@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<span th:fragment="star (isView)" th:attr="class=${isView ? 'Rating-star Rating-star_view' : 'Rating-star'}">
+    <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+      <g>
+        <g>
+          <path fill="#ffc000"
+                d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z">
+          </path>
+        </g>
+      </g>
+    </svg>
+</span>
+<span class="Rating-stars" th:fragment="intStars(rating)">
+    <span th:replace="~{this :: star(isView=${rating > 0})}"></span>
+    <span th:replace="~{this :: star(isView=${rating > 1})}"></span>
+    <span th:replace="~{this :: star(isView=${rating > 2})}"></span>
+    <span th:replace="~{this :: star(isView=${rating > 3})}"></span>
+    <span th:replace="~{this :: star(isView=${rating > 4})}"></span>
+</span>
+
+<div class="Rating Rating_noStyleLink" th:fragment="ratingStars (rating, allStars)">
+    <th:block th:if="${rating != 0}"
+              th:each="i: ${#numbers.sequence(1, rating)}">
+              <span class="Rating-star Rating-star_view">
+              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+              <g><g> <path fill="#ffc000"
+              d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z">
+              </path></g></g></svg>
+              </span>
+    </th:block>
+    <th:block th:if="${rating != 5}"
+              th:each="i: ${#numbers.sequence(1, 5 - rating)}">
+              <span class="Rating-star ">
+              <svg xmlns="http://www.w3.org/2000/svg" width="19" height="18" viewBox="0 0 19 18">
+              <g><g> <path fill="#ffc000"
+              d="M9.5 14.925L3.629 18l1.121-6.512L0 6.875l6.564-.95L9.5 0l2.936 5.925 6.564.95-4.75 4.613L15.371 18z">
+              </path></g></g></svg>
+              </span>
+    </th:block>
+    <span th:if="${allStars != ''}" class="Rating-title" th:text="${'(' + allStars + ')'}"></span>
+
+    </svg></span></span></span></span>
+</div>
+
+<div class="modal modal_compression modal_dropdown" th:fragment="ratingsModal(ratings)">
+    <div class="modal-window">
+        <a class="modal-close" href="#">
+            <span></span><span></span>
+        </a>
+        <strong class="modal-title">Распределение оценок</strong>
+        <div class="RatingGroup">
+          <span class="Rating">
+            <span th:replace="~{this :: intStars(5)}"></span>
+            <span class="Rating-title" th:text="${ratings.fiveStar}">1</span>
+          </span>
+            <br>
+            <span class="Rating">
+            <span th:replace="~{this :: intStars(4)}"></span>
+            <span class="Rating-title" th:text="${ratings.fourStar}">1</span>
+          </span>
+            <br>
+            <span class="Rating">
+            <span th:replace="~{this :: intStars(3)}"></span>
+            <span class="Rating-title" th:text="${ratings.threeStar}">1</span>
+          </span>
+            <br>
+            <span class="Rating">
+            <span th:replace="~{this :: intStars(2)}"></span>
+            <span class="Rating-title" th:text="${ratings.twoStar}">1</span>
+          </span>
+            <br>
+            <span class="Rating">
+            <span th:replace="~{this :: intStars(1)}"></span>
+            <span class="Rating-title" th:text="${ratings.oneStar}">1</span>
+          </span>
+        </div>
+    </div>
+</div>

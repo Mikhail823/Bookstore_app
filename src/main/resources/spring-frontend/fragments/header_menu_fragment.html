@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="Header-menu" th:fragment="menu">
+    <div class="wrap">
+        <nav class="menuModal" id="navigate">
+            <ul class="menu menu_main">
+                <li class="menu-item menu-item_ACTIVE">
+                    <a class="menu-link" th:href="@{/}" href="/index.html" th:text="#{topbar.main}">Главная</a>
+                </li>
+                <li class="menu-item" th:class="${genres}">
+                    <a class="menu-link" th:href="@{/api/genres}" href="/genres/index.html"
+                       th:text="#{topbar.genres}">Жанры</a>
+                </li>
+                <li class="menu-item" th:class="${recent}">
+                    <a class="menu-link" th:href="@{/api/books/recent}" href="/books/recent.html"
+                       th:text="#{topbar.news}">Новинки</a>
+                </li>
+                <li class="menu-item" th:class="${popular}">
+                    <a class="menu-link" th:href="@{/api/books/popular}" href="/books/popular.html"
+                       th:text="#{topbar.popular}">Популярное</a>
+                </li>
+                <li class="menu-item" th:class="${authors}">
+                    <a class="menu-link" th:href="@{/api/authors}" href="/authors/index.html"
+                       th:text="#{topbar.authors}">Авторы</a>
+                </li>
+                <li class="menu-item" th:class="${recently}"  sec:authorize="isAuthenticated()">
+                    <a class="menu-link" th:href="@{/api/books/recently}"
+                       th:text="#{topbar.recently}">Недавно просмотренные</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+</html>

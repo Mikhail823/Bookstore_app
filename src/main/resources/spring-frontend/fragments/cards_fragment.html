@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div class="Cards Cards_refresh" th:fragment="cardBook(books, refreshshow, refreshid)">
+    <div class="Card" th:each="book: ${books}">
+        <div class="Card-picture">
+            <a href="#" th:href="@{'/api/books/' + ${book.slug}}">
+                <img src="/assets/img/content/main/card.jpg" th:src="${book.image}" alt="card.jpg"/></a>
+            <div class="Card-sale">30% скидка
+            </div>
+            <div class="Card-ribbon">
+                <span class="Card-ribbonText" th:if="${book.isBesteller} == 1">Бестселлер</span>
+            </div>
+            <a class="Card-status" title="Куплена">
+            <img src="/assets/img/icons/check.svg" alt="check.svg"/></a>
+        </div>
+        <div class="Card-content">
+            <strong class="Card-title">
+                <a href="#" th:href="@{'/api/books/' + ${book.slug}}"
+                   th:text="${book.title}">Великая Отечественная война. 1941-1945</a>
+            </strong>
+            <div class="Card-description" th:text="${book.author}">
+                <a th:href="@{'/api/author/' + ${book.getAuthor().id}}">Солопенко Алла, Меркулов Дмитрий</a>
+            </div>
+            <div class="Card-cost">
+                <span class="Card-priceOld" th:text="${'₽' + book.priceOld}"></span>
+                <span class="Card-price" th:text="${'₽' + book.discountPrice()}">₽50.00</span>
+            </div>
+        </div>
+    </div>
+    <div class="Cards-footer Cards-footer_center">
+        <a class="btn btn_primary"
+           href="#"
+           th:data-refreshshow="${refreshshow}"
+           data-refreshoffset="0"
+           data-refreshlimit="6"
+           th:data-refreshid="${refreshid}"
+        >Показать еще</a>
+    </div>
+</div>
+</html>

@@ -1,0 +1,66 @@
+
+<!--END-->
+<!--END--><!DOCTYPE html><!--[if IE 7]>
+<html class="ie7" lang="ru">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="ru">
+<![endif]-->
+<!--[if IE 9]>
+<html class="ie9" lang="ru">
+<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
+<head>
+  <title>Тут название страницы написать</title>
+  <meta name="description" content="Описание страницы">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <!--meta( http-equiv="cache-control" content="no-cache")-->
+  <!--meta( http-equiv="expires" content="0")-->
+  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+  <link href="favicon.ico" th:href="@{/favicon.ico}" rel="shortcut icon">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=16590401">
+  <link rel="stylesheet" href="/assets/css/basic.min.css?v=16590401">
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=16590401"><!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script defer src="/assets/js/scripts.min.js?v=16590401"></script>
+  <script rel="stylesheet" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
+</head>
+<body class="Site">
+
+  <header class="Header" th:replace="~{fragments/header_fragment :: header}">
+  </header>
+  <div class="Middle">
+    <div class="wrap">
+      <main class="Middle-main">
+        <h1 class="Middle-title">Документы
+        </h1>
+        <div class="Section" >
+          <div class="Documents" th:each="doc : ${documents}">
+            <div class="Documents-wrap">
+              <a class="Documents-item" th:href="@{'/documents/' + ${doc.slug}}">
+                <div class="Documents-image">
+                  <img src="/assets/img/content/documents/1.jpg" alt="1.jpg"/>
+                </div>
+                <div class="Documents-content"  >
+                  <strong class="Documents-title" th:text="${doc.title}">Публичная оферта</strong>
+                    <div th:utext="${doc.paragraph}"> </div>
+
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <footer class="Footer" th:replace="~{fragments/footer_fragment :: footer}">
+
+  </footer>
+  <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+
+</body></html>

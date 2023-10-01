@@ -1,0 +1,120 @@
+
+<!--END-->
+<!--END--><!DOCTYPE html><!--[if IE 7]>
+<html class="ie7" lang="ru">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="ru">
+<![endif]-->
+<!--[if IE 9]>
+<html class="ie9" lang="ru">
+<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
+<head>
+  <title>Тут название страницы написать</title>
+  <meta name="description" content="Описание страницы">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <!--meta( http-equiv="cache-control" content="no-cache")-->
+  <!--meta( http-equiv="expires" content="0")-->
+  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+  <link href="favicon.ico" rel="shortcut icon">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=09585989">
+  <link rel="stylesheet" href="/assets/css/basic.min.css?v=09585989">
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=09585989"><!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script defer src="/assets/js/scripts.min.js?v=09585989"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
+</head>
+</head>
+<body class="Site">
+  <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
+  <div class="Middle">
+    <div class="wrap">
+      <main class="Middle-main">
+        <ul class="breadcrumbs">
+          <li class="breadcrumbs-item">
+            <a th:href="@{/}" href="/index.html" th:text="#{topbar.main}">Главная</a>
+          </li>
+          <li class="breadcrumbs-item">
+            <a th:href="@{/api/genres}" href="/genres/index.html" th:text="#{item.books}">Книги</a>
+          </li>
+          <li class="breadcrumbs-item breadcrumbs-item_current">
+            <span th:text="#{item.news}">Новинки</span>
+          </li>
+        </ul>
+        <div class="Section">
+          <div class="Section-header">
+            <h1 class="Section-title" th:text="#{item.news}">Новинки
+            </h1>
+            <form class="form form_inline Section-header-form" action="#" method="post">
+              <div class="form-group">
+                <label class="form-label" th:text="#{recent.datefrom}">с
+                </label>
+                <input class="form-input form-input_date form-input_date_uninit"
+                       id="fromdaterecent"
+                       name="fromdaterecent"
+                       type="text"
+                       placeholder="Дата"
+                       data-refreshoffset="0"
+                       data-refreshlimit="5"
+                       data-refreshshow="changedate"
+                       data-refreshfrom="0" autocomplete="off"/>
+              </div>
+              <div class="form-group">
+                <label class="form-label" th:text="#{recent.dateto}">по
+                </label>
+                <input class="form-input form-input_date form-input_date_uninit"
+                       id="enddaterecent"
+                       name="enddaterecent"
+                       type="text"
+                       placeholder="Дата"
+                       data-refreshoffset="0"
+                       data-refreshlimit="5"
+                       data-refreshshow="changedate"
+                       data-refreshto="0"
+                       autocomplete="off"/>
+              </div>
+            </form>
+          </div>
+          <div class="Cards Cards_refresh" th:each="book : ${newsBooks}">
+            <div class="Card" >
+              <div class="Card-picture">
+                <a href="#">
+                  <img th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
+              </div>
+              <div class="Card-content">
+                <strong class="Card-title">
+                  <a href="#" th:href="@{'/api/books/' + ${book.slug}}" th:text="${book.title}">Техника</a>
+                </strong>
+                <div class="Card-description" th:text="${book.author}">Кондратенко Александр Петрович
+                </div>
+                <div class="Card-cost">
+                  <span class="Card-priceOld" th:text="${book.priceOld}">₽300.00</span>
+                  <span class="Card-price" th:text="${book.discountPrice()}">₽190.00</span>
+                </div>
+              </div>
+            </div>
+            <div class="Cards-footer Cards-footer_center">
+              <a class="btn btn_primary"
+                 href="#"
+                 data-refreshshow="recent"
+                 data-refreshoffset="0"
+                 data-refreshlimit="5"
+                 data-refreshid="0">Показать еще</a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+    </div>
+  <footer class="Footer" th:replace="~{fragments/footer_fragment :: footer}"></footer>
+  <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+</body>
+
+</html>
