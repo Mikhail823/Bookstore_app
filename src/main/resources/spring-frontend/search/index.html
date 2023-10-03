@@ -23,7 +23,7 @@
 <div class="Middle Middle_search">
     <div class="wrap">
         <main class="Middle-main">
-            <h1 class="Middle-title">Поиск
+            <h1 class="Middle-title" th:text="#{menu.search}">Поиск
             </h1>
             <div class="Section">
                 <div class="search">
@@ -33,7 +33,7 @@
                                placeholder="Search over 30 million book titles"
                                th:value="${searchWordDto.example}"
                                value=""/>
-                        <button class="search-button" type="submit" name="searchpage" id="searchpage">Поиск
+                        <button class="search-button" type="submit" name="searchpage" id="searchpage" th:text="#{menu.search}">Поиск
                         </button>
                     </form>
                 </div>
@@ -46,7 +46,7 @@
                 </header>
                 <div class="Cards Cards_search Cards_refresh">
                     <div class="Card" th:each="book : ${searchResults}">
-                        <div class="Card-picture"><a href="#"><img  th:src="${book.image}"
+                        <div class="Card-picture"><a href="#" th:href="@{'/api/books/' + ${book.slug}}"><img  th:src="${book.image}"
                                                                     src="/assets/img/content/main/card.jpg"
                                                                     alt="card.jpg"/></a>
                         </div>
@@ -57,8 +57,8 @@
                             <div class="Card-description" th:text="${book.description}">Кондратенко Александр Петрович
                             </div>
                             <div class="Card-cost">
-                                <span class="Card-priceOld" th:text="${book.priceOld}">₽300.00</span>
-                                <span class="Card-price" th:text="${book.price}">₽190.00</span>
+                                <span class="Card-priceOld" th:text="${'₽' + book.priceOld}">₽300.00</span>
+                                <span class="Card-price" th:text="${'₽' + book.price}">₽190.00</span>
                             </div>
                         </div>
                     </div>
@@ -68,7 +68,7 @@
                            data-refreshoffset="0"
                             data-refreshlimit="6"
                             th:attr="data-refreshquery=${searchWordDto.example}"
-                             data-refreshquery="Техника">Показать еще</a>
+                             data-refreshquery="Техника" th:text="#{text.button}">Показать еще</a>
                     </div>
                 </div>
             </div>

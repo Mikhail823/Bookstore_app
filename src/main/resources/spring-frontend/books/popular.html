@@ -32,16 +32,16 @@
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
-  <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
+  <header class="Header" th:replace="~{fragments/header_fragment :: header(popular='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
           <li class="breadcrumbs-item">
-            <a th:href="@{/}" href="/index.html">Главная</a>
+            <a th:href="@{/}" href="/index.html" th:text="#{topbar.main}">Главная</a>
           </li>
           <li class="breadcrumbs-item">
-            <a th:href="@{/api/genres}" href="/genres/index.html">Книги</a>
+            <a th:href="@{/api/genres}" href="/genres/index.html" th:text="#{menu.books}">Книги</a>
           </li>
           <li class="breadcrumbs-item breadcrumbs-item_current">
             <span th:text="#{topbar.popular}">Популярное</span>

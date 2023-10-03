@@ -37,23 +37,23 @@
       <main class="Middle-main">
         <ul class="breadcrumbs">
           <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}">Главная</a>
+            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
           </li>
           <li class="breadcrumbs-item">
-            <a href="/profile.html" th:href="@{/profile}">Мой профиль</a>
+            <a href="/profile.html" th:href="@{/profile}" th:text="#{prof.my}">Мой профиль</a>
           </li>
           <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span>Мои книги</span>
+            <span th:text="#{prof.myBook}">Мои книги</span>
           </li>
         </ul>
         <div class="Section">
           <div class="Section-header">
-            <h1 class="Section-title">Мои книги
+            <h1 class="Section-title" th:text="#{prof.myBook}" >Мои книги
             </h1>
             <div class="Section-header-links">
               <a class="Section-header-link"
-                 href="/spring-frontend/my.htmlfrontend/my.html" th:href="@{/my}">Непрочитанные</a>
-              <span class="Section-header-link Section-header-link_ACTIVE">Архив</span>
+                 href="/spring-frontend/my.htmlfrontend/my.html" th:href="@{/my}" th:text="#{prof.unread}">Непрочитанные</a>
+              <span class="Section-header-link Section-header-link_ACTIVE" th:text="#{prof.archived}">Архив</span>
             </div>
           </div>
           <div class="Cards">
@@ -71,8 +71,8 @@
                 <div class="Card-description" th:text="${book.author}">Ваулина, Дули, Подоляко
                 </div>
                 <div class="Card-cost">
-                  <span class="Card-priceOld" th:text="${'₽ ' + book.priceOld}">₽250.00</span>
-                  <span class="Card-price" th:text="${'₽ ' + book.discountPrice()}">₽210.00</span>
+                  <span class="Card-priceOld" th:text="${'₽' + book.priceOld}">₽250.00</span>
+                  <span class="Card-price" th:text="${'₽' + book.discountPrice()}">₽210.00</span>
                 </div>
               </div>
             </div>

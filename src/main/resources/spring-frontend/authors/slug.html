@@ -28,18 +28,19 @@
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=93601584"><!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <script defer src="/assets/js/scripts.min.js?v=93601584"></script>
+  <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
-  <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
+  <header class="Header" th:replace="~{fragments/header_fragment :: header(authors='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
           <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}">Главная</a>
+            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
           </li>
           <li class="breadcrumbs-item">
-            <a href="/authors/index.html" th:href="@{/api/authors}">Авторы</a>
+            <a href="/authors/index.html" th:href="@{/api/authors}" th:text="#{topbar.authors}">Авторы</a>
           </li>
           <li class="breadcrumbs-item breadcrumbs-item_current">
             <span th:text="${author.firstName} + ' ' + ${author.lastName}">Борис Васильевич Бедный</span>
@@ -56,9 +57,9 @@
                 <img  src="/assets/img/content/main/card.jpg" th:src="${author.photo}" alt="card.jpg"/>
               </div>
               <div>
-                <h2>Биография
+                <h2 th:text="#{author.content}">Биография
                 </h2>
-                <p th:text="${author.description}">Борис Бедный родился в семье учителя в 1916 году в станице Ярославская Краснодарского края. Окончил Майкопский лесной техникум и был послан учиться в Ленинградскую лесотехническую академию. Стал специалистом по сплаву леса и приехал в Республику Коми, работать на сплавных предприятиях.
+                <p th:text="${author.description}">
                 </p>
               </div>
             </div>
@@ -73,14 +74,15 @@
         </article>
         <div class="Section">
           <header class="Section-header">
-            <h2 class="Section-title">Книги автора
+            <h2 class="Section-title" th:text="#{author.books}">Книги автора
             </h2>
           </header>
           <div class="Slider Slider_carousel"
                th:replace="~{fragments/slider_fragment :: slider(${authorBooks})}">
           </div>
           <footer class="Section-footer">
-            <a class="Author-books" href="/books/author.html" th:href="${'/api/books/authors/' + author.id}" >Все книги автора
+            <a class="Author-books" href="/books/author.html"
+               th:href="${'/api/books/authors/' + author.id}" th:text="#{author.allbook}">Все книги автора
               <span class="Author-amount" th:text="${'(' + size + ')'}">(55)</span></a>
           </footer>
         </div>

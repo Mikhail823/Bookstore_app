@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=65675850"><!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <script defer src="/assets/js/scripts.min.js?v=65675850"></script>
+  <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 <!--  <meta id="_csrf" name="_csrf" th:content="${_csrf.token}"/>-->
 <!--  <meta id="_csrf_header" name="_csrf_header" th:content="${_csrf.headerName}"/>-->
 </head>
@@ -37,7 +38,7 @@
   <div class="Middle Middle_form">
     <div class="Middle-top">
       <div class="wrap">
-        <h1 class="Middle-title">Регистрация
+        <h1 class="Middle-title" th:text="#{sig.registration}">Регистрация
         </h1>
       </div>
     </div>
@@ -59,11 +60,11 @@
                 </div>
                 <div class="form-group form-group_key">
                   <input class="form-input form-input_code" id="phoneCode" name="phoneCode" type="text"
-                         placeholder="Код из СМС" data-mask="99 99" data-validate="require key"/>
+                         placeholder="Последние цифры номера" data-mask="99 99" data-validate="require key"/>
                 </div>
                 <div class="form-group">
                   <button class="btn btn_success btn_sm form-btn" type="button" name="submitPhone"
-                          disabled="disabled" id="submitPhone">Подтвердить
+                          disabled="disabled" id="submitPhone" th:text="#{sig.confirm}">Подтвердить
                   </button>
                 </div>
               </div>
@@ -78,7 +79,7 @@
                 </div>
                 <div class="form-group">
                   <button class="btn btn_success btn_sm form-btn" type="button" name="submitMail"
-                          disabled="disabled" id="submitMail">Подтвердить
+                          disabled="disabled" id="submitMail" th:text="#{sig.confirm}">Подтвердить
                   </button>
                 </div>
 
@@ -91,7 +92,7 @@
 
               <div class="form-group form-group_center">
                 <button class="btn btn_primary form-btn" type="submit" name="registration" id="registration"
-                        disabled="disabled">Зарегистрироваться
+                        disabled="disabled" th:text="#{sig.reg}">Зарегистрироваться
                 </button>
               </div>
 

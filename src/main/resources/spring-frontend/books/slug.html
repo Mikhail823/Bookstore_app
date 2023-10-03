@@ -42,10 +42,10 @@
         <main class="Middle-main">
             <ul class="breadcrumbs">
                 <li class="breadcrumbs-item">
-                    <a href="/index.html" th:href="@{/}">Главная</a>
+                    <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item">
-                    <a href="/genres/index.html" th:href="@{/api/genres}">Книги</a>
+                    <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{menu.books}">Книги</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current" th:text="${slugBook.title}">
                     <span>Мара и морок</span>
@@ -82,7 +82,7 @@
                             </div>
 
                             <div class="ProductCard-assessment">
-                                <span class="ProductCard-titleProp">Оцените книгу:</span>
+                                <span class="ProductCard-titleProp" th:text="#{item.rate}">Оцените книгу:</span>
                                 <span class="Rating Rating_input"
                                       data-bookid="2121"
                                       th:attr="data-bookid=${slugBook.id}">
@@ -101,7 +101,7 @@
                               </span>
                             </div>
                             <div class="ProductCard-tags">
-                                <span class="ProductCard-titleProp">Тэги:</span>
+                                <span class="ProductCard-titleProp" th:text="#{item.tags}" >Тэги:</span>
                                 <span th:each="tag, iStat :${slugBook.tagList}">
                                     <a th:text="${tag.name}" th:href="${'/api/tags/' + tag.id}"
                                        href="/tags/">Современные</a>
@@ -110,11 +110,11 @@
                                 </span>
                             </div>
                             <div class="ProductCard-cost">
-                                <span class="ProductCard-titleProp">Цена:</span>
+                                <span class="ProductCard-titleProp" th:text="#{item.price}">Цена:</span>
                                 <span
-                                    class="ProductCard-priceOld" th:text="${'₽ ' + slugBook.priceOld}">₽300</span><span
+                                    class="ProductCard-priceOld" th:text="${'₽' + slugBook.priceOld}">₽300</span><span
                                     class="ProductCard-price"
-                                    th:text="${'₽ ' + slugBook.discountPrice()}">₽180</span>
+                                    th:text="${'₽' + slugBook.discountPrice()}">₽180</span>
                             </div>
                         </div>
                         <div class="ProductCard-text">
@@ -132,7 +132,8 @@
                                         data-check="false"
                                         data-alttext="Отложена">
                     <span class="btn-icon"><img src="/assets/img/icons/heart.svg" alt="heart.svg"/></span>
-                                    <span class="btn-content" th:if="${status == 'KEPT' ? 'Отложена' : 'Отложить'}">Отложить</span>
+                                    <span class="btn-content" th:if="${status == 'KEPT' ? 'Отложена' : 'Отложить'}"
+                                    th:text="#{text.button.postponed}">Отложить</span>
                                 </button>
                             </div>
                             <div class="ProductCard-cartElement">
@@ -147,7 +148,8 @@
                     <span class="btn-icon">
                       <img src="/assets/img/icons/shopping-basket.svg" alt="shopping-basket.svg"/></span>
 
-                                    <span class="btn-content" th:text="${status == 'PAID' ? 'Куплена' : 'Купить'}">Купить</span>
+                                    <span class="btn-content"
+                                    th:text="#{text.button.buy}">Купить</span>
                                 </button>
                             </div>
                         </div>
@@ -158,7 +160,7 @@
                       <img src="/assets/img/icons/download.svg" alt="download.svg"/>
                     </span>
 
-                                    <span class="btn-content">Скачать</span>
+                                    <span class="btn-content" th:text="#{text.button.download}">Скачать</span>
 
                                 </a>
                             </div>
@@ -176,7 +178,8 @@
                                         <img src="/assets/img/icons/archive.svg" alt="archive.svg"/>
                                     </span>
 
-                                    <span class="btn-content" th:text="${status == 'ARCHIVED' ? 'В архиве' : 'В архив'}">В архив</span>
+                                    <span class="btn-content"
+                                    th:text="#{text.button.archived}">В архив</span>
 
                                 </button>
                             </div>
@@ -210,10 +213,28 @@
                         <input type="reset" value="Сбросить">
                     </div>
                 </form>
+                <div class="Comments-addComment">
+                    <form sec:authorize="isAuthenticated()"
+                          class="form"
+                          action="#"
+                          method="post"
+                          data-bookid="1111"
+                          th:action="${'/api/books/bookReview/' + slugBook.slug }"
+                            th:data-bookid="${slugBook.id}">
+                        <div class="form-group">
+                            <textarea class="form-textarea Comments-review" name="review" id="review"
+                                      placeholder="Текст отзыва" data-validate="require"></textarea>
+                        </div>
+                        <div class="form-group Comments-sendReview">
+                            <button class="btn btn_warning" type="submit">Отправить отзыв
+                            </button>
+                        </div>
+                    </form>
+                </div>
                 <span></span>
                 <div class="Product-comments">
                     <div class="Product-comments-header">
-                        <h3 class="Product-comments-title">Отзывы
+                        <h3 class="Product-comments-title" th:text="#{item.reviews}">Отзывы
                         </h3>
                         <span class="Product-comments-amount" th:text="${slugBook.getReviewList().size() + ' отзывов'}">567 отзывов</span>
                     </div>

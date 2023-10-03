@@ -49,7 +49,7 @@
       <div class="row-block"  sec:authorize="isAuthenticated()">
         <ul class="menu menu_vt Footer-menu">
           <li class="menu-item">
-            <a class="menu-link" th:href="@{/my}" href="/spring-frontend/my.html">Мои книги (55)</a>
+            <a class="menu-link" th:href="@{/my}" href="/spring-frontend/my.html" th:text="#{book.mybooks}">Мои книги (55)</a>
           </li>
           <li class="menu-item">
             <a class="menu-link" th:href="@{/api/books/cart}"
@@ -57,11 +57,11 @@
                                    href="/cart.html">Корзина (7)</a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" th:text="${'Отложено (' + countBooksPostponed + ')'}"
+            <a class="menu-link" th:text="${'Отложено ' +  (' + countBooksPostponed + ')}"
                                    href="/postponed.html">Отложено (2)</a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" th:href="@{/profile}" href="/profile.html">Мой профиль</a>
+            <a class="menu-link" th:href="@{/profile}" href="/profile.html" th:text="#{prof.myProfile}">Мой профиль</a>
           </li>
         </ul>
       </div>

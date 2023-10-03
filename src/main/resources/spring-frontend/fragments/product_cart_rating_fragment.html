@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <div class="ProductCard-rating" th:fragment="productRating(ratingBook, ratings)">
-    <span class="ProductCard-titleProp">Рейтинг:</span>
+    <span class="ProductCard-titleProp" th:text="#{item.rating}">Рейтинг:</span>
     <button class="trigger trigger_dropdown" type="button">
         <div class="Rating Rating_noStyleLink" >
             <th:block th:if="${ratingBook != 0}">
@@ -11,7 +11,7 @@
                 <div class="modal modal_compression modal_dropdown">
                     <div class="modal-window">
                         <a class="modal-close" href="#"><span></span><span></span></a>
-                        <strong class="modal-title">Распределение оценок
+                        <strong class="modal-title" th:text="#{item.ratings}">Распределение оценок
                         </strong>
                         <div class="RatingGroup">
                           <span class="Rating">

@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/><!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <script src="/assets/js/scripts.min.js?v=45744385"></script>
+  <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
   <header class="Header" th:replace="~{fragments/header_my_fragment :: header_my(${curUsr})}">
@@ -35,19 +36,19 @@
   <div class="Middle">
     <div class="Middle-top">
       <div class="wrap">
-        <h1 class="Middle-title">Личный кабинет
+        <h1 class="Middle-title" th:text="#{prof.account}">Личный кабинет
         </h1>
       </div>
     </div>
     <div class="wrap">
       <main class="Middle-main">
-        <h2 class="Middle-title">Мой профиль
+        <h2 class="Middle-title" th:text="#{prof.my}">Мой профиль
         </h2>
         <div class="Tabs Tabs_default">
           <div class="Tabs-links">
-            <a class="Tabs-link Tabs-link_ACTIVE" href="#basic">Основные сведения</a>
-            <a class="Tabs-link" href="#transactions">История транзакций</a>
-            <a class="Tabs-link" href="#topup">Пополнить счет</a>
+            <a class="Tabs-link Tabs-link_ACTIVE" href="#basic" th:text="#{account.info}" >Основные сведения</a>
+            <a class="Tabs-link" href="#transactions" th:text="#{transaction.history}">История транзакций</a>
+            <a class="Tabs-link" href="#topup" th:text="#{account.top}">Пополнить счет</a>
           </div>
           <div class="Tabs-wrap">
             <div class="Tabs-block" id="basic">
@@ -70,11 +71,11 @@
                                th:value="${email}"
                                data-validate="require mail"/>
                         <div class="Profile-btn Profile-btn_confirm">
-                          <button class="btn btn_primary" type="button">Подтвердить</button>
+                          <button class="btn btn_primary" type="button" th:text="#{text.button.confirm}">Подтвердить</button>
                         </div>
                       </div>
                       <div class="form-group">
-                        <label class="form-label" for="phone">Телефон
+                        <label class="form-label" for="phone" th:text="#{prof.phone}">Телефон
                         </label>
                         <input class="form-input"
                                id="phone"
@@ -85,14 +86,14 @@
                                data-mask="+7 (999) 999-99-99"
                                data-validate="require"/>
                         <div class="Profile-btn Profile-btn_confirm">
-                          <button class="btn btn_primary" type="button">Подтвердить
+                          <button class="btn btn_primary" type="button" th:text="#{text.button.confirm}">Подтвердить
                           </button>
                         </div>
                       </div>
                     </div>
                     <div class="row-block">
                       <div class="form-group">
-                        <label class="form-label" for="password">Пароль
+                        <label class="form-label" for="password" th:text="#prof.pass">Пароль
                         </label>
                         <input class="form-input" id="password"
                                name="password"
@@ -100,16 +101,16 @@
                                placeholder="Тут можно изменить пароль"/>
                       </div>
                       <div class="form-group">
-                        <label class="form-label" for="passwordReply">Подтверждение пароля</label>
+                        <label class="form-label" for="passwordReply" th:text="#{prof.pass.confirm}">Подтверждение пароля</label>
                         <input class="form-input" id="passwordReply" name="passwordReply"
                                type="password" placeholder="Введите пароль повторно"/>
                       </div>
                       <div class="form-group">
                         <div class="Profile-btn">
-                          <button class="btn btn_danger" type="button">Отменить</button>
-                          <button class="btn btn_primary"  type="submit">Сохранить</button>
+                          <button class="btn btn_danger" type="button" th:text="#{prof.cancel}">Отменить</button>
+                          <button class="btn btn_primary"  type="submit" th:text="#{prof.save=}">Сохранить</button>
                         </div>
-                        <div class="Profile-success">Профиль успешно сохранен</div>
+                        <div class="Profile-success" th:text="#{prof.saved}">Профиль успешно сохранен</div>
                       </div>
                     </div>
                   </div>
@@ -122,11 +123,11 @@
                   <table class="table table_noMargin">
                     <thead>
                       <tr>
-                        <th>Дата и время
+                        <th th:text="#{prof.date.time}">Дата и время
                         </th>
-                        <th>Сумма
+                        <th th:text="#{prof.amount}">Сумма
                         </th>
-                        <th>Описание
+                        <th th:text="#{rof.descr.trans}">Описание
                         </th>
                       </tr>
                     </thead>
@@ -149,7 +150,7 @@
                   <a class="btn btn_primary Transactions-get"
                      href="#" data-transactionoffset="4"
                      data-transactionlimit="10"
-                     data-transactionsort="asc">Показать еще</a>
+                     data-transactionsort="asc" th:text="#{text.button}">Показать еще</a>
                 </div>
               </div>
             </div>
@@ -158,7 +159,7 @@
                     th:data-sendhash="${curUsr.hash}"
                     th:action="${'/payment'}">
                 <div class="Topup-wrap">
-                  <strong class="Topup-title">Введите сумму, на которую хотите пополнить свой счет:
+                  <strong class="Topup-title" th:text="#{prof.amount.top}" >Введите сумму, на которую хотите пополнить свой счет:
                   </strong>
                   <div class="form-group form-group_row Topup-group">
                     <input class="form-input" id="sum" name="sum" type="text"/>
@@ -166,7 +167,7 @@
                   </div>
                   <div class="form-group">
                     <div class="Topup-btn">
-                      <button class="btn btn_primary">Пополнить
+                      <button class="btn btn_primary" th:text="#{prof.replenish}">Пополнить
                       </button>
                     </div>
                     <div th:if="${error}">

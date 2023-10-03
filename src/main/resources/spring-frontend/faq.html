@@ -28,6 +28,7 @@
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=77124975"><!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <script defer src="/assets/js/scripts.min.js?v=77124975"></script>
+  <script th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
   <header class="Header" th:replace="~{fragments/header_fragment :: header}">
@@ -37,16 +38,16 @@
       <main class="Middle-main">
         <ul class="breadcrumbs">
           <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}">Главная</a>
+            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
 
           </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current"><span>Помощь</span>
+          <li class="breadcrumbs-item breadcrumbs-item_current"><span th:text="#{menu.help}">Помощь</span>
           </li>
         </ul>
-        <h1 class="Middle-title">Помощь
+        <h1 class="Middle-title" th:text="#{menu.help}">Помощь
         </h1>
         <div class="FAQ">
-          <strong class="FAQ-title">Наиболее частые вопросы:
+          <strong class="FAQ-title" th:text="#{faq.questions}">Наиболее частые вопросы:
           </strong>
           <div class="HideBlock FAQ-block">
             <header class="HideBlock-header HideBlock-trigger">
@@ -99,7 +100,7 @@
             </div>
           </div>
           <div class="FAQ-footer">
-            <p class="FAQ-link">Или&#32;<a href="/spring-frontend/contacts.htmlnd/contacts.html" th:href="@{/contacts}">свяжитесь с нами</a>
+            <p class="FAQ-link">Или&#32;<a href="/spring-frontend/contacts.htmlnd/contacts.html" th:href="@{/contacts}" th:text="#{faq.contact.us}">свяжитесь с нами</a>
             </p>
           </div>
         </div>

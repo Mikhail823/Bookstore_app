@@ -32,16 +32,16 @@
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
-   <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
+   <header class="Header" th:replace="~{fragments/header_fragment :: header(authors='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
         <ul class="breadcrumbs">
           <li class="breadcrumbs-item">
-            <a th href="/index.html" th:href="@{/}">Главная</a>
+            <a th href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
           </li>
           <li class="breadcrumbs-item">
-            <a href="/genres/index.html" th:href="@{/api/genres}">Книги</a>
+            <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{menu.books}">Книги</a>
           </li>
           <li class="breadcrumbs-item breadcrumbs-item_current">
             <span th:text="${author.firstName} + ' ' + ${author.lastName}">Борис Васильевич Бедный</span>
@@ -61,7 +61,7 @@
               </div>
               <div class="Card-content">
                 <strong class="Card-title" th:text="${book.title}">
-                  <a href="#">Техника</a>
+                  <a href="#" th:href="@{'/api/books/' + ${book.slug}}">Техника</a>
                 </strong>
                 <div class="Card-description">
                   <a th:href="${'/api/author/' + book.getAuthor().getId()}" href="/authors/slug.html"
@@ -79,8 +79,8 @@
                  data-refreshshow="author"
                  data-refreshoffset="0"
                  data-refreshlimit="5"
-                 th:data-refreshid="${author.getId()}">
-                Показать еще</a>
+                 th:data-refreshid="${author.getId()}" th:text="#{text.button}">
+                Показать еще </a>
             </div>
           </div>
         </div>

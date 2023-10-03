@@ -31,16 +31,16 @@
     <script defer src="/assets/js/scripts.min.js?v=56375974"></script>
 </head>
 <body class="Site">
-<header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
+<header class="Header" th:replace="~{fragments/header_fragment :: header(genres='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
 <div class="Middle">
     <div class="wrap">
         <main class="Middle-main">
             <ul class="breadcrumbs">
                 <li class="breadcrumbs-item">
-                    <a href="/index.html" th:href="@{/}">Главная</a>
+                    <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item">
-                    <a href="/genres/index.html" th:href="@{/api/genres}">Жанры</a>
+                    <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{topbar.genres}">Жанры</a>
                 </li>
                 <li class="breadcrumbs-item">
                     <a href="/genres/index.html" th:href="@{/api/genres}"

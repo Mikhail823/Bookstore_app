@@ -8,7 +8,7 @@
             <div class="Card-sale">30% скидка
             </div>
             <div class="Card-ribbon">
-                <span class="Card-ribbonText" th:if="${book.isBesteller} == 1">Бестселлер</span>
+                <span class="Card-ribbonText" th:if="${book.isBesteller} == 1" th:text="#{book.besttseller}">Бестселлер</span>
             </div>
             <a class="Card-status" title="Куплена">
             <img src="/assets/img/icons/check.svg" alt="check.svg"/></a>
@@ -34,7 +34,7 @@
            data-refreshoffset="0"
            data-refreshlimit="6"
            th:data-refreshid="${refreshid}"
-        >Показать еще</a>
+        th:text="#{text.button}">Показать еще</a>
     </div>
 </div>
 </html>

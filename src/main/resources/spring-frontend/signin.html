@@ -30,21 +30,13 @@
   <script defer src="/assets/js/scripts.min.js?v=27449092"></script>
 </head>
 <body class="Site">
-  <!--if lt IE 8
-  p.error-browser
-      | Ваш браузер&nbsp;
-      em устарел!&nbsp;
-      a(href="http://browsehappy.com/") Выберите новую версию
-          +s
-          | браузера здесь&nbsp;
-      | для правильного отображения сайта.
-  -->
+
   <header class="Header" th:replace="~{fragments/header_fragment :: header}">
   </header>
   <div class="Middle Middle_form">
     <div class="Middle-top">
       <div class="wrap">
-        <h1 class="Middle-title">Вход
+        <h1 class="Middle-title" th:text="#{sig.entrance}">Вход
         </h1>
       </div>
     </div>
@@ -54,9 +46,9 @@
           <div class="Login-ins">
             <div class="Login-step">
               <div class="form-group">
-                <label class="form-label Login-title">Введите e-mail или телефон
+                <label class="form-label Login-title" th:text="#{sig.enter.e-mail.phone}">Введите e-mail или телефон
                   <br>
-                  <span th:if="${regOk}">Регистрация прошла успешно!</span>
+                  <span th:if="${regOk}" th:text="#{sig.reg.info}">Регистрация прошла успешно!</span>
                 </label>
               </div>
               <div class="form-group">
@@ -64,7 +56,7 @@
                   <div class="row-block">
                     <label class="toggle Login-type">
                       <input type="radio" name="typeauth" value="phonetype" checked="checked"/>
-                      <span class="toggle-box"></span><span class="toggle-text">Телефон</span>
+                      <span class="toggle-box"></span><span class="toggle-text" th:text="#{prof.phone}">Телефон</span>
                     </label>
                   </div>
                   <div class="row-block">
@@ -84,13 +76,13 @@
               </div>
               <div class="form-group form-group_center">
                 <button class="btn btn_primary form-btn" type="button"
-                        name="sendauth" id="sendauth" data-type="phone" data-send="">Далее
+                        name="sendauth" id="sendauth" data-type="phone" data-send="" th:text="#{sig.further}">Далее
                 </button>
               </div>
             </div>
             <div class="Login-step Login-step_hide" data-type="phone">
               <div class="form-group">
-                <label class="form-label Login-title">На&nbsp;Ваш телефон будет совершен звонок. Введите последние четыре цифпы номера:
+                <label class="form-label Login-title" th:text="#{sig.pass.phone.txt}">На Ваш телефон будет совершен звонок. Введите последние четыре цифпы номера:
                 </label>
               </div>
               <div class="form-group form-group_key">
@@ -99,7 +91,11 @@
                        placeholder="Код" data-validate="key require" data-mask="99 99"/>
               </div>
               <div class="form-group form-group_center">
-                <button class="btn btn_primary form-btn" type="button" name="toComeInPhone" id="toComeInPhone" data-send="">Войти
+                <button class="btn btn_primary form-btn"
+                        type="button"
+                        name="toComeInPhone"
+                        id="toComeInPhone"
+                        data-send="" th:text="#{menu.enter}">Войти
                 </button>
               </div>
             </div>
@@ -114,7 +110,11 @@
                        placeholder="Код" data-validate="key require" />
               </div>
               <div class="form-group form-group_center">
-                <button class="btn btn_primary form-btn" type="button" name="toComeInMail" id="toComeInMail" data-send="">Войти
+                <button class="btn btn_primary form-btn"
+                        type="button"
+                        name="toComeInMail"
+                        id="toComeInMail"
+                        data-send="" th:text="#{menu.enter}">Войти
                 </button>
               </div>
             </div>

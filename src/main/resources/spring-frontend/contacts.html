@@ -22,7 +22,7 @@
 <div class="Middle">
     <div class="Middle-top">
         <div class="wrap">
-            <h1 class="Middle-title">Контакты
+            <h1 class="Middle-title" th:text="#{menu.contacts}">Контакты
             </h1>
         </div>
     </div>
@@ -30,19 +30,19 @@
         <main class="Middle-main">
             <ul class="breadcrumbs">
                 <li class="breadcrumbs-item">
-                    <a href="/index.html" th:href="@{/}" >Главная</a>
+                    <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current">
-                    <span>Контакты</span>
+                    <span th:text="#{menu.contacts}">Контакты</span>
                 </li>
             </ul>
             <div class="Contacts">
                 <div class="row">
                     <div class="row-block">
-                        <h2>Контакты
+                        <h2 th:text="#{menu.contacts}">Контакты
                         </h2>
                         <div class="Contacts-prop">
-                            <strong class="Contacts-propTitle">Телефон:
+                            <strong class="Contacts-propTitle" th:text="#{contacts.telephone}">Телефон:
                             </strong><span class="Contacts-propContent">8 (800) 484-48-48</span>
                         </div>
                         <div class="Contacts-prop">
@@ -50,8 +50,8 @@
                             </strong><span class="Contacts-propContent">test@test.ru</span>
                         </div>
                         <div class="Contacts-prop">
-                            <strong class="Contacts-propTitle">Телеграм-бот:
-                            </strong><span class="Contacts-propContent">@testBookShop</span>
+                            <strong class="Contacts-propTitle" th:text="#{contacts.bot}">Телеграм-бот:
+                            </strong><span class="Contacts-propContent" th:text="#{email.address.shop}">@testBookShop</span>
                         </div>
                     </div>
                     <div class="row-block">
@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="form-group">
                                     <button class="btn btn_primary form-btn" type="submit" name="sendMessage"
-                                            id="sendMessage">Отправить
+                                            id="sendMessage" th:text="#{text.button.tosend}">Отправить
                                     </button>
                                 </div>
                             </form>

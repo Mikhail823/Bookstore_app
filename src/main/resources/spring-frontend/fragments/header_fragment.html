@@ -19,7 +19,7 @@
               <form class="form form_search" action="#" method="post" data-searchlimit="20" th:object="${searchWordDto}">
                 <input class="search-input" id="query" name="query" type="text"
                        placeholder="Search over 30 million book titles" th:field="*{example}" value=""/>
-                <button class="search-button" type="submit" name="search" id="search">Поиск
+                <button class="search-button" type="submit" name="search" id="search" th:text="#{menu.search}">Поиск
                 </button>
               </form>
             </div>
@@ -58,7 +58,7 @@
         </th:block>
         <div class="row-block Header-trigger">
           <a class="menuTrigger" href="#navigate">
-            <div class="menuTrigger-content">Показать навигацию
+            <div class="menuTrigger-content" th:text="#{menu.navigation}">Показать навигацию
             </div><span></span><span></span><span></span></a>
         </div>
         <th:block >
@@ -68,6 +68,36 @@
       </div>
     </div>
   </div>
-  <div class="Header-menu" th:replace="~{fragments/header_menu_fragment :: menu}"> </div>
+  <div class="Header-menu">
+    <div class="wrap">
+      <nav class="menuModal" id="navigate">
+        <ul class="menu menu_main">
+          <li class="menu-item" th:class="${main}">
+            <a class="menu-link" th:href="@{/}" href="/index.html" th:text="#{topbar.main}">Главная</a>
+          </li>
+          <li class="menu-item" th:class="${genres}">
+            <a class="menu-link" th:href="@{/api/genres}" href="/genres/index.html"
+               th:text="#{topbar.genres}">Жанры</a>
+          </li>
+          <li class="menu-item" th:class="${recent}">
+            <a class="menu-link" th:href="@{/api/books/recent}" href="/books/recent.html"
+               th:text="#{topbar.news}">Новинки</a>
+          </li>
+          <li class="menu-item" th:class="${popular}">
+            <a class="menu-link" th:href="@{/api/books/popular}" href="/books/popular.html"
+               th:text="#{topbar.popular}">Популярное</a>
+          </li>
+          <li class="menu-item" th:class="${authors}">
+            <a class="menu-link" th:href="@{/api/authors}" href="/authors/index.html"
+               th:text="#{topbar.authors}">Авторы</a>
+          </li>
+          <li class="menu-item" th:class="${recently}"  sec:authorize="isAuthenticated()">
+            <a class="menu-link" th:href="@{/api/books/recently}"
+               th:text="#{topbar.recently}">Недавно просмотренные</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
 </header>
 </html>

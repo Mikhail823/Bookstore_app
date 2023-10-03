@@ -33,7 +33,7 @@
 </head>
 </head>
 <body class="Site">
-  <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
+  <header class="Header" th:replace="~{fragments/header_fragment :: header(recent='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
@@ -95,8 +95,8 @@
                 <div class="Card-description" th:text="${book.author}">Кондратенко Александр Петрович
                 </div>
                 <div class="Card-cost">
-                  <span class="Card-priceOld" th:text="${book.priceOld}">₽300.00</span>
-                  <span class="Card-price" th:text="${book.discountPrice()}">₽190.00</span>
+                  <span class="Card-priceOld" th:text="${'₽' +book.priceOld}">₽300.00</span>
+                  <span class="Card-price" th:text="${'₽' + book.discountPrice()}">₽190.00</span>
                 </div>
               </div>
             </div>
@@ -106,7 +106,7 @@
                  data-refreshshow="recent"
                  data-refreshoffset="0"
                  data-refreshlimit="5"
-                 data-refreshid="0">Показать еще</a>
+                 data-refreshid="0" th:text="#{text.button}">Показать еще</a>
             </div>
           </div>
         </div>
