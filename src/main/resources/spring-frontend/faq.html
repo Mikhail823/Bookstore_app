@@ -49,54 +49,15 @@
         <div class="FAQ">
           <strong class="FAQ-title" th:text="#{faq.questions}">Наиболее частые вопросы:
           </strong>
-          <div class="HideBlock FAQ-block">
+          <div class="HideBlock FAQ-block" th:each="faq : ${faqList}">
             <header class="HideBlock-header HideBlock-trigger">
-              <strong class="HideBlock-title">Что делать, если я не нашел нужный товар
+              <strong class="HideBlock-title" th:text="${faq.question}">Что делать, если я не нашел нужный товар
               </strong>
               <button class="HideBlock-btn" type="button">
               </button>
             </header>
             <div class="HideBlock-content">
-              <p>Если вы ввели в строке поиска название товара и увидели сообщение «Простите, по вашему запросу товаров сейчас нет», это значит, что такого товара у нас в ассортименте пока нет.
-              </p>
-              <p>В этом случае, вы можете добавить ссылку на искомый товар, нажав Не нашли, что искали?. Мы передадим информацию менеджерам соответствующей категории и постараемся добавить товар в ассортимент.
-              </p>
-            </div>
-          </div>
-          <div class="HideBlock FAQ-block">
-            <header class="HideBlock-header HideBlock-trigger">
-              <strong class="HideBlock-title">Товара нет в наличии
-              </strong>
-              <button class="HideBlock-btn" type="button">
-              </button>
-            </header>
-            <div class="HideBlock-content">
-              <p>Мы регулярно пополняем запасы товаров на складах. Чтобы узнать о поступлении товара, подпишитесь на уведомления, нажав кнопку Узнать о поступлении.
-              </p>
-            </div>
-          </div>
-          <div class="HideBlock FAQ-block">
-            <header class="HideBlock-header HideBlock-trigger">
-              <strong class="HideBlock-title">У товара слишком высокая цена
-              </strong>
-              <button class="HideBlock-btn" type="button">
-              </button>
-            </header>
-            <div class="HideBlock-content">
-              <p>Вы можете дождаться скидки на интересующий товар. Чтобы не пропустить снижение цены, нажмите кнопку Это дорого? на карточке товара. Когда цена снизится, мы пришлем вам уведомление.
-              </p>
-            </div>
-          </div>
-          <div class="HideBlock FAQ-block">
-            <header class="HideBlock-header HideBlock-trigger">
-              <strong class="HideBlock-title">У меня есть вопрос про товар продавца
-              </strong>
-              <button class="HideBlock-btn" type="button">
-              </button>
-            </header>
-            <div class="HideBlock-content">
-              <p>С некоторыми продавцами можно связаться через чат. Чтобы задать интересующий вас вопрос, на карточке товара под его фотографиями нажмите Спросить продавца о товаре, далее введите ваше сообщение и дождитесь ответа.
-              </p>
+              <div th:utext="${faq.answer}"></div>
             </div>
           </div>
           <div class="FAQ-footer">
@@ -107,7 +68,7 @@
       </main>
     </div>
   </div>
-  <footer class="Footer" th:replace="~{fragments/footer_fragments :: footer}">
+  <footer class="Footer" th:replace="~{fragments/footer_fragment :: footer}">
   </footer>
   <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
 </body></html>

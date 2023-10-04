@@ -2,6 +2,7 @@ package com.example.bookshop.controllers;
 
 import com.example.bookshop.dto.MessageFormDto;
 import com.example.bookshop.service.DocumentService;
+import com.example.bookshop.service.FaqService;
 import com.example.bookshop.service.MessageService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,6 +25,9 @@ public class BookShopPageController {
 
     @Autowired
     private final MessageService messageService;
+
+    @Autowired
+    private final FaqService faqService;
 
     @GetMapping("/about")
     public String handlerAbout(){
@@ -52,7 +56,8 @@ public class BookShopPageController {
     }
 
     @GetMapping("/faq")
-    public String handlerFaq(){
+    public String handlerFaq(Model model){
+        model.addAttribute("faqList", faqService.findAllFaq());
         return "faq";
     }
 

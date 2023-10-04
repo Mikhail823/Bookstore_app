@@ -99,7 +99,8 @@
               <span class="Cart-price_old" th:text="${'₽' + oldPrice}">658 р.</span>
             </div>
             <div class="Cart-block">
-              <a class="btn btn_success btn_md" th:href="@{'/api/books/pay'}" href="/order.html" th:text="#{text.button.buy}">Купить</a>
+              <a class="btn btn_success btn_md" th:href="@{'/api/books/pay'}"
+                 href="/order.html" th:text="#{text.button.buy}">Купить</a>
             </div>
           </div>
           <span style="color:#eeb41d" th:utext="${error}"></span>
