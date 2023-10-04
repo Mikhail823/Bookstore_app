@@ -5,7 +5,6 @@ import com.example.bookshop.security.exception.RequestException;
 import com.example.bookshop.service.*;
 import com.example.bookshop.struct.book.BookEntity;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
@@ -28,7 +27,6 @@ import static com.example.bookshop.service.util.DateFormatter.getToDateFormat;
 
 @Controller
 @RequestMapping("/api/books")
-@Slf4j
 @RequiredArgsConstructor
 public class BooksController {
     @Autowired
@@ -36,7 +34,7 @@ public class BooksController {
     @Autowired
     private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
     @Autowired
-    private final ResourceStorage storage;
+    private final ResourceStorageService storage;
     @Autowired
     private final BookReviewService bookReviewService;
     @Autowired

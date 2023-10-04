@@ -1,13 +1,15 @@
-package com.example.bookshop.service;
+package com.example.bookshop.service.impl;
 
 import com.example.bookshop.repository.BookFileRepository;
+import com.example.bookshop.service.ResourceStorageService;
 import com.example.bookshop.struct.book.file.BookFileEntity;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,22 +18,20 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-
 @Service
-public class ResourceStorage {
+@RequiredArgsConstructor
+public class ResourceStorageServiceImpl implements ResourceStorageService {
+
     @Value("${upload.path}/")
     String uploadPath;
 
     @Value("${download.path}/")
     String downloadPath;
 
+    @Autowired
     private final BookFileRepository bookFileRepository;
 
-    @Autowired
-    public ResourceStorage(BookFileRepository bookFileRepository) {
-        this.bookFileRepository = bookFileRepository;
-    }
-
+    @Override
     public String saveNewBookImage(MultipartFile file, String slug) throws IOException {
 
         String resourceURI = null;
@@ -48,11 +48,13 @@ public class ResourceStorage {
         return resourceURI;
     }
 
+    @Override
     public Path getBookFilePath(String hash) {
         BookFileEntity bookFile = bookFileRepository.findBookFileEntityByHash(hash);
         return Paths.get(bookFile.getPath());
     }
 
+    @Override
     public MediaType getBookFileMime(String hash) {
         BookFileEntity bookFile = bookFileRepository.findBookFileEntityByHash(hash);
         String mimeType =
@@ -64,6 +66,7 @@ public class ResourceStorage {
         }
     }
 
+    @Override
     public byte[] getBookFileByteArray(String hash) throws IOException {
         BookFileEntity bookFile = bookFileRepository.findBookFileEntityByHash(hash);
         Path path = Paths.get(downloadPath, bookFile.getPath());

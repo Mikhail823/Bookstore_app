@@ -12,18 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-public class GenreService {
+public interface GenreService {
 
-    @Autowired
-    private final GenreRepository genreRepository;
+    Map<GenreType, List<GenreEntity>> getGenresMap();
 
-    public Map<GenreType, List<GenreEntity>> getGenresMap(){
-        List<GenreEntity> genresList = genreRepository.findAll();
-        if (!genresList.isEmpty()) {
-            return genresList.stream().collect(Collectors.groupingBy(GenreEntity::getParentId));
-        }
-        return new HashMap<>();
-    }
 }
