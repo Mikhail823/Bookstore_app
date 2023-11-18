@@ -6,6 +6,7 @@ import com.example.bookshop.service.BookReviewService;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
+import com.example.bookshop.struct.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -36,4 +37,12 @@ public class BookReviewServiceImpl implements BookReviewService {
         review.setRating(0);
         bookReviewRepository.save(review);
     }
+
+    @Override
+    public void deleteReviewUser(Integer id) {
+        BookReviewEntity bookReviewUser = bookReviewRepository.findBookReviewEntityById(id);
+        bookReviewRepository.delete(bookReviewUser);
+    }
+
+
 }

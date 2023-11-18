@@ -1,0 +1,60 @@
+/*body*/
+body{
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+h2{
+    text-align: center;
+    font-size: 18px;
+    font-family: Montserrat, Verdana, Arial, "Helvetica CY", Helvetica, "Nimbus Sans L", sans-serif;
+}
+
+
+/*page*/
+.page-add{
+    display: block;
+    align-items: center;
+    width: 500px;
+    padding: 20px;
+    margin: auto;
+
+    background-color: #99ccFF;
+}
+
+/*input form*/
+
+.title-form{
+    margin: 0 0 15px;
+}
+
+/*fom input group*/
+.form_input_group{
+     padding-bottom: 20px;
+}
+
+.form-lable{
+    padding-right: 42px;
+}
+
+.lable-photo{
+    padding-right: 18px;
+}
+
+.lable-description{
+    padding-right: 5px;
+}
+
+/*button*/
+.btn-add{
+    text-align: center;
+    margin-top: 20px;
+    border: 1px solid black;
+    border-radius: 15px;
+    background-color: #2aa73a;
+    color: #ccffff;
+    font-size: 14px;
+    height: 25px;
+}
+.btn-add:hover{
+    background-color: grey;
+}

@@ -35,31 +35,31 @@ public class UserEntity implements Serializable {
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
-//    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-//    private String phone;
-//
-//    @Column(columnDefinition = "VARCHAR(255) NOT NULL")
-//    private String email;
-
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String password;
 
-    @Column(name = "role")
-    @Enumerated(value = EnumType.STRING)
-    private RoleType roleType;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "user2role" ,
+            joinColumns = {@JoinColumn(name = "user_id")},
+            inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    @JsonIgnore
+    private Set<RoleEntity> roles;
+
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<MessageEntity> listMessage = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
+    @Transient
     private List<UserContactEntity> listContact = new ArrayList<>();
 
-    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
     @JsonIgnore
     private List<BookReviewEntity> review = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "book2user" ,
             joinColumns = {@JoinColumn(name = "user_id")},
             inverseJoinColumns = {@JoinColumn(name = "book_id")})
@@ -67,7 +67,7 @@ public class UserEntity implements Serializable {
     private List<BookEntity> listBooks = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<BalanceTransactionEntity> transaction;
+    private List<BalanceTransactionEntity> transaction = new ArrayList<>();
 
 
 }

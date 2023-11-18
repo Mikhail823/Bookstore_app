@@ -65,11 +65,11 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private final UserRepository userRepository;
 
-    @Override
-    @Cacheable(value = "nameAuthor", key = "#authorName")
-    public List<BookEntity> getBooksByAuthor(String authorName) {
-        return bookRepository.findBooksByAuthorFirstNameContaining(authorName);
-    }
+//    @Override
+//    @Cacheable(value = "nameAuthor", key = "#authorName")
+//    public List<BookEntity> getBooksByAuthor(String authorName) {
+//        return bookRepository.findBooksByAuthorFirstNameContaining(authorName);
+//    }
 
     @Override
     public List<BookEntity> getBooksByTitle(String title) throws BookStoreApiWrongParameterException {

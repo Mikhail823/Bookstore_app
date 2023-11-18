@@ -42,23 +42,23 @@ class BookRepositoryTest {
         }
     }
 
-    @Test
-    @DisplayName("Поиск книг по имени автора")
-    void findBookEntityByAuthor_FirstName() {
-
-        String token = "Daryl";
-        List<BookEntity> listBookByAuthorFirstName = bookRepository.findBookEntityByAuthor_FirstName(token);
-
-        assertNotNull(listBookByAuthorFirstName);
-
-        assertFalse(listBookByAuthorFirstName.isEmpty());
-
-        for(BookEntity book : listBookByAuthorFirstName){
-
-            assertThat(book.getAuthor().getFirstName().contains(token));
-
-        }
-    }
+//    @Test
+//    @DisplayName("Поиск книг по имени автора")
+//    void findBookEntityByAuthor_FirstName() {
+//
+//        String token = "Daryl";
+//        List<BookEntity> listBookByAuthorFirstName = bookRepository.findBookEntityByAuthor_FirstName(token);
+//
+//        assertNotNull(listBookByAuthorFirstName);
+//
+//        assertFalse(listBookByAuthorFirstName.isEmpty());
+//
+//        for(BookEntity book : listBookByAuthorFirstName){
+//
+//            assertThat(book.getAuthor().getFirstName().contains(token));
+//
+//        }
+//    }
 
     @Test
     @DisplayName("Нахождение бестеллеров")

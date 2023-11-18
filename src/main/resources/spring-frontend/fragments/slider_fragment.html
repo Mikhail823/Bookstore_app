@@ -21,8 +21,10 @@
                                th:text="${book.title}">Техника</a>
                         </strong>
                         <div class="Card-description">
-                            <a th:href="@{'/api/authors' + ${book.getAuthor().getId()}}"
-                               th:text="${book.author}"></a>
+                            <div th:each="author : ${book.authors}">
+                                <a href="#" th:href="@{'/api/author/' + ${author.getId()}}"
+                                   th:text="${author.toString()}">Лия Арден</a>
+                            </div>
                         </div>
                         <div class="Card-cost">
                             <span class="Card-priceOld" th:text="${'₽' + book.priceOld}">₽500.00</span>

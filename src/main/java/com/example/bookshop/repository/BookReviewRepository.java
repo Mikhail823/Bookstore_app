@@ -2,6 +2,7 @@ package com.example.bookshop.repository;
 
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
+import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

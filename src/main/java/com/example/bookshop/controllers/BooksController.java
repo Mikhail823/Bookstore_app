@@ -10,6 +10,7 @@ import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -43,6 +44,7 @@ public class BooksController {
     private final static String REDIRECT = "redirect:/api/books/";
 
     @PostMapping("/{slug}/img/save")
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public String saveNewBookImage(@RequestParam("file")MultipartFile file,
                                    @PathVariable("slug")String slug) throws IOException {
 

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <div class="Cards Cards_refresh" th:fragment="cardBook(books, refreshshow, refreshid)">
     <div class="Card" th:each="book: ${books}">
         <div class="Card-picture">
@@ -18,8 +18,12 @@
                 <a href="#" th:href="@{'/api/books/' + ${book.slug}}"
                    th:text="${book.title}">Великая Отечественная война. 1941-1945</a>
             </strong>
-            <div class="Card-description" th:text="${book.author}">
-                <a th:href="@{'/api/author/' + ${book.getAuthor().id}}">Солопенко Алла, Меркулов Дмитрий</a>
+            <div class="Card-description">
+                <div th:each="author : ${book.authors}">
+                    <a th:href="${'/api/author/' + author.id}" href="/authors/slug.html"
+                       th:text="${author.toString()}">Абгарян
+                        Наринэ</a>
+                </div>
             </div>
             <div class="Card-cost">
                 <span class="Card-priceOld" th:text="${'₽' + book.priceOld}"></span>

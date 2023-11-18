@@ -1,17 +1,21 @@
 package com.example.bookshop.service.impl;
+
 import com.example.bookshop.dto.ProfileFormDto;
+import com.example.bookshop.repository.User2RoleRepository;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
+import com.example.bookshop.service.RoleService;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.service.util.UniqueTokenUtil;
 import com.example.bookshop.struct.enums.ContactType;
-import com.example.bookshop.struct.user.RoleType;
+import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,11 +27,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Component
+@Slf4j
 public class UserServiceImp implements UserService {
 
     @Autowired
@@ -41,31 +45,37 @@ public class UserServiceImp implements UserService {
     private final BookstoreUserRegister registerUser;
     @Autowired
     private final UserContactRepository contactRepository;
+    @Autowired
+    private final RoleService roleService;
 
     @Autowired
     PasswordEncoder encoder;
 
     @Override
-    public UserEntity getUserById(Integer id){
+    public UserEntity getUserById(Integer id) {
         return userRepository.findUserEntityById(id);
     }
 
     @Override
-    public UserEntity findByUserFromHash(String hash){
+    public UserEntity findByUserFromHash(String hash) {
         return userRepository.findByHash(hash);
     }
 
     @Override
     @Transactional
     public UserEntity createAnonymousUser() {
-     UserEntity user = new UserEntity();
-     user.setBalance(0);
-     user.setHash(generatingRandomString());
-     user.setPassword("");
-     user.setName(generateNameUser());
-     user.setRoleType(RoleType.ANONYMOUS);
-     user.setRegTime(new Date());
-    return userRepository.save(user);
+        RoleEntity role = roleService.findRoleByName("ROLE_ANONYMOUS");
+        Set<RoleEntity> roles = new HashSet<>();
+        roles.add(role);
+        UserEntity user = new UserEntity();
+        user.setBalance(0);
+        user.setHash(generatingRandomString());
+        user.setPassword("");
+        user.setName(generateNameUser());
+        user.setRoles(roles);
+        user.setRegTime(new Date());
+        userRepository.save(user);
+        return user;
     }
 
     @Override
@@ -74,13 +84,13 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public String generateNameUser(){
+    public String generateNameUser() {
         return RandomStringUtils.random(4, true, false);
     }
 
 
     @Override
-    public UserEntity getUserName(String name){
+    public UserEntity getUserName(String name) {
         return userRepository.getUserByUsername(name);
     }
 
@@ -89,12 +99,12 @@ public class UserServiceImp implements UserService {
     public void updateUserProfile(ProfileFormDto profileDto, Integer userId) {
         UserEntity userEntity = getUserById(userId);
         List<UserContactEntity> listContactUser = userEntity.getListContact();
-        if (userEntity != null){
+        if (userEntity != null) {
             userEntity.setName(profileDto.getName());
             userEntity.setPassword(encoder.encode(profileDto.getPassword()));
             userEntity.setRegTime(new Date());
             userRepository.save(userEntity);
-            for (UserContactEntity contact : listContactUser){
+            for (UserContactEntity contact : listContactUser) {
                 contact.setUserId(userEntity);
                 contact.setType(ContactType.EMAIL);
                 contact.setContact(profileDto.getMail());
@@ -109,7 +119,7 @@ public class UserServiceImp implements UserService {
 
     @Transactional
     @Override
-    public void saveBalanceUser(UserEntity user, Double balance){
+    public void saveBalanceUser(UserEntity user, Double balance) {
         UserEntity userEntity = userRepository.findUserEntityById(user.getId());
         Double count = user.getBalance() + balance;
         userEntity.setBalance(count);
@@ -128,7 +138,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void confirmChangingUserProfile(ProfileFormDto  profileForm) throws JsonProcessingException {
+    public void confirmChangingUserProfile(ProfileFormDto profileForm) throws JsonProcessingException {
         Object curUser = registerUser.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails) {
             confirmChanges(profileForm);
@@ -138,7 +148,7 @@ public class UserServiceImp implements UserService {
     @Override
     public void changeUserProfile(String token) throws JsonProcessingException {
         Object user = registerUser.getCurrentUser();
-        if(user instanceof BookstoreUserDetails) {
+        if (user instanceof BookstoreUserDetails) {
             Integer id = ((BookstoreUserDetails) user).getContact().getUserId().getId();
             ProfileFormDto profileForm = uniqueTokenUtil.extractProfileForm(token);
             updateUserProfile(profileForm, id);
@@ -146,12 +156,12 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public UserEntity saveUserEntity(UserEntity user){
+    public UserEntity saveUserEntity(UserEntity user) {
         return userRepository.save(user);
     }
 
     @Override
-    public UserContactEntity findContactUser(UserEntity user, ContactType type){
+    public UserContactEntity findContactUser(UserEntity user, ContactType type) {
         return contactRepository.findFirstUserContactEntityByUserIdAndType(user, type);
     }
 

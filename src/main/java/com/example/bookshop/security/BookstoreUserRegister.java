@@ -1,9 +1,12 @@
 package com.example.bookshop.security;
 
 import com.example.bookshop.aop.annotations.LoggableExceptionHandler;
+import com.example.bookshop.repository.User2RoleRepository;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.security.jwt.JWTUtil;
+import com.example.bookshop.service.RoleService;
+import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.RoleType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
@@ -16,11 +19,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,8 @@ public class BookstoreUserRegister {
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private final RoleService roleService;
     @Autowired
     private final UserContactRepository contactRepository;
     @Autowired
@@ -38,19 +43,25 @@ public class BookstoreUserRegister {
     private final JWTUtil jwtUtil;
     @Autowired
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
+    @Autowired
+    private final User2RoleRepository user2RoleRepository;
 
+    @Transactional
     public void registrationNewUser(RegistrationForm registrationForm, HttpServletRequest request){
         UserEntity userRegAny = userRepository.findByHash(getHashOfTheUserFromCookie(request));
 
         if (userRegAny != null){
             UserContactEntity emailContact = contactRepository.findFirstByContact(registrationForm.getEmail());
             UserContactEntity phoneContact = contactRepository.findFirstByContact(registrationForm.getPhone());
+            RoleEntity role = roleService.findRoleByName("ROLE_USER");
+            Set<RoleEntity> roles = new HashSet<>();
+            roles.add(role);
             userRegAny.setName(registrationForm.getName());
             userRegAny.setPassword(passwordEncoder.encode(registrationForm.getPass()));
             userRegAny.setBalance(0);
             userRegAny.setRegTime(new Date());
             userRegAny.setHash(generateString());
-            userRegAny.setRoleType(RoleType.USER);
+            userRegAny.setRoles(roles);
             userRepository.save(userRegAny);
             emailContact.setApproved((short) 1);
             contactRepository.save(emailContact);
@@ -107,11 +118,6 @@ public class BookstoreUserRegister {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
 
-    public String getCurrentUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName();
-    }
-
     public static String generateString() {
         String uuid = UUID.randomUUID().toString();
         return uuid.replace("-", "");
@@ -126,11 +132,4 @@ public class BookstoreUserRegister {
             return true;
         }
     }
-
-    public String encodingPasswordCode(String pass){
-        return passwordEncoder.encode(pass);
-    }
-
-
-
 }

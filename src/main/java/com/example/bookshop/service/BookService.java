@@ -17,7 +17,7 @@ import java.util.List;
 
 public interface BookService {
 
-    List<BookEntity> getBooksByAuthor(String authorName);
+//    List<BookEntity> getBooksByAuthor(String authorName);
 
     List<BookEntity> getBooksByTitle(String title) throws BookStoreApiWrongParameterException;
 

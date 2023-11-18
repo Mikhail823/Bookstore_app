@@ -216,6 +216,12 @@
             <artifactId>tika-parsers</artifactId>
             <version>1.10</version>
         </dependency>
+        <dependency>
+            <groupId>com.buttercms</groupId>
+            <artifactId>buttercmsclient</artifactId>
+            <version>1.6</version>
+        </dependency>
+
 
     </dependencies>
 

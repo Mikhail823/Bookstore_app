@@ -29,7 +29,7 @@ public class EmailConfig {
 
         Properties properties = javaMailSender.getJavaMailProperties();
         properties.put("mail.transport.protocol", "smtps");
-        properties.put("mail.smtp.auth", "ture");
+        properties.put("mail.smtp.auth", "true");
         properties.put("mail.smtp.starttls.enable", "true");
         properties.put("mail.smtp.ssl.enable", "true");
         properties.put("mail.debug", "true");

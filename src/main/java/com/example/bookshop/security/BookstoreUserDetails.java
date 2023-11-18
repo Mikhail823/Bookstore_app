@@ -1,5 +1,7 @@
 package com.example.bookshop.security;
 
+import com.example.bookshop.struct.user.RoleEntity;
+import com.example.bookshop.struct.user.RoleType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -7,9 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Map;
+import java.util.*;
 
 
 public class BookstoreUserDetails implements UserDetails, OAuth2User {
@@ -29,7 +29,14 @@ public class BookstoreUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        Set<RoleEntity> roles = contact.getUserId().getRoles();
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        for (RoleEntity role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
+        }
+
+        return authorities;
     }
 
     @Override

@@ -1,0 +1,93 @@
+
+<!--END-->
+<!--END--><!DOCTYPE html><!--[if IE 7]>
+<html class="ie7" lang="ru">
+<![endif]-->
+<!--[if IE 8]>
+<html class="ie8" lang="ru">
+<![endif]-->
+<!--[if IE 9]>
+<html class="ie9" lang="ru">
+<![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!--<![endif]-->
+<head th:replace="~{fragments/common_head_fragment :: head(title='Books of shop')}">
+</head>
+<body class="Site">
+  <header class="Header" th:replace="~{fragments/header_fragment :: header (books='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
+  <div class="Middle">
+    <div class="wrap">
+      <main class="Middle-main">
+        <h1 class="Middle-title" th:text="#{prof.basket}">Книги магазина
+        </h1>
+        <form class="form Cart" action="#" method="post">
+          <div class="Cart-product" th:each="book : ${books}">
+            <div class="Cart-block Cart-block_row">
+              <div class="Cart-block Cart-block_pict">
+                <a class="Cart-pict" href="#">
+                  <img class="Cart-img" th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
+              </div>
+              <div class="Cart-block Cart-block_row">
+                <div class="Cart-block Cart-block_info">
+                  <div class="Cart-author">
+                    <div th:each="author : ${book.authors}">
+                      <a href="#" th:text="${author.toString()}">Борис Васильевич Бедный</a>
+                    </div>
+                  </div>
+                  <div class="Cart-title">
+                    <a href="#" th:text="${book.title}">Жизнь</a>
+                  </div>
+                  <div class="Cart-buttons">
+                    <div class="Cart-btn">
+                      <button class="btn btn_primary btn_outline"
+                              data-sendstatus="KEPT"
+                              th:attr="data-bookid = ${'postponed/' + book.slug}"
+                              data-bookid="[1122]">
+                        <span class="btn-icon">
+                          <img src="/assets/img/icons/heart.svg" alt="heart.svg"/></span>
+                        <span class="btn-content" th:text="#{text.button.postponed}">Отложить</span>
+                      </button>
+                    </div>
+                    <div class="Cart-btn">
+                      <button class="btn btn_danger btn_outline"
+                              data-sendstatus="UNLINK"
+                              th:attr="data-bookid = ${'cart/remove/' + book.slug}"
+                              data-bookid="[1122]">
+                        <span class="btn-icon">
+                          <img src="/assets/img/icons/trash.svg" alt="trash.svg"/></span>
+                        <span class="btn-content" th:text="#{text.button.delete}">Удалить</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="Cart-block Cart-block_price">
+                  <div class="Cart-priceTitle" th:text="#{item.price}">Цена:
+                  </div>
+                  <div class="Cart-price Cart-price_old" th:text="${'₽' + book.priceOld}"></div>
+                  <div class="Cart-price" th:text="${'₽' + book.discountPrice()}">
+                  </div>
+                  <div class="Cart-sale" th:text="${'-' + book.price * 100 + ' %'}"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="Cart-total">
+            <div class="Cart-block Cart-block_total">
+              <strong class="Cart-title">Итого:
+              </strong><span class="Cart-price" th:text="${'₽' + totalPrice}">534 р.</span>
+              <span class="Cart-price_old" th:text="${'₽' + oldPrice}">658 р.</span>
+            </div>
+            <div class="Cart-block">
+              <a class="btn btn_success btn_md" th:href="@{'/api/books/pay'}"
+                 href="/order.html" th:text="#{text.button.buy}">Купить</a>
+            </div>
+          </div>
+          <span style="color:#eeb41d" th:utext="${error}"></span>
+        </form>
+      </main>
+    </div>
+  </div>
+  </div>
+  <footer class="Footer" th:replace="~{fragments/footer_fragment :: footer}">  </footer>
+  <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+ </body></html>

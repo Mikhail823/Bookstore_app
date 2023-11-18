@@ -10,25 +10,7 @@
 <html class="ie9" lang="ru">
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
-<head>
-  <title>Тут название страницы написать</title>
-  <meta name="description" content="Описание страницы"/>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-  <!--meta( http-equiv="cache-control" content="no-cache")-->
-  <!--meta( http-equiv="expires" content="0")-->
-  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
-  <link href="favicon.ico" rel="shortcut icon"/>
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous"/>
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous"/>
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous"/>
-  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous"/>
-  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=45744385"/>
-  <link rel="stylesheet" href="/assets/css/basic.min.css?v=45744385"/>
-  <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/><!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-  <script src="/assets/js/scripts.min.js?v=45744385"></script>
-  <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
+<head th:replace="~{fragments/common_head_fragment :: head(title='Profile')}">
 </head>
 <body class="Site">
   <header class="Header" th:replace="~{fragments/header_my_fragment :: header_my(${curUsr})}">
@@ -71,7 +53,7 @@
                                th:value="${email}"
                                data-validate="require mail"/>
                         <div class="Profile-btn Profile-btn_confirm">
-                          <button class="btn btn_primary" type="button" th:text="#{text.button.confirm}">Подтвердить</button>
+                          <button class="btn btn_primary" type="submit" th:text="#{text.button.confirm}">Подтвердить</button>
                         </div>
                       </div>
                       <div class="form-group">
@@ -86,14 +68,14 @@
                                data-mask="+7 (999) 999-99-99"
                                data-validate="require"/>
                         <div class="Profile-btn Profile-btn_confirm">
-                          <button class="btn btn_primary" type="button" th:text="#{text.button.confirm}">Подтвердить
+                          <button class="btn btn_primary" type="submit" th:text="#{text.button.confirm}">Подтвердить
                           </button>
                         </div>
                       </div>
                     </div>
                     <div class="row-block">
                       <div class="form-group">
-                        <label class="form-label" for="password" th:text="#prof.pass">Пароль
+                        <label class="form-label" for="password" th:text="#{prof.pass}">Пароль
                         </label>
                         <input class="form-input" id="password"
                                name="password"
@@ -107,8 +89,8 @@
                       </div>
                       <div class="form-group">
                         <div class="Profile-btn">
-                          <button class="btn btn_danger" type="button" th:text="#{prof.cancel}">Отменить</button>
-                          <button class="btn btn_primary"  type="submit" th:text="#{prof.save=}">Сохранить</button>
+                          <button class="btn btn_danger" type="reset" th:text="#{prof.cancel}">Отменить</button>
+                          <button class="btn btn_primary"  type="submit" th:text="#{prof.save}">Сохранить</button>
                         </div>
                         <div class="Profile-success" th:text="#{prof.saved}">Профиль успешно сохранен</div>
                       </div>

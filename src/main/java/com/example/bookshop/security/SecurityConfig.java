@@ -17,11 +17,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.sql.DataSource;
 import java.util.Arrays;
 
 @Configuration
@@ -37,6 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final JWTBlackList jwtBlackList;
     @Autowired
     private final CustomOAuth2UserService oAuth2UserService;
+    @Autowired
+    private final DataSource dataSource;
 
 
     @Bean
@@ -57,12 +62,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .passwordEncoder(passwordEncoder());
     }
 
+
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .csrf()
                 .disable()
                 .authorizeRequests()
+
                 .antMatchers("/my", "/profile").authenticated()
                 .antMatchers("/**", "/login", "/oauth/**").permitAll()
                 .and().formLogin()

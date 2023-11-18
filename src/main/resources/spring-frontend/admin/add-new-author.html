@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta name="description" content="Описание страницы">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <!--meta( http-equiv="cache-control" content="no-cache")-->
+    <!--meta( http-equiv="expires" content="0")-->
+    <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+    <link href="favicon.ico" th:href="@{/favicon.ico}" rel="shortcut icon">
+    <link rel="stylesheet" type="text/css" href="/assets/css/style.css">
+    <title>Title</title>
+</head>
+<body>
+    <div class="page-add">
+            <form action="#" th:object="${authorDto}" th:action="@{/api/admin/save-author}" method="post">
+                <div class="form-fieldset">
+                    <h2 class="title-form">Добавление нового автора</h2>
+                    <div class="form_input_group">
+                        <lable class="form-lable" for="first_name_author">Введите имя автора</lable>
+                        <input th:field="*{firstName}" class="form-input" type="text" id="first_name_author" name="first_name_author">
+                    </div>
+                    <div class="form_input_group">
+                        <lable for="last_name_author">Введите фамилию автора</lable>
+                        <input th:field="*{lastName}" class="form-input" type="text" id="last_name_author" name="last_name_author">
+                    </div>
+                    <div class="form_input_group">
+                        <label class="lable-photo" for="file">Дорбавить фото автора</label>
+                        <input th:field="*{photo}" class="form-input-photo" type="file" name="file" id="file">
+                    </div>
+                    <div class="form_input_group">
+                        <lable class="lable-description" for="description_author">Введите бографию атора</lable>
+                        <textarea th:field="*{description}" class="text_description" id="description_author" name="text" placeholder="Биография автора"></textarea>
+                    </div>
+                    <button class="btn-add" type="submit">Добавить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -5,6 +5,7 @@ import com.example.bookshop.struct.book.BookEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @Table(name = "authors")
 @Setter
 @Getter
+@EqualsAndHashCode
 public class AuthorEntity {
 
     @Id
@@ -37,9 +39,12 @@ public class AuthorEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    @OneToMany(mappedBy = "author")
+    @ManyToMany
+    @JoinTable(name = "book2author",
+            joinColumns = {@JoinColumn(name = "author_id")},
+            inverseJoinColumns = {@JoinColumn(name = "book_id")})
     @JsonIgnore
-    private List<BookEntity> bookList = new ArrayList<>();
+    private List<BookEntity> books = new ArrayList<>();
 
     @Override
     public String toString() {

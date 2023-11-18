@@ -18,7 +18,7 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
-    List<BookEntity> findBooksByAuthorFirstNameContaining(String authorsFirstName);
+   // List<BookEntity> findBooksByAuthorFirstNameContaining(String authorsFirstName);
 
     List<BookEntity> findBooksByTitleContaining(String bookTitle);
 
@@ -26,7 +26,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     List<BookEntity> findBooksByPriceOldIs(Integer price);
 
-    List<BookEntity> findBookEntityByAuthor_FirstName(String name);
+   // List<BookEntity> findBookEntityByAuthor_FirstName(String name);
 
     @Query("from BookEntity where is_bestseller=1")
     List<BookEntity> getBestsellers();
@@ -49,7 +49,8 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     Page<BookEntity> findAll(Pageable next);
 
-    Page<BookEntity> findBookEntityByAuthorId(Integer id, Pageable nextPage);
+    @Query(value = "SELECT * FROM book AS b JOIN book2author AS b2a ON b2a.book_id = b.id WHERE b2a.author_id =:id", nativeQuery = true)
+    Page<BookEntity> findBookEntityByAuthorId(@Param("id")Integer id, Pageable nextPage);
 
     Page<BookEntity> findAllByGenre_ParentId(GenreType type, Pageable nextPage);
 

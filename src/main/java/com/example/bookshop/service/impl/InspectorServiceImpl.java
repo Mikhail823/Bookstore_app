@@ -46,7 +46,7 @@ public class InspectorServiceImpl implements InspectorService {
          simpleMailMessage.setFrom("rabota822@bk.ru");
          simpleMailMessage.setTo(payload.getContact());
 
-         UserContactEntity contact = new UserContactEntity(smsServiceImpl.generateCode(), 300);
+         UserContactEntity contact = new UserContactEntity(smsServiceImpl.generateCode(), 400);
          contact.setUserId(user);
          contact.setType(ContactType.EMAIL);
          contact.setApproved((short) 0);

@@ -12,6 +12,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,7 @@ import java.util.*;
 @Table(name = "book")
 @Setter
 @Getter
+@EqualsAndHashCode
 public class BookEntity implements Serializable {
 
         @Id
@@ -34,10 +36,12 @@ public class BookEntity implements Serializable {
         @ApiModelProperty("date of book publication")
         private Date pubDate;
 
-        @ManyToOne
-        @JoinColumn(name = "author_id", referencedColumnName = "id")
+        @ManyToMany
+        @JoinTable(name = "book2author",
+                joinColumns = {@JoinColumn(name = "book_id")},
+                inverseJoinColumns = {@JoinColumn(name = "author_id")})
         @JsonIgnore
-        private AuthorEntity author;
+        private List<AuthorEntity> authors = new ArrayList<>();
 
         @Column(name = "is_bestseller")
         @ApiModelProperty("if isBestseller = 1 so the book is considered to be bestseller and if 0 the book is not a " +
@@ -71,11 +75,6 @@ public class BookEntity implements Serializable {
         public Integer discountPrice() {
             Integer discountPriceInt = priceOld - Math.toIntExact(Math.round(price * priceOld));
             return discountPriceInt;
-        }
-
-        @JsonGetter("authors")
-        public String authorsFullName() {
-            return author.toString();
         }
 
         @ManyToOne
@@ -122,4 +121,5 @@ public class BookEntity implements Serializable {
         public String toString() {
             return "Title {" + getTitle() + "}";
         }
+
 }

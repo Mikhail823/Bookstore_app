@@ -12,28 +12,7 @@
 <html lang="ru"> <!--<![endif]-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--<![endif]-->
-<head>
-    <title>Тут название страницы написать</title>
-    <meta name="description" content="Описание страницы">
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
-    <!--meta( http-equiv="cache-control" content="no-cache")-->
-    <!--meta( http-equiv="expires" content="0")-->
-    <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
-    <link href="favicon.ico" th:href="@{/favicon.ico}" rel="shortcut icon">
-    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
-    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
-    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
-    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/fonts.min.css?v=64223515">
-    <link rel="stylesheet" href="/assets/css/basic.min.css?v=64223515">
-    <link rel="stylesheet" href="/assets/css/DownloadBookWindowStyle.css">
-    <link rel="stylesheet" href="/assets/css/extra.min.css?v=64223515"><!--[if lt IE 9]>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-    <script defer src="/assets/js/scripts.min.js?v=64223515"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-    <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
-
+<head th:replace="~{fragments/common_head_fragment :: head(title='Book')}">
 </head>
 <body class="Site">
 <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
@@ -47,8 +26,8 @@
                 <li class="breadcrumbs-item">
                     <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{menu.books}">Книги</a>
                 </li>
-                <li class="breadcrumbs-item breadcrumbs-item_current" th:text="${slugBook.title}">
-                    <span>Мара и морок</span>
+                <li class="breadcrumbs-item breadcrumbs-item_current">
+                    <span th:text="${slugBook.title}">Мара и морок</span>
                 </li>
             </ul>
             <div class="Product">
@@ -59,22 +38,27 @@
                             <div class="ProductCard-photo" id="uploadbutton">
                                 <img th:src="${slugBook.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/>
                             </div>
-                            <input type="file" name="file" id="dialog" style="..." accept="image/*" />
+                            <input sec:authorize="hasRole('ADMIN')" type="file" name="file" id="dialog" style="..." accept="image/*"/>
                         </form>
                     </div>
                     <div class="ProductCard-desc">
                         <div class="ProductCard-header">
                             <h1 class="ProductCard-title" th:text="${slugBook.title}">Мара и морок
                             </h1>
-                            <div class="ProductCard-author"><span class="ProductCard-titleProp">Автор:</span>&#32;
-                                 <a href="#" th:href="@{'/api/author/' + ${slugBook.getAuthor().id}}"
-                                       th:text="${slugBook.author}">Лия Арден</a>
+                            <div class="ProductCard-author" >
+
+                                <span class="ProductCard-titleProp" th:text="${slugBook.authors.size() > 1 ? 'Авторы:' : 'Автор:'}">Автор:</span>&#32;
+                                <div th:each="author : ${slugBook.authors}">
+                                    <a href="#" th:href="@{'/api/author/' + ${author.getId()}}"
+                                       th:text="${author.toString()}">Лия Арден</a>
+                                </div>
+
                             </div>
                             <div class="ProductCard-rating">
-                                <span class="ProductCard-titleProp" >Рейтинг:</span>
+                                <span class="ProductCard-titleProp">Рейтинг:</span>
                                 <button class="trigger trigger_dropdown" type="button">
                                     <div class="Rating Rating_noStyleLink"
-                                            th:replace="~{fragments/rating_fragment :: ratingStars(${totalRating.getAverage()}
+                                         th:replace="~{fragments/rating_fragment :: ratingStars(${totalRating.getAverage()}
                                             , ${totalRating.getTotal()})}">
                                     </div>
                                     <div th:replace="~{fragments/rating_fragment :: ratingsModal(${ratingBook})}"></div>
@@ -101,7 +85,7 @@
                               </span>
                             </div>
                             <div class="ProductCard-tags">
-                                <span class="ProductCard-titleProp" th:text="#{item.tags}" >Тэги:</span>
+                                <span class="ProductCard-titleProp" th:text="#{item.tags}">Тэги:</span>
                                 <span th:each="tag, iStat :${slugBook.tagList}">
                                     <a th:text="${tag.name}" th:href="${'/api/tags/' + tag.id}"
                                        href="/tags/">Современные</a>
@@ -112,14 +96,14 @@
                             <div class="ProductCard-cost">
                                 <span class="ProductCard-titleProp" th:text="#{item.price}">Цена:</span>
                                 <span
-                                    class="ProductCard-priceOld" th:text="${'₽' + slugBook.priceOld}">₽300</span><span
+                                        class="ProductCard-priceOld"
+                                        th:text="${'₽' + slugBook.priceOld}">₽300</span><span
                                     class="ProductCard-price"
                                     th:text="${'₽' + slugBook.discountPrice()}">₽180</span>
                             </div>
                         </div>
                         <div class="ProductCard-text">
-                            <p th:text="${slugBook.description}">
-                            </p>
+                            <p th:text="${slugBook.description}"></p>
                         </div>
                         <div class="ProductCard-cart">
                             <div class="ProductCard-cartElement">
@@ -131,9 +115,10 @@
                                         data-btnradio="buyblock"
                                         data-check="false"
                                         data-alttext="Отложена">
-                    <span class="btn-icon"><img src="/assets/img/icons/heart.svg" alt="heart.svg"/></span>
-                                    <span class="btn-content" th:if="${status == 'KEPT' ? 'Отложена' : 'Отложить'}"
-                                    th:text="#{text.button.postponed}">Отложить</span>
+                                    <span class="btn-icon"><img src="/assets/img/icons/heart.svg"
+                                                                alt="heart.svg"/></span>
+                                    <span class="btn-content"
+                                          th:text="#{text.button.postponed}">Отложить</span>
                                 </button>
                             </div>
                             <div class="ProductCard-cartElement">
@@ -145,23 +130,22 @@
                                         data-btnradio="buyblock"
                                         data-check="false"
                                         data-alttext="В корзине">
+
                     <span class="btn-icon">
                       <img src="/assets/img/icons/shopping-basket.svg" alt="shopping-basket.svg"/></span>
 
-                                    <span class="btn-content"
-                                    th:text="#{text.button.buy}">Купить</span>
+                                        <span class="btn-content"
+                                              th:text="#{text.button.buy}">Купить</span>
                                 </button>
                             </div>
                         </div>
-                        <div class="ProductCard-cart">
+                        <div class="ProductCard-cart" sec:authorize="hasRole('USER, ADMIN')">
                             <div class="ProductCard-cartElement">
                                 <a class="btn btn_primary btn_outline" href="#">
-                    <span class="btn-icon">
-                      <img src="/assets/img/icons/download.svg" alt="download.svg"/>
-                    </span>
-
+                                    <span class="btn-icon">
+                                        <img src="/assets/img/icons/download.svg" alt="download.svg"/>
+                                    </span>
                                     <span class="btn-content" th:text="#{text.button.download}">Скачать</span>
-
                                 </a>
                             </div>
 
@@ -177,73 +161,72 @@
                                     <span class="btn-icon">
                                         <img src="/assets/img/icons/archive.svg" alt="archive.svg"/>
                                     </span>
-
-                                    <span class="btn-content"
-                                    th:text="#{text.button.archived}">В архив</span>
-
+                                    <span class="btn-content" th:text="#{text.button.archived}">В архив</span>
                                 </button>
                             </div>
                         </div>
-                        <div id="myPopup">
-                            <p>Ссылки для скачивания</p>
-                            <div th:each="bookFile : ${slugBook.getFileList()}">
-                                <a href="#" th:herf="${'/api/books/download/' + bookFile.hash}"
-                                   th:text="${bookFile.getBookExtensionString()}"></a>
-                                <span id="myPopup_close" class="close">❎</span>
-                            </div>
-                        </div>
-                        <div id="myOverlay"></div>
-                        <!--+div.-cart-->
-                        <!--    //+div.-cartElement.-cartElement_amount-->
-                        <!--    //    +Amount._product-->
-                        <!--    +div.-cartElement-->
-                        <!--        +btn('button')(data-sendstatus='UNLINK' data-bookid="[1111]")._muted Вернуть из архива-->
                     </div>
-                </div>
-                <h3 sec:authorize="isAnonymous()">
-                    <a th:href="@{/signin}"></a></h3>
-                <form sec:authorize="isAuthenticated()" th:action="${'/api/books/bookReview/' + slugBook.slug }" method="post">
-                    <fieldset>
-                        <legend for="text">Текст отзыва</legend>
-                        <textarea id="text" cols="15" rows="5" name="text" required></textarea><br><br>
-                    </fieldset>
-                    <div class="buttons">
-                        <input type="submit" value="Добавить отзыв" id="bookReview">
-                        <br>
-                        <input type="reset" value="Сбросить">
-                    </div>
-                </form>
-                <div class="Comments-addComment">
-                    <form sec:authorize="isAuthenticated()"
-                          class="form"
-                          action="#"
-                          method="post"
-                          data-bookid="1111"
-                          th:action="${'/api/books/bookReview/' + slugBook.slug }"
-                            th:data-bookid="${slugBook.id}">
-                        <div class="form-group">
-                            <textarea class="form-textarea Comments-review" name="review" id="review"
-                                      placeholder="Текст отзыва" data-validate="require"></textarea>
+                    <div id="myPopup" sec:authorize="hasRole('USER, ADMIN')">
+                        <p>Ссылки для скачивания</p>
+                        <div th:each="bookFile : ${slugBook.getFileList()}">
+                            <a href="#" th:herf="${'/api/books/download/' + bookFile.hash}"
+                               th:text="${bookFile.getBookExtensionString()}"></a>
+                            <span id="myPopup_close" class="close">❎</span>
                         </div>
-                        <div class="form-group Comments-sendReview">
-                            <button class="btn btn_warning" type="submit">Отправить отзыв
-                            </button>
-                        </div>
-                    </form>
-                </div>
-                <span></span>
-                <div class="Product-comments">
-                    <div class="Product-comments-header">
-                        <h3 class="Product-comments-title" th:text="#{item.reviews}">Отзывы
-                        </h3>
-                        <span class="Product-comments-amount" th:text="${slugBook.getReviewList().size() + ' отзывов'}">567 отзывов</span>
                     </div>
-                </div>
-                <div th:replace="~{fragments/rating_comment :: reviews(${reviewBook}, ${slugBook})}">
+                    <div id="myOverlay" sec:authorize="hasRole('USER, ADMIN')"></div>
+                    <!--+div.-cart-->
+                    <!--    //+div.-cartElement.-cartElement_amount-->
+                    <!--    //    +Amount._product-->
+                    <!--    +div.-cartElement-->
+                    <!--        +btn('button')(data-sendstatus='UNLINK' data-bookid="[1111]")._muted Вернуть из архива-->
                 </div>
             </div>
-        </main>
-    </div>
+            <div>
+                <h3 sec:authorize="isAnonymous()">Пожалуйста пройдите регистрацию, чтоб оставить отзыв</h3>
+                <a th:href="@{/signin}">Регистрация</a>
+            </div>
+
+            <!--                <form sec:authorize="isAuthenticated()" th:action="${'/api/books/bookReview/' + slugBook.slug }" method="post">-->
+            <!--                    <fieldset>-->
+            <!--                        <legend for="text">Текст отзыва</legend>-->
+            <!--                        <textarea id="text" cols="15" rows="5" name="text" required></textarea><br><br>-->
+            <!--                    </fieldset>-->
+            <!--                    <div class="buttons">-->
+            <!--                        <input type="submit" value="Добавить отзыв" id="bookReview">-->
+            <!--                        <br>-->
+            <!--                        <input type="reset" value="Сбросить">-->
+            <!--                    </div>-->
+            <!--                </form>-->
+            <div class="Comments-addComment">
+                <form sec:authorize="isAuthenticated()"
+                      class="form"
+                      action="#"
+                      method="post"
+                      data-bookid="1111"
+                      th:action="${'/api/books/bookReview/' + slugBook.slug}"
+                      th:data-bookid="${slugBook.id}">
+                    <div class="form-group">
+                            <textarea class="form-textarea Comments-review" name="review" id="review"
+                                      placeholder="Текст отзыва" data-validate="require"></textarea>
+                    </div>
+                    <div class="form-group Comments-sendReview">
+                        <button class="btn btn_warning" type="submit">Отправить отзыв </button>
+                    </div>
+                </form>
+            </div>
+            <span></span>
+            <div class="Product-comments">
+                <div class="Product-comments-header">
+                    <h3 class="Product-comments-title" th:text="#{item.reviews}">Отзывы
+                    </h3>
+                    <span class="Product-comments-amount" th:text="${slugBook.getReviewList().size() + ' отзывов'}">567 отзывов</span>
+                </div>
+            </div>
+                <div th:replace="~{fragments/rating_comment :: reviews(${reviewBook}, ${slugBook})}">
+            </div>
+    </main>
+</div>
 </div>
 <footer th:replace="~{fragments/footer_fragment :: footer}"></footer>
 <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>

@@ -9,4 +9,6 @@ import org.springframework.stereotype.Repository;
 public interface AuthorRepository extends JpaRepository<AuthorEntity, Integer> {
 
     AuthorEntity findAuthorEntityById(Integer id);
+
+    AuthorEntity findAuthorEntityByLastName(String lastName);
 }
