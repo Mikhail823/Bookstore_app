@@ -89,9 +89,11 @@
                                     src="/assets/img/icons/comment/dislike.svg" alt="dislike.svg"/></span><span
                                     class="btn-content" th:text="${review.getDisLikeCount()}">100</span>
                             </button>
-                            <form action="#" th:action="${'/api/admin/deleteReview/' + slugBook.slug + '/' + review.id}" method="post">
-                                <button  class="btn btn_warning" type="submit">Удалить отзыв</button>
-                            </form>
+                            <div sec:authorize="hasRole('ADMIN')">
+                                <form action="#" th:action="${'/api/admin/deleteReview/' + slugBook.slug + '/' + review.id}" method="post">
+                                    <button  class="btn btn_warning" type="submit">Удалить отзыв</button>
+                                </form>
+                            </div>
                         </div>
                         <!--                        <button class="Spoiler-trigger btn btn_primary btn_nr" type="button"-->
                         <!--                                data-showtext="Свернуть отзыв" data-hidetext="Показать отзыв полностью">-->

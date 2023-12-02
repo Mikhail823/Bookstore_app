@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
@@ -25,6 +26,7 @@ public class BookReviewServiceImpl implements BookReviewService {
     private final BookService bookService;
 
     @Override
+    @Transactional
     public void saveReviewText(String slug, String textReview){
         BookEntity book = bookService.getBookPageSlug(slug);
         BookstoreUserDetails userDetails =
@@ -39,6 +41,7 @@ public class BookReviewServiceImpl implements BookReviewService {
     }
 
     @Override
+    @Transactional
     public void deleteReviewUser(Integer id) {
         BookReviewEntity bookReviewUser = bookReviewRepository.findBookReviewEntityById(id);
         bookReviewRepository.delete(bookReviewUser);

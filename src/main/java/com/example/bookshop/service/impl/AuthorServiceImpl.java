@@ -55,4 +55,9 @@ public class AuthorServiceImpl implements AuthorService {
     public String generateSlug() {
         return RandomStringUtils.random(6, true, true);
     }
+
+    @Override
+    public List<AuthorEntity> getAllAuthors(){
+        return authorRepository.findAll();
+    }
 }

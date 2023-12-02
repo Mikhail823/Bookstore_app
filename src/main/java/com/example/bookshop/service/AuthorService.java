@@ -13,4 +13,5 @@ public interface AuthorService {
     AuthorEntity getAuthorById(Integer id);
 
     void saveNewAuthor(AuthorDto authorDto);
+    List<AuthorEntity> getAllAuthors();
 }

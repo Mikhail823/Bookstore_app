@@ -27,6 +27,10 @@
                     <a class="menu-link" th:href="@{/api/books/recently}"
                        th:text="#{topbar.recently}">Недавно просмотренные</a>
                 </li>
+                <li sec:authorize="hasRole('ADMIN')" class="menu-item" th:class="${admin}">
+                    <a class="menu-link" th:href="@{/api/admin/users}"
+                    >Пользователи магазина</a>
+                </li>
             </ul>
         </nav>
     </div>

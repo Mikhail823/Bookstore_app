@@ -4,20 +4,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "book2genre")
 @Setter
 @Getter
 public class Book2GenreEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Integer id;
 
-    @Column(columnDefinition = "INT NOT NULL")
-    private int bookId;
+    @Column(name = "book_id", columnDefinition = "INT NOT NULL")
+    private Integer bookId;
 
-    @Column(columnDefinition = "INT NOT NULL")
-    private int genreId;
+    @Column(name = "genre_id", columnDefinition = "INT NOT NULL")
+    private Integer genreId;
 }

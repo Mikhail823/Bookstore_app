@@ -46,13 +46,11 @@
                             <h1 class="ProductCard-title" th:text="${slugBook.title}">Мара и морок
                             </h1>
                             <div class="ProductCard-author" >
-
                                 <span class="ProductCard-titleProp" th:text="${slugBook.authors.size() > 1 ? 'Авторы:' : 'Автор:'}">Автор:</span>&#32;
                                 <div th:each="author : ${slugBook.authors}">
                                     <a href="#" th:href="@{'/api/author/' + ${author.getId()}}"
                                        th:text="${author.toString()}">Лия Арден</a>
                                 </div>
-
                             </div>
                             <div class="ProductCard-rating">
                                 <span class="ProductCard-titleProp">Рейтинг:</span>
@@ -89,7 +87,7 @@
                                 <span th:each="tag, iStat :${slugBook.tagList}">
                                     <a th:text="${tag.name}" th:href="${'/api/tags/' + tag.id}"
                                        href="/tags/">Современные</a>
-                                    <span th:if="${!iStat.last}">,&#32;</span>
+                                   <span th:if="${!iStat.last}">,&#32;</span>-->
                                 </span>
                                 </span>
                             </div>
@@ -105,66 +103,7 @@
                         <div class="ProductCard-text">
                             <p th:text="${slugBook.description}"></p>
                         </div>
-                        <div class="ProductCard-cart">
-                            <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline"
-                                        data-sendstatus="KEPT"
-                                        th:attr="data-bookid=${'postponed/' + slugBook.slug}"
-                                        data-bookid="[1111]"
-                                        data-btntype="check"
-                                        data-btnradio="buyblock"
-                                        data-check="false"
-                                        data-alttext="Отложена">
-                                    <span class="btn-icon"><img src="/assets/img/icons/heart.svg"
-                                                                alt="heart.svg"/></span>
-                                    <span class="btn-content"
-                                          th:text="#{text.button.postponed}">Отложить</span>
-                                </button>
-                            </div>
-                            <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline"
-                                        data-sendstatus="CART"
-                                        data-bookid="[1111]"
-                                        th:attr="data-bookid = ${slugBook.slug}"
-                                        data-btntype="check"
-                                        data-btnradio="buyblock"
-                                        data-check="false"
-                                        data-alttext="В корзине">
-
-                    <span class="btn-icon">
-                      <img src="/assets/img/icons/shopping-basket.svg" alt="shopping-basket.svg"/></span>
-
-                                        <span class="btn-content"
-                                              th:text="#{text.button.buy}">Купить</span>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="ProductCard-cart" sec:authorize="hasRole('USER, ADMIN')">
-                            <div class="ProductCard-cartElement">
-                                <a class="btn btn_primary btn_outline" href="#">
-                                    <span class="btn-icon">
-                                        <img src="/assets/img/icons/download.svg" alt="download.svg"/>
-                                    </span>
-                                    <span class="btn-content" th:text="#{text.button.download}">Скачать</span>
-                                </a>
-                            </div>
-
-                            <div class="ProductCard-cartElement">
-                                <button class="btn btn_primary btn_outline"
-                                        data-sendstatus="ARCHIVED"
-                                        th:attr="data-bookid = ${'archived/' + slugBook.slug}"
-                                        data-bookid="[1111]"
-                                        data-btntype="check"
-                                        data-btnradio="buyblock"
-                                        data-check="false"
-                                        data-alttext="Вернуть из архива">
-                                    <span class="btn-icon">
-                                        <img src="/assets/img/icons/archive.svg" alt="archive.svg"/>
-                                    </span>
-                                    <span class="btn-content" th:text="#{text.button.archived}">В архив</span>
-                                </button>
-                            </div>
-                        </div>
+                        <div class="ProductCard-cart" th:replace="~{fragments/productcard_fragment :: button_card(${slugBook})}"></div>
                     </div>
                     <div id="myPopup" sec:authorize="hasRole('USER, ADMIN')">
                         <p>Ссылки для скачивания</p>
@@ -182,39 +121,20 @@
                     <!--        +btn('button')(data-sendstatus='UNLINK' data-bookid="[1111]")._muted Вернуть из архива-->
                 </div>
             </div>
-            <div>
-                <h3 sec:authorize="isAnonymous()">Пожалуйста пройдите регистрацию, чтоб оставить отзыв</h3>
-                <a th:href="@{/signin}">Регистрация</a>
-            </div>
-
-            <!--                <form sec:authorize="isAuthenticated()" th:action="${'/api/books/bookReview/' + slugBook.slug }" method="post">-->
-            <!--                    <fieldset>-->
-            <!--                        <legend for="text">Текст отзыва</legend>-->
-            <!--                        <textarea id="text" cols="15" rows="5" name="text" required></textarea><br><br>-->
-            <!--                    </fieldset>-->
-            <!--                    <div class="buttons">-->
-            <!--                        <input type="submit" value="Добавить отзыв" id="bookReview">-->
-            <!--                        <br>-->
-            <!--                        <input type="reset" value="Сбросить">-->
-            <!--                    </div>-->
-            <!--                </form>-->
-            <div class="Comments-addComment">
-                <form sec:authorize="isAuthenticated()"
-                      class="form"
-                      action="#"
-                      method="post"
-                      data-bookid="1111"
-                      th:action="${'/api/books/bookReview/' + slugBook.slug}"
-                      th:data-bookid="${slugBook.id}">
-                    <div class="form-group">
-                            <textarea class="form-textarea Comments-review" name="review" id="review"
-                                      placeholder="Текст отзыва" data-validate="require"></textarea>
-                    </div>
-                    <div class="form-group Comments-sendReview">
-                        <button class="btn btn_warning" type="submit">Отправить отзыв </button>
+            <h3 sec:authorize="isAnonymous()"><a th:href="@{/signin}">ПРОЙДИТЕ РЕГИСТРАЦИЮ!!!</a></h3>
+           <div sec:authorize="isAuthenticated()">
+                <form th:action="${'/api/books/bookReview/' + slugBook.slug }" method="post">
+                    <fieldset>
+                        <legend for="text">Текст отзыва</legend>
+                        <textarea id="text" cols="15" rows="5" name="text" required></textarea><br><br>
+                    </fieldset>
+                    <div class="buttons">
+                        <input type="submit" value="Добавить отзыв" id="bookReview">
+                        <br>
+                        <input type="reset" value="Сбросить">
                     </div>
                 </form>
-            </div>
+             </div>
             <span></span>
             <div class="Product-comments">
                 <div class="Product-comments-header">

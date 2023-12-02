@@ -2,6 +2,7 @@ package com.example.bookshop.struct.genre;
 
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.enums.GenreType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,8 +31,15 @@ public class GenreEntity {
     @Column(columnDefinition = "VARCHAR(255) NOT NULL")
     private String name;
 
-    @OneToMany(mappedBy = "genre")
+    @OneToMany
+    @JoinTable(name = "book2genre",
+            joinColumns = {@JoinColumn(name = "genre_id")},
+            inverseJoinColumns = {@JoinColumn(name = "book_id")})
+    @JsonIgnore
     private List<BookEntity> listBook = new ArrayList<>();
 
-
+    @Override
+    public String toString() {
+        return name;
+    }
 }

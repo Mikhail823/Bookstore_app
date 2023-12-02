@@ -1,12 +1,14 @@
 package com.example.bookshop.service.impl;
 
 import com.example.bookshop.aop.annotations.LogSQLException;
+import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.exeption.BookStoreApiWrongParameterException;
 import com.example.bookshop.repository.*;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.BooksRatingAndPopulatityService;
+import com.example.bookshop.service.util.DateFormatter;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
@@ -16,8 +18,8 @@ import com.example.bookshop.struct.genre.GenreEntity;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -65,12 +67,6 @@ public class BookServiceImpl implements BookService {
     @Autowired
     private final UserRepository userRepository;
 
-//    @Override
-//    @Cacheable(value = "nameAuthor", key = "#authorName")
-//    public List<BookEntity> getBooksByAuthor(String authorName) {
-//        return bookRepository.findBooksByAuthorFirstNameContaining(authorName);
-//    }
-
     @Override
     public List<BookEntity> getBooksByTitle(String title) throws BookStoreApiWrongParameterException {
 
@@ -108,7 +104,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-
     public Page<BookEntity> getPageOfSearchResultsBooks(String searchWord, Integer offset, Integer limit) {
         Pageable nexPage = PageRequest.of(offset, limit);
         return bookRepository.findBookEntityByTitleContaining(searchWord, nexPage);
@@ -121,7 +116,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Cacheable(value="popularBooks")
     public Page<BookEntity> getPageOfPopularBooks(Integer offset, Integer limit) {
         Pageable nexPage = PageRequest.of(offset, limit);
         return bookRepository.findAllBooksPopulal(nexPage);
@@ -146,7 +140,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Cacheable(value="booksOfGenreType")
     public Page<BookEntity> getBooksOfGenreType(GenreType type, Integer offset, Integer limit) {
         Pageable next = PageRequest.of(offset, limit);
         return bookRepository.findAllByGenre_ParentId(type, next);
@@ -358,6 +351,36 @@ public class BookServiceImpl implements BookService {
         bookRepository.updateCountCartBooks(slug,  count);
 
     }
+
+    @Override
+    public void addBook(BookDto bookDto) {
+        BookEntity newBook = new BookEntity();
+        newBook.setTitle(bookDto.getTitle());
+        newBook.setDescription(bookDto.getDescription());
+        newBook.setPrice(Double.parseDouble(bookDto.getPrice()));
+        newBook.setPriceOld(Integer.parseInt(bookDto.getDiscountPrice()));
+        newBook.setPubDate(DateFormatter.getToDateFormat(bookDto.getPubDate()));
+        newBook.setImage(bookDto.getImage());
+        newBook.setAuthors(bookDto.getAuthors());
+        newBook.setTagList(bookDto.getTags());
+        newBook.setGenre(bookDto.getGenre());
+        newBook.setIsBesteller(isBestsellerBook(bookDto.getBestseller()));
+        newBook.setSlug(randomSlug());
+        bookRepository.save(newBook);
+
+    }
+
+    public String randomSlug(){
+        return RandomStringUtils.randomAlphabetic(6);
+    }
+
+    public Integer isBestsellerBook(String bestseller){
+        if (bestseller.equals("no")){
+            return 0;
+        }
+         return 1;
+    }
+
     @Transactional
     @Override
     public void updateCountCartAndCountPostponed(String slug, Integer countCart, Integer countPostponed){
@@ -370,4 +393,11 @@ public class BookServiceImpl implements BookService {
     public void updateCountPaidBooks(String slug, Integer count){
         bookRepository.updateCountPaidBooks(slug, count);
     }
+
+    @Override
+    public BookEntity findBookById(Integer id) {
+        return bookRepository.findBookEntityById(id);
+    }
+
+
 }

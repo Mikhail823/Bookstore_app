@@ -1,5 +1,6 @@
 package com.example.bookshop.service;
 
+import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.exeption.BookStoreApiWrongParameterException;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
@@ -16,8 +17,6 @@ import java.util.List;
 
 
 public interface BookService {
-
-//    List<BookEntity> getBooksByAuthor(String authorName);
 
     List<BookEntity> getBooksByTitle(String title) throws BookStoreApiWrongParameterException;
 
@@ -55,7 +54,7 @@ public interface BookService {
 
     List<BookEntity> getBooksCart(UserEntity userId);
 
-   void getBooksTheCartOfUser(Model model);
+    void getBooksTheCartOfUser(Model model);
 
     void calculationCostOfBooksTheCartUser(Model model, List<BookEntity> listBook);
 
@@ -75,14 +74,17 @@ public interface BookService {
 
     boolean isStatus(BookEntity book);
 
-
     void updateCountPostponedBook(String slug, Integer post);
 
     Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit, HttpServletRequest request);
 
     void updateCountBooksCart(String slug, Integer count);
 
+    void addBook(BookDto bookDto);
+
     void updateCountCartAndCountPostponed(String slug, Integer countCart, Integer countPostponed);
 
     void updateCountPaidBooks(String slug, Integer count);
+
+    BookEntity findBookById(Integer id);
 }

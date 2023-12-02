@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html class="ie7" lang="ru">
+<html class="ie8" lang="ru">
+<html class="ie9" lang="ru">
+<html lang="ru" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/common_head_fragment :: head(title='Add new author')}">
+</head>
+<body class="Site">
+<header class="Header" th:replace="~{fragments/header_fragment :: header(admin='menu-item menu-item_ACTIVE', status='unauthorized')}">
+</header>
+<div class="Middle">
+    <div class="wrap">
+        <main class="Middle-main">
+            <ul class="breadcrumbs">
+                <li class="breadcrumbs-item">
+                    <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                </li>
+                <li class="breadcrumbs-item">
+                    <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{item.books}">Книги</a>
+                </li>
+                <li class="breadcrumbs-item breadcrumbs-item_current">
+                    <span>Добавление новой книги</span>
+                </li>
+            </ul>
+            <div class="Section">
+                <div class="Section-header">
+                    <h1 class="Section-title">Добавление новой книги</h1>
+                    <span style="color: red" th:if="${saveAuthor}">Автор добавлен</span>
+                </div>
+                <div class="section_container">
+                    <div class="section-content">
+                        <form class="from__group" action="#" th:object="${authorDto}" th:action="@{/api/admin/save-author}" method="post">
+                            <div class="firstname-author">
+                                <label>Введите имя автора</label>
+                                <input type="text"  th:field="*{firstName}">
+                            </div>
+                            <div class="lastname-author">
+                                <label>Введите фамилию автора</label>
+                                <textarea th:field="*{lastName}"></textarea>
+                            </div>
+                            <div class="photo-author">
+                                <label>Добавте фото автора</label>
+                                <input th:field="*{photo}" type="file">
+                            </div>
+                            <div class="description-author">
+                                <lable>Введите биографию атора</lable>
+                                <textarea th:field="*{description}" placeholder="Биография автора"></textarea>
+                            </div>
+                            <button class="btn-add" type="submit">
+                                <span class="btn-add-content">Добавить</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+<footer class="Footer" th:replace="~{fragments/footer_fragment :: footer}">
+</footer>
+<script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
+</body>
+</html>

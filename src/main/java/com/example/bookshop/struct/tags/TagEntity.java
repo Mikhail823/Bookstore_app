@@ -27,4 +27,9 @@ public class TagEntity implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "book_id", foreignKey = @ForeignKey(name = "fk_book_tag"))
     )
     private List<BookEntity> books = new ArrayList<>();
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

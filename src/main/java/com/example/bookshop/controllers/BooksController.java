@@ -1,13 +1,18 @@
 package com.example.bookshop.controllers;
 
 import com.example.bookshop.dto.*;
+import com.example.bookshop.security.ContactConfirmationPayload;
+import com.example.bookshop.security.ContactConfirmationResponse;
 import com.example.bookshop.security.exception.RequestException;
 import com.example.bookshop.service.*;
+import com.example.bookshop.service.response.TrueResponse;
 import com.example.bookshop.struct.book.BookEntity;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -16,6 +21,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
@@ -29,6 +35,7 @@ import static com.example.bookshop.service.util.DateFormatter.getToDateFormat;
 @Controller
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
+@Slf4j
 public class BooksController {
     @Autowired
     private final BookService bookService;
@@ -80,7 +87,7 @@ public class BooksController {
         model.addAttribute("totalRating", booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
         model.addAttribute("ratingBook", booksRatingAndPopulatityService.getRatingBook(book.getId()));
         model.addAttribute("reviewBook", bookService.getBookReview(book, 0, 4));
-
+//        model.addAttribute("bookReview", new BookReviewDto());
         return new ModelAndView("/books/slug");
     }
 
@@ -130,13 +137,15 @@ public class BooksController {
 
     @PostMapping(value = "/bookReview/{slug}")
     public ModelAndView addBookReview(@PathVariable("slug") String slug,
-                                @PathParam("text") String text){
+                                      @PathParam("text") String text){
         bookReviewService.saveReviewText(slug, text);
         return new ModelAndView(REDIRECT + slug);
     }
 
+
+
     @PostMapping("/rateBookReview/{slug}")
-    public String likeTheReviewBook( @RequestBody LikeReviewBookDto reviewBookDto,
+    public String likeTheReviewBook(@RequestBody LikeReviewBookDto reviewBookDto,
                                     @PathVariable("slug") String slug) throws RequestException {
         booksRatingAndPopulatityService.saveLikeReviewBook(reviewBookDto);
         booksRatingAndPopulatityService.saveRatingReview(reviewBookDto.getReviewid());

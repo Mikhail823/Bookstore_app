@@ -28,4 +28,11 @@ public class GenreServiceImpl implements GenreService {
         }
         return new HashMap<>();
     }
+
+    @Override
+    public List<GenreEntity> getAllGenres() {
+        return genreRepository.findAll();
+    }
+
+
 }

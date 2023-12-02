@@ -1,10 +1,9 @@
 package com.example.bookshop.controllers.admin;
 
 import com.example.bookshop.dto.AuthorDto;
-import com.example.bookshop.service.AdminService;
-import com.example.bookshop.service.AuthorService;
-import com.example.bookshop.service.BookReviewService;
-import com.example.bookshop.service.UserService;
+import com.example.bookshop.dto.BookDto;
+import com.example.bookshop.service.*;
+import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,11 +20,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/api/admin")
 public class AdminController {
     private final static String REDIRECT = "redirect:/api/admin/users";
-    private final static String REDIRECT_BOOK_SLUG = "redirect:/api/books/";
+    private final static String REDIRECT_GENRES = "redirect:/api/books/genres";
     @Autowired
     private final AdminService adminService;
     @Autowired
     private final UserService userService;
+    @Autowired
+    private final BookService bookService;
+    @Autowired
+    private final GenreService genreService;
+    @Autowired
+    private final TagService tagService;
     @Autowired
     private final BookReviewService bookReviewService;
     @Autowired
@@ -63,14 +68,36 @@ public class AdminController {
     @GetMapping("/addAuthor")
     public String handlerPageAddAuthor(Model model){
         model.addAttribute("authorDto", new AuthorDto());
-        return "/admin/add-new-author";
+        return "/admin/newAuthor";
     }
 
     @PostMapping("/save-author")
     public String saveNewAuthor(AuthorDto authorDto, Model model){
         authorService.saveNewAuthor(authorDto);
-        model.addAttribute("saveAuthorOK", true);
-        return "redirect:/api/authors";
+        model.addAttribute("saveAuthor", true);
+        return "/admin/newAuthor";
     }
 
+    @GetMapping("/addBook")
+    public String handlerPageAddBook(Model model){
+
+        model.addAttribute("bookDto", new BookDto());
+        model.addAttribute("authors", authorService.getAllAuthors());
+        model.addAttribute("genres", genreService.getAllGenres());
+        model.addAttribute("tags", tagService.getTags());
+        return "/admin/addBooks";
+    }
+
+    @PostMapping("/save-book")
+    public String saveNewBook(BookDto bookDto, Model model){
+        bookService.addBook(bookDto);
+        model.addAttribute("saveBook", true);
+        return "/admin/addBooks";
+    }
+
+    @PostMapping("/delete-book/{book}")
+    public String deleteBookShop(@PathVariable("book")BookEntity book){
+        adminService.deleteBook(book);
+        return REDIRECT_GENRES;
+    }
 }

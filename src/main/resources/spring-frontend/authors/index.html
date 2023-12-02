@@ -44,7 +44,11 @@
       </main>
     </div>
     <div sec:authorize="hasRole('ADMIN')">
-      <a th:href="@{/api/admin/addAuthor}"><button type="button">Добавить автора</button></a>
+      <a th:href="@{/api/admin/addAuthor}">
+        <button class="btn btn_primary btn_outline" type="submit">
+          <span class="btn-content">Добавить автора</span>
+        </button>
+      </a>
     </div>
   </div>
   <footer class="Footer" th:replace="~{fragments/footer_fragment ::footer}"></footer>

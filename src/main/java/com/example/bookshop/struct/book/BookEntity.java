@@ -36,7 +36,7 @@ public class BookEntity implements Serializable {
         @ApiModelProperty("date of book publication")
         private Date pubDate;
 
-        @ManyToMany
+        @ManyToMany(fetch = FetchType.LAZY)
         @JoinTable(name = "book2author",
                 joinColumns = {@JoinColumn(name = "book_id")},
                 inverseJoinColumns = {@JoinColumn(name = "author_id")})
@@ -77,9 +77,21 @@ public class BookEntity implements Serializable {
             return discountPriceInt;
         }
 
+        @JsonProperty
+        public Integer discountCart(){
+                Integer discount;
+                if (getPrice() == 1){
+                        return 1;
+                } else {
+                        discount = (int)(getPrice() * 100);
+                        return discount;
+                }
+        }
+
         @ManyToOne
-        @JoinColumn(name = "genre_id", referencedColumnName = "id")
-        @JsonIgnore
+        @JoinTable(name = "book2genre",
+                joinColumns = {@JoinColumn(name = "book_id")},
+                inverseJoinColumns = {@JoinColumn(name = "genre_id")})
         private GenreEntity genre;
 
         @ManyToMany(fetch = FetchType.LAZY)

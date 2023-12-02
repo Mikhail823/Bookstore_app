@@ -13,4 +13,6 @@ public interface AdminService {
 
     List<BookEntity> getAllBooks();
 
+    void deleteBook(BookEntity book);
+
 }

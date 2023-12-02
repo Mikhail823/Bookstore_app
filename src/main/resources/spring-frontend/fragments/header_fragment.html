@@ -4,16 +4,6 @@
   <div class="Header-rowMain">
     <div class="wrap">
       <h2 sec:authorize="hasRole('ADMIN')"><span sec:authentication="name"></span></h2>
-      <h2 sec:authorize="hasRole('ANONYMOUS')"><span sec:authentication="name"></span></h2>
-      <h2 sec:authorize="hasRole('USER')"><span sec:authentication="name"></span></h2>
-      <div sec:authorize="hasRole('ADMIN')">
-        This will only be displayed if authenticated user has role ROLE_ADMIN.
-      </div>
-      <div sec:authorize="isAuthenticated()">
-        Welcome <b><span sec:authentication="name">Username</span></b>
-
-        <span sec:authentication="principal.authorities">Roles</span>
-      </div>
       <div class="row">
         <div class="row-block Header-logo">
           <a class="logo" th:href="@{/}" href="/">
@@ -79,44 +69,7 @@
       </div>
     </div>
   </div>
-  <div class="Header-menu">
-    <div class="wrap">
-      <nav class="menuModal" id="navigate">
-        <ul class="menu menu_main">
-          <li class="menu-item" th:class="${main}">
-            <a class="menu-link" th:href="@{/}" href="/index.html" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="menu-item" th:class="${genres}">
-            <a class="menu-link" th:href="@{/api/genres}" href="/genres/index.html"
-               th:text="#{topbar.genres}">Жанры</a>
-          </li>
-          <li class="menu-item" th:class="${recent}">
-            <a class="menu-link" th:href="@{/api/books/recent}" href="/books/recent.html"
-               th:text="#{topbar.news}">Новинки</a>
-          </li>
-          <li class="menu-item" th:class="${popular}">
-            <a class="menu-link" th:href="@{/api/books/popular}" href="/books/popular.html"
-               th:text="#{topbar.popular}">Популярное</a>
-          </li>
-          <li class="menu-item" th:class="${authors}">
-            <a class="menu-link" th:href="@{/api/authors}" href="/authors/index.html"
-               th:text="#{topbar.authors}">Авторы</a>
-          </li>
-          <li class="menu-item" th:class="${recently}"  sec:authorize="isAuthenticated()">
-            <a class="menu-link" th:href="@{/api/books/recently}"
-               th:text="#{topbar.recently}">Недавно просмотренные</a>
-          </li>
-          <li sec:authorize="hasRole('ADMIN')" class="menu-item" th:class="${admin}">
-            <a class="menu-link" th:href="@{/api/admin/users}"
-               >Пользователи магазина</a>
-          </li>
-          <li sec:authorize="hasRole('ADMIN')" class="menu-item" th:class="${books}">
-            <a class="menu-link" th:href="@{/api/admin/books}"
-            >Книги магазина</a>
-          </li>
-        </ul>
-      </nav>
-    </div>
+  <div class="Header-menu" th:replace="~{fragments/header_menu_fragment :: menu}">
   </div>
 </header>
 </html>

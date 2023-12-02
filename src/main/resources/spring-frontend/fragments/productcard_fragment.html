@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<div th:fragment="button_card(book)">
+    <div class="ProductCard-cart" >
+        <div class="ProductCard-cartElement">
+            <button class="btn btn_primary btn_outline"
+                    data-sendstatus="KEPT"
+                    th:attr="data-bookid=${'postponed/' + book.slug}"
+                    data-bookid="[1111]"
+                    data-btntype="check"
+                    data-btnradio="buyblock"
+                    data-check="false"
+                    data-alttext="Отложена">
+                <span class="btn-icon">
+                    <img src="/assets/img/icons/heart.svg" alt="heart.svg"/>
+                </span>
+                <span class="btn-content"
+                      th:text="#{text.button.postponed}">Отложить</span>
+            </button>
+        </div>
+        <div class="ProductCard-cartElement">
+            <button class="btn btn_primary btn_outline"
+                    data-sendstatus="CART"
+                    data-bookid="[1111]"
+                    th:attr="data-bookid = ${book.slug}"
+                    data-btntype="check"
+                    data-btnradio="buyblock"
+                    data-check="false"
+                    data-alttext="В корзине">
+                        <span class="btn-icon">
+                          <img src="/assets/img/icons/shopping-basket.svg" alt="shopping-basket.svg"/>
+                        </span>
+                <span class="btn-content"
+                      th:text="#{text.button.buy}">Купить</span>
+            </button>
+        </div>
+    </div>
+    <div sec:authorize="isAuthenticated()">
+        <div class="ProductCard-cart">
+            <div class="ProductCard-cartElement">
+                <a class="btn btn_primary btn_outline" href="#">
+                    <span class="btn-icon">
+                        <img src="/assets/img/icons/download.svg" alt="download.svg"/>
+                    </span>
+                    <span class="btn-content" th:text="#{text.button.download}">Скачать</span>
+                </a>
+            </div>
+
+            <div class="ProductCard-cartElement">
+                <button class="btn btn_primary btn_outline"
+                        data-sendstatus="ARCHIVED"
+                        th:attr="data-bookid = ${'archived/' + book.slug}"
+                        data-bookid="[1111]"
+                        data-btntype="check"
+                        data-btnradio="buyblock"
+                        data-check="false"
+                        data-alttext="Вернуть из архива">
+                    <span class="btn-icon">
+                        <img src="/assets/img/icons/archive.svg" alt="archive.svg"/>
+                    </span>
+                    <span class="btn-content" th:text="#{text.button.archived}">В архив</span>
+                </button>
+            </div>
+            <div sec:authorize="hasRole('ADMIN')">
+                <div class="ProductCard-cartElement">
+                    <button class="btn btn_primary btn_outline" type="submit" th:href="@{'api/admin/delete-book/' + book}">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

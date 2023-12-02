@@ -48,9 +48,15 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
     public RatingCountDto getTotalAndAvgStars(Integer bookId) {
         RatingCountI totalAndAvgStars = ratingRepository.getTotalAndAvgStars(bookId);
         BookEntity book = bookRepository.getOne(bookId);
-        book.setRating(totalAndAvgStars.getAverage());
-        bookRepository.save(book);
-        return new RatingCountDto(totalAndAvgStars.getTotal(), totalAndAvgStars.getAverage());
+        if (totalAndAvgStars == null){
+            book.setRating(0);
+            bookRepository.save(book);
+            return new RatingCountDto(0, 0);
+        } else {
+            book.setRating(totalAndAvgStars.getAverage());
+            bookRepository.save(book);
+            return new RatingCountDto(totalAndAvgStars.getTotal(), totalAndAvgStars.getAverage());
+        }
     }
 
     @Override

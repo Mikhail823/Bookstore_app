@@ -10,6 +10,7 @@ import com.example.bookshop.struct.user.links.User2Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(UserEntity user) {
         User2Role role = user2RoleRepository.findFirstByUser_id(user.getId());
         user2RoleRepository.delete(role);
@@ -38,5 +40,11 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public List<BookEntity> getAllBooks() {
         return bookRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void deleteBook(BookEntity book){
+        bookRepository.delete(book);
     }
 }

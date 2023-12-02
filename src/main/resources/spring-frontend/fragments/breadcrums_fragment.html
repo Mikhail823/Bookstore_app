@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
-<ul class="breadcrumbs" th:fragment="breadcrumps">
+<ul class="breadcrumbs" th:fragment="breadcrumps(item)">
     <li class="breadcrumbs-item"><a th:href="@{/bookshop/main}" th:text="#{topbar.main}">Главная</a>
     </li>
     <li class="breadcrumbs-item"><a th:href="@{/authors}" th:text="#{topbar.authors}">Авторы</a>
