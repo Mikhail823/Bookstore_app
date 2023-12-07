@@ -17,17 +17,7 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a th:href="@{/}" href="/index.html" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item">
-            <a th:href="@{/api/genres}" href="/genres/index.html" th:text="#{menu.books}">Книги</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="#{topbar.popular}">Популярное</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:fragment="~{fragments/breadcrums_fragment :: breadcrumps(#{menu.books}, #{topbar.popular})}"></ul>
         <div class="Section">
           <div class="Section-header">
             <h1 class="Section-title" th:text="#{topbar.popular}">Популярное

@@ -66,7 +66,7 @@ public class MainPageController {
                                        @RequestParam("limit") Integer limit){
         return new BooksPageDto(bookService.getPageRecentSlider(offset, limit).getContent());
     }
-    @GetMapping(value = "/api/popular")
+    @GetMapping("/api/popular")
     public String popularBookPage() {
         return "/books/popular";
     }

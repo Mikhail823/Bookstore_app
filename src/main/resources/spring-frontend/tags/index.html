@@ -17,13 +17,7 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current" th:text="${tag.name}"><span>Психологическая проза</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:replace="~{fragments/breadcruns_fragment :: breadcrumps(${tag.name}, ${tag.name})}"> </ul>
         <div class="Section">
           <div class="Section-header">
             <h1 class="Section-title" th:text="${tag.name}">Психологическая проза

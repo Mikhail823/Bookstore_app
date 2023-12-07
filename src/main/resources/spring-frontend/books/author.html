@@ -13,59 +13,16 @@
 <head th:replace="~{fragments/common_head_fragment :: head(title='Books of author')}">
 </head>
 <body class="Site">
-   <header class="Header" th:replace="~{fragments/header_fragment :: header(authors='menu-item menu-item_ACTIVE', status='unauthorized')}"></header>
+   <header class="Header" th:replace="~{fragments/header_fragment :: header(authors='menu-item menu-item_ACTIVE', status='authorized')}"></header>
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a th href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item">
-            <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{menu.books}">Книги</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="${author.firstName} + ' ' + ${author.lastName}">Борис Васильевич Бедный</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{menu.books}, ${author.toString()})}"> </ul>
         <h1 class="Middle-title"
             th:text="${author.firstName} + ' ' + ${author.lastName}">Борис Васильевич Бедный
         </h1>
         <div class="Section">
-          <div class="Cards Cards_refresh" >
-            <div class="Card" th:each="book : ${booksAuthor}">
-              <div class="Card-picture">
-                <a href="#" th:href="@{'/api/books/' + ${book.slug}}">
-                  <img th:src="${book.image}"
-                       alt="card.jpg"/>
-                </a>
-              </div>
-              <div class="Card-content">
-                <strong class="Card-title" th:text="${book.title}">
-                  <a href="#" th:href="@{'/api/books/' + ${book.slug}}">Техника</a>
-                </strong>
-                <div class="Card-description">
-                  <div th:each="author : ${book.authors}">
-                    <a th:href="${'/api/author/' + author.id}" href="/authors/slug.html"
-                       th:text="${author.toString()}">Абгарян
-                      Наринэ</a>
-                  </div>
-                </div>
-                <div class="Card-cost">
-                  <span class="Card-priceOld" th:text="${'₽' + book.priceOld}">?300.00</span>
-                  <span class="Card-price" th:text="${'₽' + book.discountPrice()}">?190.00</span>
-                </div>
-              </div>
-            </div>
-            <div class="Cards-footer Cards-footer_center">
-              <a class="btn btn_primary" href="#" th:href="@{'/api/author/page' + ${author.getId()}}"
-                 data-refreshshow="author"
-                 data-refreshoffset="0"
-                 data-refreshlimit="5"
-                 th:data-refreshid="${author.getId()}" th:text="#{text.button}">
-                Показать еще </a>
-            </div>
-          </div>
+          <div th:replace="~{fragments/cards_fragment :: cardBook(${booksAuthor}, 'author', ${author.getId()})}"></div>
         </div>
       </main>
     </div>

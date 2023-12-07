@@ -77,10 +77,6 @@
             <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-cache</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -217,16 +213,14 @@
             <version>1.10</version>
         </dependency>
         <dependency>
-            <groupId>com.buttercms</groupId>
-            <artifactId>buttercmsclient</artifactId>
-            <version>1.6</version>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.10.3</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
-        <plugins>
+             <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -247,7 +241,7 @@
                     </execution>
                 </executions>
             </plugin>
-        </plugins>
+         </plugins>
     </build>
 
 </project>

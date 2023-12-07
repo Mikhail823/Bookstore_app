@@ -17,18 +17,7 @@
 <div class="Middle">
     <div class="wrap">
         <main class="Middle-main">
-            <ul class="breadcrumbs">
-                <li class="breadcrumbs-item">
-                    <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-                </li>
-                <li class="breadcrumbs-item">
-                    <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{topbar.genres}">Жанры</a>
-                </li>
-                <li class="breadcrumbs-item">
-                    <a href="/genres/index.html" th:href="@{/api/genres}"
-                       th:text="${type.getTypeGenre()}">Легкое чтение</a>
-                </li>
-            </ul>
+            <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{topbar.genres}, ${type.getTypeGenre()})}"></ul>
             <header class="Middle-header">
                 <h1 class="Middle-title"
                     th:text="${type.getTypeGenre()}">Детективы

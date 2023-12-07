@@ -13,7 +13,7 @@ import org.springframework.session.config.annotation.web.http.EnableSpringHttpSe
 
 @SpringBootApplication
 @AutoConfigurationPackage
-//@LiquibaseDataSource
+@LiquibaseDataSource
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 
 public class BookShopApplication {

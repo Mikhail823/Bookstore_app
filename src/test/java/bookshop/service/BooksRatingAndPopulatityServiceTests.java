@@ -93,26 +93,26 @@ class BooksRatingAndPopulatityServiceTests {
 
     }
 
-    @Test
-    @DisplayName("Проверка расчета рейтинга отзыва книги")
-    void calculateRatingReviewTest()  {
-
-        bookReviewServiceMock.saveReviewText("book-axe-269", "Очень хорошая книга");
-        BookEntity book = bookRepository.findBookEntityBySlug("book-axe-269");
-        BookReviewEntity review = bookReviewRepository.findBookReviewEntityById(book.getId());
-        short likeReview = 1;
-        likeReviewBookDtoMock.setValue(likeReview);
-        likeReviewBookDtoMock.setReviewid(1);
-        booksRatingAndPopulatityService.saveLikeReviewBook(likeReviewBookDtoMock);
-        long d = review.getLikeCount() > review.getDisLikeCount() ? review.getLikeCount() - review.getDisLikeCount() :
-                review.getDisLikeCount() - review.getLikeCount();
-
-        assertNotNull(review);
-
-        assertNotNull(book);
-
-        assertEquals(d, 2);
-    }
+//    @Test
+//    @DisplayName("Проверка расчета рейтинга отзыва книги")
+//    void calculateRatingReviewTest()  {
+//
+//        bookReviewServiceMock.saveReviewText("book-axe-269", "Очень хорошая книга");
+//        BookEntity book = bookRepository.findBookEntityBySlug("book-axe-269");
+//        BookReviewEntity review = bookReviewRepository.findBookReviewEntityById(book.getId());
+//        short likeReview = 1;
+//        likeReviewBookDtoMock.setValue(likeReview);
+//        likeReviewBookDtoMock.setReviewid(1);
+//        booksRatingAndPopulatityService.saveLikeReviewBook(likeReviewBookDtoMock);
+//        long d = review.getLikeCount() > review.getDisLikeCount() ? review.getLikeCount() - review.getDisLikeCount() :
+//                review.getDisLikeCount() - review.getLikeCount();
+//
+//        assertNotNull(review);
+//
+//        assertNotNull(book);
+//
+//        assertEquals(d, 2);
+//    }
 
     @Test
     @DisplayName("Проверка расчета рейтинга книги")

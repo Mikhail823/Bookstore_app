@@ -19,7 +19,6 @@ public class DocumentServiceImpl implements DocumentService {
     private final DocumentRepository documentRepository;
 
     @Override
-    @Cacheable(value="document", key = "#slug")
     public DocumentEntity findDocumentBySlug(String slug) {
         return documentRepository.findDocumentEntityBySlug(slug);
     }

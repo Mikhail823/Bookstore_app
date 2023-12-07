@@ -17,22 +17,11 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item">
-            <a href="/authors/index.html" th:href="@{/api/authors}" th:text="#{topbar.authors}">Авторы</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="${author.firstName} + ' ' + ${author.lastName}">Борис Васильевич Бедный</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{topbar.authors}, ${author.toString()})}"></ul>
         <h1 class="Middle-title" th:text="${author.firstName} + ' ' + ${author.lastName}">Борис Васильевич Бедный
         </h1>
         <article class="Article" >
-          <div class="sdf">
-          </div>
+          <div class="sdf"></div>
           <div class="Spoiler Spoiler_CLOSE" >
             <div class="Spoiler-visible">
               <div class="pict pict_left">

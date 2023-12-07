@@ -102,9 +102,11 @@ public class BookEntity implements Serializable {
         private List<TagEntity> tagList = new ArrayList<>();
 
         @OneToMany(mappedBy = "bookId", cascade = CascadeType.REMOVE)
+        @JsonIgnore
         private List<BookFileEntity> fileList = new ArrayList<>();
 
         @OneToMany(mappedBy = "bookId", cascade = CascadeType.REMOVE)
+        @JsonIgnore
         private List<BookReviewEntity> reviewList = new ArrayList<>();
 
         @Enumerated(EnumType.STRING)

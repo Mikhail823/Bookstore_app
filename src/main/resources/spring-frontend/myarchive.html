@@ -17,17 +17,7 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item">
-            <a href="/profile.html" th:href="@{/profile}" th:text="#{prof.my}">Мой профиль</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="#{prof.myBook}">Мои книги</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{prof.my}, #{prof.myBook})}"></ul>
         <div class="Section">
           <div class="Section-header">
             <h1 class="Section-title" th:text="#{prof.myBook}" >Мои книги

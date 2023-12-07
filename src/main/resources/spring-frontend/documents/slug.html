@@ -24,19 +24,8 @@
     </div>
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item">
-            <a href="/documents/index.html" th:href="@{/documents}" th:text="#{menu.doc}">Документы</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="${document.getTitle()}">Политика обработки персональных данных</span>
-          </li>
-        </ul>
-        <h1 class="Middle-title" th:text="${document.title}">Политика обработки персональных данных
-        </h1>
+        <ul class="breadcrumbs" th:fragment="~{fragments/breadcrums_fragment :: breadcrumps(#{menu.doc}, ${document.getTitle()})}"></ul>
+        <h1 class="Middle-title" th:text="${document.title}">Политика обработки персональных данных</h1>
         <article class="Article">
           <div class="sdf">
           </div>

@@ -46,7 +46,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
                                                             Date dateTo);
     Page<BookEntity> findBookEntityByGenre(GenreEntity genre, Pageable next);
 
-    Page<BookEntity> findBookEntityByGenre(Integer id, Pageable next);
+//    Page<BookEntity> findBookEntityByGenre(Integer id, Pageable next);
 
 
     Page<BookEntity> findAll(Pageable next);

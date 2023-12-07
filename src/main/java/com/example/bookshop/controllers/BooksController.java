@@ -87,13 +87,12 @@ public class BooksController {
         model.addAttribute("totalRating", booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
         model.addAttribute("ratingBook", booksRatingAndPopulatityService.getRatingBook(book.getId()));
         model.addAttribute("reviewBook", bookService.getBookReview(book, 0, 4));
-//        model.addAttribute("bookReview", new BookReviewDto());
         return new ModelAndView("/books/slug");
     }
 
     @GetMapping("/popular")
     public String getPopularPage(Model model){
-        model.addAttribute("booksPopular", bookService.getPageOfPopularBooks(0, 5).getContent());
+        model.addAttribute("booksPopular", bookService.getPageOfPopularBooks(0, 6).getContent());
         return "/books/popular";
     }
 

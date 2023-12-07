@@ -9,11 +9,11 @@
 <!--[if IE 9]>
 <html class="ie9" lang="ru">
 <![endif]-->
-<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
+<!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!--<![endif]-->
 <head th:replace="~{fragments/common_head_fragment :: head(title='Genres')}">
 </head>
 <body class="Site">
-  <header class="Header" th:replace="~{fragments/header_fragment :: header(genres='menu-item menu-item_ACTIVE', status='unauthorized')}">
+  <header class="Header" th:replace="~{fragments/header_fragment :: header(genres='menu-item menu-item_ACTIVE')}">
   </header>
   <div class="Middle">
     <div class="wrap">
@@ -41,8 +41,10 @@
             </div>
           </div>
         </div>
-        <div>
-          <a th:href="@{/api/admin/addBook}"><button>Добавить книгу</button></a>
+        <div sec:authorize="hasRole('ADMIN')">
+          <a th:href="@{/api/admin/addBook}">
+            <button>Добавить книгу</button>
+          </a>
         </div>
       </main>
     </div>

@@ -24,7 +24,6 @@ public class AuthorServiceImpl implements AuthorService {
     @Autowired
     private final AuthorRepository authorRepository;
 
-    @Cacheable(value="authorsMap")
     @Override
     public Map<String, List<AuthorEntity>> getAuthorsMap(){
         List<AuthorEntity> authors = authorRepository.findAll();

@@ -19,17 +19,7 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item">
-            <a href="/index.html" th:href="@{/}" th:text="#{topbar.main}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item">
-            <a href="/profile.html" th:href="@{/profile}" th:text="#{prof.myProfile}">Мой профиль</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="#{prof.myBook}">Мои книги</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{prof.myProfile}, #{prof.myBook})}"></ul>
         <div class="Section">
           <div class="Section-header">
             <h1 class="Section-title" th:text="#{prof.myBook}">Мои книги
@@ -40,7 +30,7 @@
                  href="/spring-frontend/myarchive.htmld/myarchive.html" th:href="@{/archive}" th:text="#{prof.archived}">Архив</a>
             </div>
           </div>
-          <div class="Cards">
+          <div class="Cards" >
             <div class="Card" th:each="book : ${myBooks}">
               <div class="Card-picture" th:href="@{'/api/books/' + ${book.slug}}">
                 <a href="#" th:href="@{'/api/books/' + ${book.slug}}">

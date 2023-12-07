@@ -18,7 +18,6 @@ public class FaqServiceImpl implements FaqService {
     private final FaqRepository faqRepository;
 
     @Override
-    @Cacheable(value = "faqs")
     public List<FaqEntity> findAllFaq() {
         return faqRepository.findAll();
     }

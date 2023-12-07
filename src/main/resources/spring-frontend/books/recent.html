@@ -63,33 +63,7 @@
               </div>
             </form>
           </div>
-          <div class="Cards Cards_refresh" th:each="book : ${newsBooks}">
-            <div class="Card" >
-              <div class="Card-picture">
-                <a href="#">
-                  <img th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
-              </div>
-              <div class="Card-content">
-                <strong class="Card-title">
-                  <a href="#" th:href="@{'/api/books/' + ${book.slug}}" th:text="${book.title}">Техника</a>
-                </strong>
-                <div class="Card-description" th:text="${book.author}">Кондратенко Александр Петрович
-                </div>
-                <div class="Card-cost">
-                  <span class="Card-priceOld" th:text="${'₽' +book.priceOld}">₽300.00</span>
-                  <span class="Card-price" th:text="${'₽' + book.discountPrice()}">₽190.00</span>
-                </div>
-              </div>
-            </div>
-            <div class="Cards-footer Cards-footer_center">
-              <a class="btn btn_primary"
-                 href="#"
-                 data-refreshshow="recent"
-                 data-refreshoffset="0"
-                 data-refreshlimit="5"
-                 data-refreshid="0" th:text="#{text.button}">Показать еще</a>
-            </div>
-          </div>
+          <div th:replace="~{fragments/cards_fragment :: cardBook(${newsBooks}, 'recent', null)}"></div>
         </div>
       </main>
     </div>

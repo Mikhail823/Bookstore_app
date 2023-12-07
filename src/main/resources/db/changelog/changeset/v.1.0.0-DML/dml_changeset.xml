@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+  http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="v.1-insert-authors.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-books.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-genres.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-tags.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-roles.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-book2author.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-book2genres.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-book2tag.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-rating_books.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-book_files.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-book_file_type.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-book2user_type.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-inser-documents.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-insert-faq.sql" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

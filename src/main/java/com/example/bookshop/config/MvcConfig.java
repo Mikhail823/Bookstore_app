@@ -1,5 +1,6 @@
 package com.example.bookshop.config;
 
+import liquibase.integration.spring.SpringLiquibase;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,6 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
-@EnableCaching
 public class MvcConfig implements WebMvcConfigurer {
     @Value("${upload.path}")
     private String uploadPath;
@@ -41,4 +41,5 @@ public class MvcConfig implements WebMvcConfigurer {
     public MappingJackson2HttpMessageConverter messageConverter(){
         return new MappingJackson2HttpMessageConverter();
     }
+
 }

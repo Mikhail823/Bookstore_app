@@ -18,13 +18,7 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs">
-          <li class="breadcrumbs-item"><a href="/index.html" th:text="#{topbar.main}" th:href="@{/}">Главная</a>
-          </li>
-          <li class="breadcrumbs-item breadcrumbs-item_current">
-            <span th:text="#{menu.about}">О компании</span>
-          </li>
-        </ul>
+        <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{menu.about}, #{menu.about})}"></ul>
         <h1 class="Middle-title" th:text="#{menu.about}">О компании
         </h1>
         <article class="Article">
