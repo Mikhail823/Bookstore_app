@@ -24,7 +24,7 @@ import java.util.*;
 @Table(name = "book")
 @Setter
 @Getter
-@EqualsAndHashCode
+
 public class BookEntity implements Serializable {
 
         @Id
@@ -40,7 +40,7 @@ public class BookEntity implements Serializable {
         @JoinTable(name = "book2author",
                 joinColumns = {@JoinColumn(name = "book_id")},
                 inverseJoinColumns = {@JoinColumn(name = "author_id")})
-        @JsonIgnore
+   //     @JsonProperty
         private List<AuthorEntity> authors = new ArrayList<>();
 
         @Column(name = "is_bestseller")
@@ -71,13 +71,13 @@ public class BookEntity implements Serializable {
         @ApiModelProperty("discount value for book")
         private Double price;
 
-        @JsonProperty
+        @JsonProperty("discountPrice")
         public Integer discountPrice() {
             Integer discountPriceInt = priceOld - Math.toIntExact(Math.round(price * priceOld));
             return discountPriceInt;
         }
 
-        @JsonProperty
+        @JsonProperty("discountCart")
         public Integer discountCart(){
                 Integer discount;
                 if (getPrice() == 1){
@@ -98,7 +98,7 @@ public class BookEntity implements Serializable {
         @JoinTable(name = "book2tag",
                 joinColumns = {@JoinColumn(name = "book_id")},
                 inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-        @JsonIgnore
+        @JsonProperty("tagList")
         private List<TagEntity> tagList = new ArrayList<>();
 
         @OneToMany(mappedBy = "bookId", cascade = CascadeType.REMOVE)
@@ -113,6 +113,7 @@ public class BookEntity implements Serializable {
         private Book2UserTypeEntity.StatusBookType status;
 
         private Integer rating;
+
         @Column(name = "count_postponed")
         private Integer numberOfPosponed;
 

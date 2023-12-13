@@ -3,6 +3,7 @@ package com.example.bookshop.struct.book.author;
 
 import com.example.bookshop.struct.book.BookEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import lombok.EqualsAndHashCode;
@@ -46,7 +47,9 @@ public class AuthorEntity {
     @JsonIgnore
     private List<BookEntity> books = new ArrayList<>();
 
+
     @Override
+    @JsonProperty("fullName")
     public String toString() {
         return firstName + ' ' + lastName;
     }

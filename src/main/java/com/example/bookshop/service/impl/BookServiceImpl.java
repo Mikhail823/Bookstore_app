@@ -118,7 +118,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Page<BookEntity> getPageOfPopularBooks(Integer offset, Integer limit) {
         Pageable nexPage = PageRequest.of(offset, limit);
-        return bookRepository.findAllBooksPopulal(nexPage);
+        return bookRepository.findAllOrderByRating(nexPage);
     }
 
     @Override

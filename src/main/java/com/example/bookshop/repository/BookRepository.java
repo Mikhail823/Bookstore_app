@@ -18,8 +18,6 @@ import java.util.List;
 @Repository
 public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
-   // List<BookEntity> findBooksByAuthorFirstNameContaining(String authorsFirstName);
-
     List<BookEntity> findBooksByTitleContaining(String bookTitle);
 
     List<BookEntity> findBooksByPriceOldBetween(Integer min, Integer max);
@@ -27,8 +25,6 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     List<BookEntity> findBooksByPriceOldIs(Integer price);
 
     BookEntity findBookEntityById(Integer id);
-
-   // List<BookEntity> findBookEntityByAuthor_FirstName(String name);
 
     @Query("from BookEntity where is_bestseller=1")
     List<BookEntity> getBestsellers();
@@ -45,9 +41,6 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
                                                             Date dateFrom,
                                                             Date dateTo);
     Page<BookEntity> findBookEntityByGenre(GenreEntity genre, Pageable next);
-
-//    Page<BookEntity> findBookEntityByGenre(Integer id, Pageable next);
-
 
     Page<BookEntity> findAll(Pageable next);
 
@@ -116,6 +109,9 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     @Query(value = "SELECT * FROM book AS b JOIN viewed_books AS vb" +
             " ON vb.book_id=b.id WHERE vb.time >= NOW() - INTERVAL '7 DAY' ORDER BY b.rating DESC", nativeQuery = true)
-    Page<BookEntity> findAllBooksPopulal(Pageable pageable);
+//    @Query(value = "SELECT * FROM book ORDER BY rating DESC", nativeQuery = true)
+
+//    @Query(value = "SELECT b FROM book AS b JOIN viewed_books AS vb ON vb.book_id=b.id ORDER BY b.rating DESC", nativeQuery = true)
+    Page<BookEntity> findAllOrderByRating(Pageable pageable);
 
 }

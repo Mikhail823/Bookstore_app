@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Table(name = "viewed_books")
 @Setter
 @Getter
-public class ViewedBooks implements Serializable {
+public class ViewedBooks  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
