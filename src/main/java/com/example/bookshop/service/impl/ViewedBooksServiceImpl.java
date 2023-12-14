@@ -3,7 +3,6 @@ package com.example.bookshop.service.impl;
 import com.example.bookshop.repository.ViewedBooksRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
-import com.example.bookshop.service.UserService;
 import com.example.bookshop.service.ViewedBooksService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
@@ -23,8 +22,6 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
     private final ViewedBooksRepository viewedBooksRepository;
     @Autowired
     private final BookstoreUserRegister registerUser;
-    @Autowired
-    private final UserService userService;
 
     @Override
     public void saveViewedBooksUser(BookEntity book, HttpServletRequest request){
@@ -38,10 +35,7 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
                 viewedBooks.setType(Book2UserTypeEntity.StatusBookType.VIEWED);
                 viewedBooks.setTime(LocalDateTime.now());
                 viewedBooksRepository.save(viewedBooks);
-
-            } else {
-                return;
-        }
+            }
     }
 
     public ViewedBooks getViewedBookUser(BookEntity book, UserEntity user){

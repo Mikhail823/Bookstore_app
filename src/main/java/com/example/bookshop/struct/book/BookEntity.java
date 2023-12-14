@@ -40,7 +40,6 @@ public class BookEntity implements Serializable {
         @JoinTable(name = "book2author",
                 joinColumns = {@JoinColumn(name = "book_id")},
                 inverseJoinColumns = {@JoinColumn(name = "author_id")})
-   //     @JsonProperty
         private List<AuthorEntity> authors = new ArrayList<>();
 
         @Column(name = "is_bestseller")
@@ -62,22 +61,18 @@ public class BookEntity implements Serializable {
         private String description;
 
         @Column(name = "price")
-        @JsonProperty("price")
         @ApiModelProperty("book price without discount")
         private Integer priceOld;
 
         @Column(name = "discount")
-        @JsonProperty("discount")
         @ApiModelProperty("discount value for book")
         private Double price;
 
-        @JsonProperty("discountPrice")
         public Integer discountPrice() {
             Integer discountPriceInt = priceOld - Math.toIntExact(Math.round(price * priceOld));
             return discountPriceInt;
         }
 
-        @JsonProperty("discountCart")
         public Integer discountCart(){
                 Integer discount;
                 if (getPrice() == 1){
@@ -98,7 +93,6 @@ public class BookEntity implements Serializable {
         @JoinTable(name = "book2tag",
                 joinColumns = {@JoinColumn(name = "book_id")},
                 inverseJoinColumns = {@JoinColumn(name = "tag_id")})
-        @JsonProperty("tagList")
         private List<TagEntity> tagList = new ArrayList<>();
 
         @OneToMany(mappedBy = "bookId", cascade = CascadeType.REMOVE)

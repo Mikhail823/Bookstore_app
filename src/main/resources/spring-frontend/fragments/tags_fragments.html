@@ -2,16 +2,16 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <div class="Tags" id="tags" th:fragment="tag(tags)" >
     <div class="Tag" th:each="tag : ${tags}">
-        <div class="Tag Tag_lg" th:if="${tag.books.size() > 60}">
+        <div class="Tag Tag_lg" th:if="${tag.books.size() > 50}">
             <a th:text="${tag.getName()}" th:href="${'/api/tags/' + tag.getId()}"></a>
         </div>
-        <div class="Tag Tag_md" th:if="${tag.books.size() <= 60 && tag.books.size() < 40}">
+        <div class="Tag Tag_md" th:if="${tag.books.size() <= 50 && tag.books.size() > 40}">
             <a th:text="${tag.getName()}" th:href="${'/api/tags/' + tag.getId()}"></a>
         </div>
-        <div class="Tag Tag_sm" th:if="${tag.books.size() <= 40 && tag.books.size() < 20}">
+        <div class="Tag Tag_sm" th:if="${tag.books.size() <= 40 && tag.books.size() > 30}">
             <a th:text="${tag.getName()}" th:href="${'/api/tags/' + tag.getId()}"></a>
         </div>
-        <div class="Tag Tag_xs" th:if="${tag.books.size() <= 20 && tag.books.size() < 10}">
+        <div class="Tag Tag_xs" th:if="${tag.books.size() <= 30 && tag.books.size() > 20}">
             <a th:text="${tag.getName()}" th:href="${'/api/tags/' + tag.getId()}"></a>
         </div>
         <div class="Tag" th:if="${tag.books.size() <= 10 && tag.books.size() > 0}">
