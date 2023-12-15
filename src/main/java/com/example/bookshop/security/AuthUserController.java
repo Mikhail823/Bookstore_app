@@ -59,10 +59,9 @@ public class AuthUserController {
     public ContactConfirmationResponse handleRequestContactConfirmation
             (@RequestBody ContactConfirmationPayload payload, HttpServletRequest request) throws IOException {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-
+            response.setResult("true");
         if (!payload.getContact().contains("@")){
             inspectorService.restApiRequestCodeSmsRu(payload, request);
-            response.setResult("true");
         }
         return response;
     }

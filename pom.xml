@@ -220,28 +220,34 @@
     </dependencies>
 
     <build>
-             <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <version>${project.parent.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>build-info</goal>
-                        </goals>
-                        <configuration>
-                            <additionalProperties>
-                                <encoding.source>UTF-8</encoding.source>
-                                <enciding.reporting>UTF-8</enciding.reporting>
-                                <java.version>${maven.compiler.source}</java.version>
-                                <java.target>${maven.compiler.target}</java.target>
-                            </additionalProperties>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-         </plugins>
+        <pluginManagement>
+            <plugins>
+<!--                <plugin>-->
+<!--                    <groupId>org.springframework.boot</groupId>-->
+<!--                    <artifactId>spring-boot-maven-plugin</artifactId>-->
+<!--                    <version>${project.parent.version}</version>-->
+<!--                    <executions>-->
+<!--                        <execution>-->
+<!--                            <goals>-->
+<!--                                <goal>build-info</goal>-->
+<!--                            </goals>-->
+<!--                            <configuration>-->
+<!--                                <additionalProperties>-->
+<!--                                    <encoding.source>UTF-8</encoding.source>-->
+<!--                                    <enciding.reporting>UTF-8</enciding.reporting>-->
+<!--                                    <java.version>${maven.compiler.source}</java.version>-->
+<!--                                    <java.target>${maven.compiler.target}</java.target>-->
+<!--                                </additionalProperties>-->
+<!--                            </configuration>-->
+<!--                        </execution>-->
+<!--                    </executions>-->
+<!--                </plugin>-->
+                <plugin>
+                    <groupId>org.sonarsource.scanner.maven</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>3.10.0.2594</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
-
 </project>

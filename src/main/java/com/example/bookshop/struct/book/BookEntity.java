@@ -62,12 +62,15 @@ public class BookEntity implements Serializable {
 
         @Column(name = "price")
         @ApiModelProperty("book price without discount")
+        @JsonProperty("price")
         private Integer priceOld;
 
         @Column(name = "discount")
         @ApiModelProperty("discount value for book")
+        @JsonProperty("discount")
         private Double price;
 
+        @JsonProperty("discountPrice")
         public Integer discountPrice() {
             Integer discountPriceInt = priceOld - Math.toIntExact(Math.round(price * priceOld));
             return discountPriceInt;
