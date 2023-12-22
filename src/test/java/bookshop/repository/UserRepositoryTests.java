@@ -1,5 +1,6 @@
-package com.example.bookshop.repository;
+package bookshop.repository;
 
+import com.example.bookshop.repository.UserRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

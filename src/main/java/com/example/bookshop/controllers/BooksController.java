@@ -1,18 +1,13 @@
 package com.example.bookshop.controllers;
 
 import com.example.bookshop.dto.*;
-import com.example.bookshop.security.ContactConfirmationPayload;
-import com.example.bookshop.security.ContactConfirmationResponse;
 import com.example.bookshop.security.exception.RequestException;
 import com.example.bookshop.service.*;
-import com.example.bookshop.service.response.TrueResponse;
 import com.example.bookshop.struct.book.BookEntity;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,7 +16,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.websocket.server.PathParam;
@@ -34,21 +28,26 @@ import static com.example.bookshop.service.util.DateFormatter.getToDateFormat;
 
 @Controller
 @RequestMapping("/api/books")
-@RequiredArgsConstructor
 @Slf4j
 public class BooksController {
-    @Autowired
-    private final BookService bookService;
-    @Autowired
-    private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
-    @Autowired
-    private final ResourceStorageService storage;
-    @Autowired
-    private final BookReviewService bookReviewService;
-    @Autowired
-    private final ViewedBooksService viewedBooksService;
 
-    private final static String REDIRECT = "redirect:/api/books/";
+    private final BookService bookService;
+    private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
+    private final ResourceStorageService storage;
+    private final BookReviewService bookReviewService;
+    private final ViewedBooksService viewedBooksService;
+    private static final String REDIRECT = "redirect:/api/books/";
+
+    @Autowired
+    public BooksController(BookService bookService, BooksRatingAndPopulatityService booksRatingAndPopulatityService,
+                           ResourceStorageService storage, BookReviewService bookReviewService,
+                           ViewedBooksService viewedBooksService) {
+        this.bookService = bookService;
+        this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
+        this.storage = storage;
+        this.bookReviewService = bookReviewService;
+        this.viewedBooksService = viewedBooksService;
+    }
 
     @PostMapping("/{slug}/img/save")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
@@ -145,7 +144,7 @@ public class BooksController {
 
     @PostMapping("/rateBookReview/{slug}")
     public String likeTheReviewBook(@RequestBody LikeReviewBookDto reviewBookDto,
-                                    @PathVariable("slug") String slug) throws RequestException {
+                                    @PathVariable("slug") String slug){
         booksRatingAndPopulatityService.saveLikeReviewBook(reviewBookDto);
         booksRatingAndPopulatityService.saveRatingReview(reviewBookDto.getReviewid());
         return REDIRECT + slug;

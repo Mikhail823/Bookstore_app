@@ -5,7 +5,6 @@ import com.example.bookshop.service.DocumentService;
 import com.example.bookshop.service.FaqService;
 import com.example.bookshop.service.MessageService;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,19 +14,19 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-@RequiredArgsConstructor
 public class BookShopPageController {
 
     private static final String REDIRECT_CONT = "redirect:/contacts";
-
-    @Autowired
     private final DocumentService documentService;
-
-    @Autowired
     private final MessageService messageService;
+    private final FaqService faqService;
 
     @Autowired
-    private final FaqService faqService;
+    public BookShopPageController(DocumentService documentService, MessageService messageService, FaqService faqService) {
+        this.documentService = documentService;
+        this.messageService = messageService;
+        this.faqService = faqService;
+    }
 
     @GetMapping("/about")
     public String handlerAbout(){

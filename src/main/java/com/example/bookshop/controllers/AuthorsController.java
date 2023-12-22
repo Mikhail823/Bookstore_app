@@ -10,7 +10,6 @@ import com.example.bookshop.struct.book.author.AuthorEntity;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -21,16 +20,20 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-@Api(description = "author data")
+@Api("author data")
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class AuthorsController {
-    @Autowired
+
     private final AuthorService authorService;
-    @Autowired
     private final AuthorRepository authorRepository;
-    @Autowired
     private final BookService bookService;
+
+    @Autowired
+    public AuthorsController(AuthorService authorService, AuthorRepository authorRepository, BookService bookService) {
+        this.authorService = authorService;
+        this.authorRepository = authorRepository;
+        this.bookService = bookService;
+    }
 
     @ModelAttribute("authorsMap")
     public Map<String,List<AuthorEntity>> authorsMap(){

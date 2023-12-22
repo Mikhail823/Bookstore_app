@@ -6,12 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "book_file")
 @Setter
 @Getter
-public class BookFileEntity {
+public class BookFileEntity implements Serializable {
+
+    private  static  final Long  serialVersionUID  =  1905122041950289547L ;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

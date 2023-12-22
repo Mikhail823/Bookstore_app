@@ -6,7 +6,6 @@ import com.example.bookshop.dto.RatingCountI;
 import com.example.bookshop.repository.*;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
-import com.example.bookshop.security.exception.RequestException;
 import com.example.bookshop.security.exception.UserNotFoundException;
 import com.example.bookshop.service.BooksRatingAndPopulatityService;
 import com.example.bookshop.service.UserService;
@@ -15,7 +14,6 @@ import com.example.bookshop.struct.book.ratings.RatingBookEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
 import com.example.bookshop.struct.book.review.BookReviewLikeEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,26 +21,29 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 @Service
-@RequiredArgsConstructor
 public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopulatityService {
 
-    @Autowired
     private final RatingRepository ratingRepository;
-
-    @Autowired
     private final BookReviewLikeRepository bookReviewLikeRepository;
-
-    @Autowired
     private final BookReviewRepository bookReviewRepository;
-
-    @Autowired
     private final BookstoreUserRegister bookstoreUserRegister;
-
-    @Autowired
     private final UserService userServiceImp;
+    private final BookRepository bookRepository;
 
     @Autowired
-    private final BookRepository bookRepository;
+    public BooksRatingAndPopulatityServiceImpl(RatingRepository ratingRepository,
+                                               BookReviewLikeRepository bookReviewLikeRepository,
+                                               BookReviewRepository bookReviewRepository,
+                                               BookstoreUserRegister bookstoreUserRegister,
+                                               UserService userServiceImp,
+                                               BookRepository bookRepository) {
+        this.ratingRepository = ratingRepository;
+        this.bookReviewLikeRepository = bookReviewLikeRepository;
+        this.bookReviewRepository = bookReviewRepository;
+        this.bookstoreUserRegister = bookstoreUserRegister;
+        this.userServiceImp = userServiceImp;
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public RatingCountDto getTotalAndAvgStars(Integer bookId) {
@@ -65,7 +66,7 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
     }
 
     @Override
-    public void ratingBookSave(Integer value, RatingBookEntity ratingBookEntity) throws RequestException {
+    public void ratingBookSave(Integer value, RatingBookEntity ratingBookEntity){
 
         switch (value) {
             case 1:
@@ -82,6 +83,8 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
                 break;
             case 5:
                 ratingBookEntity.setFiveStar(ratingBookEntity.getFiveStar() + 1);
+                break;
+            default:
                 break;
         }
         ratingRepository.save(ratingBookEntity);
@@ -109,7 +112,7 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
 
     @Override
     public void saveRatingReview(Integer id) {
-        if (!getCurrentUser().equals(null)) {
+        if (getCurrentUser() != null) {
             BookReviewEntity review = bookReviewRepository.findBookReviewEntityById(id);
             if (review.getLikeCount() > 0 && review.getDisLikeCount() > 0) {
                 long avg = review.getLikeCount() > review.getDisLikeCount() ?
@@ -121,7 +124,7 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
                 bookReviewRepository.save(review);
             }
         } else {
-            new UserNotFoundException("Данный пользователь не зарегистрирован((");
+            throw new UserNotFoundException("Данный пользователь не зарегистрирован((");
         }
     }
 

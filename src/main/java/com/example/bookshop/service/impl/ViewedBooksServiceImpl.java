@@ -8,7 +8,6 @@ import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import com.example.bookshop.struct.book.links.ViewedBooks;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,12 +15,16 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @Service
-@RequiredArgsConstructor
 public class ViewedBooksServiceImpl implements ViewedBooksService {
-    @Autowired
+
     private final ViewedBooksRepository viewedBooksRepository;
-    @Autowired
     private final BookstoreUserRegister registerUser;
+
+    @Autowired
+    public ViewedBooksServiceImpl(ViewedBooksRepository viewedBooksRepository, BookstoreUserRegister registerUser) {
+        this.viewedBooksRepository = viewedBooksRepository;
+        this.registerUser = registerUser;
+    }
 
     @Override
     public void saveViewedBooksUser(BookEntity book, HttpServletRequest request){

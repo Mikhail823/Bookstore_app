@@ -1,7 +1,6 @@
 package com.example.bookshop.service.impl;
 
 import com.example.bookshop.dto.ProfileFormDto;
-import com.example.bookshop.repository.User2RoleRepository;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
@@ -14,7 +13,6 @@ import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,27 +27,36 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 
-@RequiredArgsConstructor
 @Component
 @Slf4j
 public class UserServiceImp implements UserService {
 
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
     private final UniqueTokenUtil uniqueTokenUtil;
-    @Autowired
     private JavaMailSender javaMailSender;
-    @Lazy
-    @Autowired
     private final BookstoreUserRegister registerUser;
-    @Autowired
     private final UserContactRepository contactRepository;
-    @Autowired
     private final RoleService roleService;
+    PasswordEncoder encoder;
 
     @Autowired
-    PasswordEncoder encoder;
+    public UserServiceImp(UserRepository userRepository,
+                          UniqueTokenUtil uniqueTokenUtil,
+                          JavaMailSender javaMailSender,
+                          @Lazy BookstoreUserRegister registerUser,
+                          UserContactRepository contactRepository,
+                          RoleService roleService,
+                          PasswordEncoder encoder) {
+        this.userRepository = userRepository;
+        this.uniqueTokenUtil = uniqueTokenUtil;
+        this.javaMailSender = javaMailSender;
+        this.registerUser = registerUser;
+        this.contactRepository = contactRepository;
+        this.roleService = roleService;
+        this.encoder = encoder;
+    }
+
+
 
     @Override
     public UserEntity getUserById(Integer id) {

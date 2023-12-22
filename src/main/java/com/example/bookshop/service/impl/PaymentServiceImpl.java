@@ -8,7 +8,6 @@ import com.example.bookshop.struct.enums.PaymentStatusType;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -21,8 +20,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
+
     @Value("${robokassa.merchant.login}")
     private String merchantLogin;
 
@@ -32,12 +31,18 @@ public class PaymentServiceImpl implements PaymentService {
     @Value("${robokassa.pass2}")
     private String towTestPass;
 
-    @Autowired
     private final BalanceTransactionRepository balanceTransactionRepository;
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
     private final UserContactRepository contactRepository;
+
+    @Autowired
+    public PaymentServiceImpl(BalanceTransactionRepository balanceTransactionRepository,
+                              UserRepository userRepository,
+                              UserContactRepository contactRepository) {
+        this.balanceTransactionRepository = balanceTransactionRepository;
+        this.userRepository = userRepository;
+        this.contactRepository = contactRepository;
+    }
 
     @Override
     public String getPaymentUrl(UserEntity user, Double sum) throws NoSuchAlgorithmException {
@@ -70,10 +75,9 @@ public class PaymentServiceImpl implements PaymentService {
                 + invId + ":" + towTestPass).getBytes());
         signatureValue = DatatypeConverter.printHexBinary(signatureValue.getBytes()).toUpperCase();
         String value = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
-        if (signatureValue.equals(value)) {
-        return true;
-        }
+        if (signatureValue.equals(value)) return true;
         return false;
+
     }
 
 

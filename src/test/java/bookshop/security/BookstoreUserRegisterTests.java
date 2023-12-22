@@ -1,6 +1,8 @@
-package com.example.bookshop.security;
+package bookshop.security;
 
 import com.example.bookshop.repository.UserRepository;
+import com.example.bookshop.security.BookstoreUserRegister;
+import com.example.bookshop.security.RegistrationForm;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

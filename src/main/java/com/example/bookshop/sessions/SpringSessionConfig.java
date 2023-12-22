@@ -1,6 +1,5 @@
 package com.example.bookshop.sessions;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.ServletListenerRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -8,9 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.session.SessionRegistry;
-
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.session.jdbc.JdbcIndexedSessionRepository;
@@ -19,16 +16,21 @@ import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 @EnableJdbcHttpSession
 @Configuration
-@RequiredArgsConstructor
 @Order(2)
 public class SpringSessionConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
+
     private final ConcurrentSessionStrategy concurrentSessionStrategy;
-    @Autowired
     private final SessionRegistry sessionRegistry;
-    @Autowired
     private final AuthenticationFailureHandler securityErrorHandler;
 
+    @Autowired
+    public SpringSessionConfig(ConcurrentSessionStrategy concurrentSessionStrategy,
+                               SessionRegistry sessionRegistry,
+                               AuthenticationFailureHandler securityErrorHandler){
+        this.concurrentSessionStrategy = concurrentSessionStrategy;
+        this.sessionRegistry = sessionRegistry;
+        this.securityErrorHandler = securityErrorHandler;
+    }
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -49,10 +51,10 @@ public class SpringSessionConfig extends WebSecurityConfigurerAdapter {
     }
 
     //для инвалидации сессий при логауте
-//    @Bean
-//    public static ServletListenerRegistrationBean httpSessionEventPublisher() {
-//        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
-//    }
+    @Bean
+    public static ServletListenerRegistrationBean httpSessionEventPublisher() {
+        return new ServletListenerRegistrationBean(new HttpSessionEventPublisher());
+    }
 
     @Bean
     public static SessionRegistry sessionRegistry(JdbcIndexedSessionRepository sessionRepository) {

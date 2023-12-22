@@ -1,56 +1,53 @@
 package com.example.bookshop.security.admin;
 
 import com.example.bookshop.repository.RoleRepository;
-import com.example.bookshop.repository.User2RoleRepository;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import com.example.bookshop.struct.user.links.User2Role;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Component
-@RequiredArgsConstructor
-@Slf4j
 @Order(3)
 public class AutoRunAdmin implements CommandLineRunner{
-    @Autowired
+
     private final UserRepository userRepository;
-    @Autowired
     private final RoleRepository roleRepository;
-    @Autowired
-    private final User2RoleRepository user2RoleRepository;
-    @Autowired
     private final AdminConfig adminDataConfig;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
-    @Autowired
     private final UserContactRepository userContactRepository;
 
+    @Autowired
+    public AutoRunAdmin(UserRepository userRepository,
+                        RoleRepository roleRepository,
+                        AdminConfig adminDataConfig,
+                        PasswordEncoder passwordEncoder,
+                        UserContactRepository userContactRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.adminDataConfig = adminDataConfig;
+        this.passwordEncoder = passwordEncoder;
+        this.userContactRepository = userContactRepository;
+    }
+
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args){
 
             UserEntity adm = userRepository.getUserByUsername(adminDataConfig.getLogin());
-            if (adm != null) return;
-            else {
+            if (adm == null) {
                 saveAdmin();
                 saveContactPhoneAdmin(adminDataConfig);
                 saveContactEmailAdmin(adminDataConfig);
             }
-
-        log.info("PFUHEPRF");
     }
 
 

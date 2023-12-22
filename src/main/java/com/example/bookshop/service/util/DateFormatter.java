@@ -8,7 +8,7 @@ public class DateFormatter {
     public static final String DATE_PATTERN = "dd.MM.yyyy";
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat(DATE_PATTERN);
 
-    public DateFormatter(){}
+    private DateFormatter(){}
 
     public static Date getToDateFormat(String date){
         try{

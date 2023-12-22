@@ -1,4 +1,4 @@
-package com.example.bookshop.selenium;
+package bookshop.selenium;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

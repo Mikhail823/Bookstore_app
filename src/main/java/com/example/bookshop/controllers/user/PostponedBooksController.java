@@ -11,8 +11,6 @@ import com.example.bookshop.struct.book.BookEntity;
 
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,19 +26,26 @@ import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusB
 
 @Controller
 @RequestMapping("/api/books")
-@RequiredArgsConstructor
-@Slf4j
 public class PostponedBooksController {
-    @Autowired
-    private final BookService bookService;
-    @Autowired
-    private final BookstoreUserRegister userRegister;
-    @Autowired
-    private final CookieService cookieService;
-    @Autowired
-    private final UserService userServiceImp;
+
     private static final String REDIRECT_SLUG = "redirect:/api/books/";
     private static final String REDIRECT_POSTPONED = "redirect:/api/books/postponed";
+
+    private final BookService bookService;
+    private final BookstoreUserRegister userRegister;
+    private final CookieService cookieService;
+    private final UserService userServiceImp;
+
+    @Autowired
+    public PostponedBooksController(BookService bookService,
+                                    BookstoreUserRegister userRegister,
+                                    CookieService cookieService,
+                                    UserService userServiceImp) {
+        this.bookService = bookService;
+        this.userRegister = userRegister;
+        this.cookieService = cookieService;
+        this.userServiceImp = userServiceImp;
+    }
 
     @ModelAttribute("postponedBooks")
     public List<BookEntity> postponedBook(){
@@ -70,7 +75,7 @@ public class PostponedBooksController {
         Object curUser = userRegister.getCurrentUser();
 
         BookEntity book = bookService.getBookPageSlug(slug);
-        int quantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();;
+        int quantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
         if (curUser instanceof BookstoreUserDetails){
             UserEntity user = userServiceImp.getUserName(((BookstoreUserDetails) curUser).getName());
             bookService.saveBook2User(book, user, KEPT);
@@ -114,11 +119,7 @@ public class PostponedBooksController {
                 bookService.updateCountCartAndCountPostponed(book.getSlug(),
                         quantityCart + 1, book.getNumberOfPosponed() - 1);
             }
-        } else{
-
         }
-
         return REDIRECT_POSTPONED + "isCart=true";
     }
-
 }

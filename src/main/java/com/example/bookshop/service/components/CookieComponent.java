@@ -6,7 +6,6 @@ import com.example.bookshop.service.BooksRatingAndPopulatityService;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -19,31 +18,45 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Component
-@RequiredArgsConstructor
 public class CookieComponent implements CookieService{
 
-    @Autowired
+    public static final String POST_BOOK = "postponedBook";
+    public static final String CART_CONTENT = "cartContents";
+    public static final String CART_EMPTY = "isCartEmpty";
+    public static final String STATUS = "status";
+    public static final String POSTPONED_EMPTY = "isPostponedEmpty";
+    public static final String TOTAL_RATING = "totalRating";
+    public static final String BOOK_CART = "bookCart";
+    public static final String KEPT = "KEPT";
+    public static final String CART = "CART";
+
     private final UserService userServiceImp;
-    @Autowired
     private final BookService bookService;
-    @Autowired
     private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
+
+    @Autowired
+    public CookieComponent(UserService userServiceImp, BookService bookService,
+                           BooksRatingAndPopulatityService booksRatingAndPopulatityService) {
+        this.userServiceImp = userServiceImp;
+        this.bookService = bookService;
+        this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
+    }
 
     @Override
     public void addBooksCookieCart(String cookies, Model model,
                                Map<String, String> allParams, HttpServletResponse response, String slug) {
         if (cookies == null || cookies.equals("")) {
-            Cookie cookie = new Cookie("cartContents", allParams.get("status") + "=" + slug);
+            Cookie cookie = new Cookie(CART_CONTENT, allParams.get(STATUS) + "=" + slug);
             cookie.setPath("/");
             response.addCookie(cookie);
-            model.addAttribute("isEmptyCart", false);
-        } else if (!cookies.contains(allParams.get("status") + "=" + slug)) {
+            model.addAttribute(CART_CONTENT, false);
+        } else if (!cookies.contains(allParams.get(STATUS) + "=" + slug)) {
             StringJoiner stringJoiner = new StringJoiner("/");
-            stringJoiner.add(cookies).add(allParams.get("status") + "=" + slug);
-            Cookie cookie = new Cookie("cartContents", stringJoiner.toString());
+            stringJoiner.add(cookies).add(allParams.get(STATUS) + "=" + slug);
+            Cookie cookie = new Cookie(CART_CONTENT, stringJoiner.toString());
             cookie.setPath("/");
             response.addCookie(cookie);
-            model.addAttribute("isEmptyCart", false);
+            model.addAttribute(CART_EMPTY, false);
         }
     }
 
@@ -51,17 +64,17 @@ public class CookieComponent implements CookieService{
     public void addBooksCookiePostponed(String cookies, Model model,
                                         Map<String, String> allParams, HttpServletResponse response, String slug){
         if (cookies == null || cookies.equals("")) {
-            Cookie cookie = new Cookie("postponedBook", allParams.get("status") + "=" + slug);
+            Cookie cookie = new Cookie(POST_BOOK, allParams.get(STATUS) + "=" + slug);
             cookie.setPath("/");
             response.addCookie(cookie);
-            model.addAttribute("isPostponedEmpty", false);
-        } else if (!cookies.contains(allParams.get("status") + "=" + slug)) {
+            model.addAttribute(POSTPONED_EMPTY, false);
+        } else if (!cookies.contains(allParams.get(STATUS) + "=" + slug)) {
             StringJoiner stringJoiner = new StringJoiner("/");
-            stringJoiner.add(cookies).add(allParams.get("status") + "=" + slug);
-            Cookie cookie = new Cookie("postponedBook", stringJoiner.toString());
+            stringJoiner.add(cookies).add(allParams.get(STATUS) + "=" + slug);
+            Cookie cookie = new Cookie(POST_BOOK, stringJoiner.toString());
             cookie.setPath("/");
             response.addCookie(cookie);
-            model.addAttribute("isPostponedEmpty", false);
+            model.addAttribute(POSTPONED_EMPTY, false);
         }
     }
 
@@ -88,8 +101,8 @@ public class CookieComponent implements CookieService{
     public void clearCookie(HttpServletResponse response, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         for (Cookie c : cookies) {
-            if (c.getName().equals("cartContents") && c.getValue().equals("")
-                    || c.getName().equals("postponedBook") && c.getValue().equals("")) {
+            if (c.getName().equals(CART_CONTENT) && c.getValue().equals("")
+                    || c.getName().equals(POST_BOOK) && c.getValue().equals("")) {
                 c.setPath("/");
                 c.setMaxAge(0);
                 c.setValue("");
@@ -111,22 +124,22 @@ public class CookieComponent implements CookieService{
     @Override
     public List<String> slugsCookieCart(String contents) {
         return Arrays.stream(splitCookie(contents))
-                .filter(s -> s.contains("CART"))
-                .map(s -> s.replace("CART=", ""))
+                .filter(s -> s.contains(CART))
+                .map(s -> s.replace(CART + "=", ""))
                 .collect(Collectors.toList());
     }
 
     @Override
     public void cookieCartBooks(String contents, Model model) {
         if (contents == null || contents.equals("")) {
-            model.addAttribute("isEmptyCart", true);
+            model.addAttribute(CART_EMPTY, true);
         } else {
-            model.addAttribute("isEmptyCart", false);
+            model.addAttribute(CART_EMPTY, false);
             List<String> suitableCookieSlugs = slugsCookieCart(contents);
             List<BookEntity> booksFromCookieSlugs = bookService.getBooksBySlugIn(suitableCookieSlugs);
-            model.addAttribute("bookCart", booksFromCookieSlugs);
+            model.addAttribute(BOOK_CART, booksFromCookieSlugs);
             for (BookEntity book : booksFromCookieSlugs) {
-                model.addAttribute("totalRating", booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
+                model.addAttribute(TOTAL_RATING, booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
             }
         }
     }
@@ -134,59 +147,59 @@ public class CookieComponent implements CookieService{
     @Override
     public void cookiePostponedBooks(String contents, Model model) {
         if (contents == null || contents.equals("")){
-            model.addAttribute("isPostponedEmpty", true);
+            model.addAttribute(POSTPONED_EMPTY, true);
         }
         else {
-            model.addAttribute("isPostponedEmpty", false);
+            model.addAttribute(POSTPONED_EMPTY, false);
             contents = contents.startsWith("/") ? contents.substring(1) : contents;
             contents = contents.endsWith("/") ? contents.substring(0, contents.length() - 1) : contents;
             String[] cookiePostponedBook = contents.split("/");
             List<String> suitableCookieSlugs = Arrays.stream(cookiePostponedBook)
-                    .filter(s -> s.contains("KEPT"))
-                    .map(s -> s.replace("KEPT=",""))
+                    .filter(s -> s.contains(KEPT))
+                    .map(s -> s.replace(KEPT + "=",""))
                     .collect(Collectors.toList());
             List<BookEntity> booksFromCookieSlug = bookService.getBooksBySlugIn(suitableCookieSlugs);
             for (BookEntity book : booksFromCookieSlug){
-                model.addAttribute("totalRating", booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
+                model.addAttribute(TOTAL_RATING, booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
             }
-            model.addAttribute("postponedBooks", booksFromCookieSlug);
+            model.addAttribute(POST_BOOK, booksFromCookieSlug);
 
         }
     }
 
     @Override
     public void deleteBookFromCookieCart(String slug, String cartContents, HttpServletResponse response, Model model) {
-        if (!cartContents.equals("") && cartContents != null) {
+        if (cartContents.isEmpty()) {
             ArrayList<String> booksCookie = new ArrayList<>
                     (Arrays.asList(cartContents.split("/")));
-            booksCookie.remove("CART=" + slug);
-            Cookie cookie = new Cookie("cartContents", String.join("/", booksCookie));
+            booksCookie.remove(CART + "=" + slug);
+            Cookie cookie = new Cookie(CART_CONTENT, String.join("/", booksCookie));
             cookie.setPath("/");
             response.addCookie(cookie);
 
-            if (booksCookie.size() > 0) {
-                model.addAttribute("isCartEmpty", false);
-            } else {
-                model.addAttribute("isCartEmpty", true);
-            }
+            isCartEmpty(booksCookie, model);
         } else {
-            model.addAttribute("isCartEmpty", true);
+            model.addAttribute(CART_EMPTY, true);
         }
     }
 
+    public Model isCartEmpty(List<String> cookie, Model model){
+        if (cookie.isEmpty()){  return model.addAttribute(CART_EMPTY, false);}
+        return model.addAttribute(CART_EMPTY, true);
+    }
     @Override
     public void deleteBookThePostponedCookie(String slug, String postponedBook,
                                              HttpServletResponse response, Model model){
         if (postponedBook != null || !postponedBook.equals("")){
             ArrayList<String> cookieBookPostponedList = new ArrayList<>(Arrays.asList(postponedBook.split("/")));
             cookieBookPostponedList.remove(slug);
-            Cookie cookie = new Cookie("postponedBook", String.join("/", cookieBookPostponedList));
+            Cookie cookie = new Cookie(POST_BOOK, String.join("/", cookieBookPostponedList));
             cookie.setPath("/");
             response.addCookie(cookie);
-            model.addAttribute("isPostponedEmpty", false);
+            model.addAttribute(POSTPONED_EMPTY, false);
         }
         else {
-            model.addAttribute("isPostponedEmpty", true);
+            model.addAttribute(POSTPONED_EMPTY, true);
         }
     }
 
@@ -208,5 +221,4 @@ public class CookieComponent implements CookieService{
         }
         return listBooks;
     }
-
 }

@@ -1,4 +1,4 @@
-package com.example.bookshop.controllers.user;
+package bookshop.controllers.user;
 
 import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.service.BookService;

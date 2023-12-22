@@ -6,7 +6,6 @@ import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.struct.book.BookEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 
@@ -22,15 +21,20 @@ import java.util.List;
 import static java.util.Objects.nonNull;
 
 @ControllerAdvice(annotations = Controller.class)
-@RequiredArgsConstructor
 @Primary
 public class GlobalModelAttributesController {
-    @Autowired
+
     private final BookService bookService;
-    @Autowired
     private final BookstoreUserRegister userRegister;
-    @Autowired
     private final CookieService cookieComponent;
+    @Autowired
+    public GlobalModelAttributesController(BookService bookService,
+                                           BookstoreUserRegister userRegister,
+                                           CookieService cookieComponent) {
+        this.bookService = bookService;
+        this.userRegister = userRegister;
+        this.cookieComponent = cookieComponent;
+    }
 
     @ModelAttribute("searchWordDto")
     public SearchWordDto dto() {

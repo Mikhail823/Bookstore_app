@@ -16,11 +16,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@Api(description = "book data api")
+@Api("book data api")
 public class BooksRestApiController {
 
     private final BookService bookService;
-
 
     @Autowired
     public BooksRestApiController(BookService bookService) {
@@ -42,7 +41,7 @@ public class BooksRestApiController {
 
     @GetMapping("/books/by-price-range")
     @ApiOperation("get books by price range from min price to max price")
-    public ResponseEntity<List<BookEntity>> priceRangeBookss(@RequestParam("min")Integer min, @RequestParam("max")Integer max){
+    public ResponseEntity<List<BookEntity>> priceRangeBooks(@RequestParam("min")Integer min, @RequestParam("max")Integer max){
         return ResponseEntity.ok(bookService.getBooksWithPriceBetween(min, max));
     }
 
@@ -60,13 +59,13 @@ public class BooksRestApiController {
 
     @ExceptionHandler(StackOverflowError.class)
     public ResponseEntity<ApiResponse<BookEntity>> handler(Exception exception){
-        return new ResponseEntity<>( new ApiResponse<BookEntity>(HttpStatus.BAD_REQUEST, "SatckOverflow",
+        return new ResponseEntity<>( new ApiResponse<>(HttpStatus.BAD_REQUEST, "SatckOverflow",
                 exception), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(BookStoreApiWrongParameterException.class)
     public ResponseEntity<ApiResponse<BookEntity>> bookStoreHandler(Exception exception){
-        return new ResponseEntity<>(new ApiResponse<BookEntity>(HttpStatus.BAD_REQUEST, "STACKOVERFLOW!!!!", exception),
+        return new ResponseEntity<>(new ApiResponse<>(HttpStatus.BAD_REQUEST, "STACKOVERFLOW!!!!", exception),
                 HttpStatus.BAD_REQUEST);
     }
 

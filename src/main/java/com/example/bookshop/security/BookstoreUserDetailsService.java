@@ -7,7 +7,6 @@ import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,12 +19,16 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
-@RequiredArgsConstructor
 public class BookstoreUserDetailsService implements UserDetailsService {
-    @Autowired
+
     private final UserRepository userRepository;
-    @Autowired
     private final UserContactRepository contactRepository;
+
+    @Autowired
+    public BookstoreUserDetailsService(UserRepository userRepository, UserContactRepository contactRepository) {
+        this.userRepository = userRepository;
+        this.contactRepository = contactRepository;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String contact) throws UsernameNotFoundException {

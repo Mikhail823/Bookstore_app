@@ -6,7 +6,6 @@ import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.MessageService;
 import com.example.bookshop.struct.book.review.MessageEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -16,19 +15,24 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 
 @Component
-@RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService {
 
     @Value("${email.address.shop}")
     private String email;
-
-    @Autowired
     private final JavaMailSender javaMailSender;
+    private final MessageRepository messageRepository;
+    private final BookstoreUserRegister userRegister;
 
     @Autowired
-    private final MessageRepository messageRepository;
-    @Autowired
-    private final BookstoreUserRegister userRegister;
+    public MessageServiceImpl(JavaMailSender javaMailSender,
+                              MessageRepository messageRepository,
+                              BookstoreUserRegister userRegister) {
+        this.javaMailSender = javaMailSender;
+        this.messageRepository = messageRepository;
+        this.userRegister = userRegister;
+    }
+
+
 
     @Override
     public void saveMessage(MessageFormDto messageFormDto){

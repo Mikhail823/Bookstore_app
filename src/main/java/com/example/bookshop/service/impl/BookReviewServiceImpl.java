@@ -6,8 +6,6 @@ import com.example.bookshop.service.BookReviewService;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
-import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -16,14 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 @Service
-@RequiredArgsConstructor
 public class BookReviewServiceImpl implements BookReviewService {
 
-    @Autowired
     private final BookReviewRepository bookReviewRepository;
+    private final BookService bookService;
 
     @Autowired
-    private final BookService bookService;
+    public BookReviewServiceImpl(BookReviewRepository bookReviewRepository, BookService bookService) {
+        this.bookReviewRepository = bookReviewRepository;
+        this.bookService = bookService;
+    }
 
     @Override
     @Transactional

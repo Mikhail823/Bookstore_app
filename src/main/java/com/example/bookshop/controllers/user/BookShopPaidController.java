@@ -3,12 +3,9 @@ package com.example.bookshop.controllers.user;
 import com.example.bookshop.security.BookstoreUserDetails;
 
 import com.example.bookshop.service.BookService;
-import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.service.PaymentService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -21,40 +18,39 @@ import java.security.NoSuchAlgorithmException;
 
 @Controller
 @RequestMapping("/api/books")
-@RequiredArgsConstructor
-@Slf4j
 public class BookShopPaidController {
+
     private static final String REDIRECT_SLUG = "redirect:/api/books/";
     private static final String REDIRECT_PROFILE = "http://localhost:8081/profile";
 
-    @Autowired
     private final BookService bookService;
-    @Autowired
-    private final CookieService cookieService;
-    @Autowired
     private final PaymentService paymentService;
 
+    @Autowired
+    public BookShopPaidController(BookService bookService, PaymentService paymentService) {
+        this.bookService = bookService;
+        this.paymentService = paymentService;
+    }
 
     @GetMapping("/success")
-    public RedirectView successURLHandler(@RequestParam("OutSum") Double OutSum,
-                                          @RequestParam("InvId") Integer InvId,
-                                          @RequestParam("SignatureValue") String SignatureValue,
-                                          @RequestParam("Culture") String Culture,
-                                          @RequestParam("IsTest") String IsTest) throws NoSuchAlgorithmException {
+    public RedirectView successURLHandler(@RequestParam("outSum") Double outSum,
+                                          @RequestParam("invId") Integer invId,
+                                          @RequestParam("signatureValue") String signatureValue,
+                                          @RequestParam("Culture") String culture,
+                                          @RequestParam("IsTest") String isTest) {
 
-
-        String description = "Пополнение счета через сервис ROBOKASSA на сумму " + OutSum + " руб.";
-        paymentService.savingTransaction(Double.valueOf(OutSum), InvId, description);
+        String description = "Пополнение счета через сервис ROBOKASSA на сумму " + outSum + " руб.";
+        paymentService.savingTransaction(outSum, invId, description);
         return new RedirectView(REDIRECT_PROFILE);
     }
 
     @GetMapping("/result")
-    public RedirectView resultUrlHandler(@RequestParam("OutSum") Double OutSum,
-                                         @RequestParam("InvId") Integer InvId,
-                                         @RequestParam("SignatureValue") String SignatureValue,
-                                         @RequestParam("Culture") String Culture,
-                                         @RequestParam("IsTest") String IsTest, Model model) throws NoSuchAlgorithmException {
-        if(paymentService.isSignature(SignatureValue, OutSum, InvId)){
+    public RedirectView resultUrlHandler(@RequestParam("OutSum") Double outSum,
+                                         @RequestParam("invId") Integer invId,
+                                         @RequestParam("SignatureValue") String signatureValue,
+                                         @RequestParam("Culture") String culture,
+                                         @RequestParam("IsTest") String isTest, Model model) throws NoSuchAlgorithmException {
+        if(paymentService.isSignature(signatureValue, outSum, invId)){
             model.addAttribute("res", true);
             model.addAttribute("paymentResult", "Денежные средства зачислены на счет!");
         }
@@ -63,9 +59,9 @@ public class BookShopPaidController {
     }
 
     @GetMapping("/failPayment")
-    public RedirectView failPaymentUrlHandler(@RequestParam("OutSum") Double OutSum,
-                                              @RequestParam("InvId") Integer InvId,
-                                              @RequestParam("Culture") String Culture, Model model){
+    public RedirectView failPaymentUrlHandler(@RequestParam("OutSum") Double outSum,
+                                              @RequestParam("InvId") Integer invId,
+                                              @RequestParam("Culture") String culture, Model model){
         model.addAttribute("error", "Ошибка зачисления денежных средств!!!!!:((");
         return new RedirectView(REDIRECT_PROFILE);
     }

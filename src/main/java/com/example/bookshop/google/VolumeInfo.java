@@ -2,7 +2,7 @@ package com.example.bookshop.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class VolumeInfo {
     @JsonProperty("title")
@@ -17,15 +17,15 @@ public class VolumeInfo {
     String title;
 
     @JsonProperty("authors")
-    public ArrayList<String> getAuthors() {
+    public List<String> getAuthors() {
         return this.authors;
     }
 
-    public void setAuthors(ArrayList<String> authors) {
+    public void setAuthors(List<String> authors) {
         this.authors = authors;
     }
 
-    ArrayList<String> authors;
+    List<String> authors;
 
     @JsonProperty("publisher")
     public String getPublisher() {
@@ -61,15 +61,15 @@ public class VolumeInfo {
     String description;
 
     @JsonProperty("industryIdentifiers")
-    public ArrayList<IndustryIdentifier> getIndustryIdentifiers() {
+    public List<IndustryIdentifier> getIndustryIdentifiers() {
         return this.industryIdentifiers;
     }
 
-    public void setIndustryIdentifiers(ArrayList<IndustryIdentifier> industryIdentifiers) {
+    public void setIndustryIdentifiers(List<IndustryIdentifier> industryIdentifiers) {
         this.industryIdentifiers = industryIdentifiers;
     }
 
-    ArrayList<IndustryIdentifier> industryIdentifiers;
+    List<IndustryIdentifier> industryIdentifiers;
 
     @JsonProperty("readingModes")
     public ReadingModes getReadingModes() {
@@ -105,15 +105,15 @@ public class VolumeInfo {
     String printType;
 
     @JsonProperty("categories")
-    public ArrayList<String> getCategories() {
+    public List<String> getCategories() {
         return this.categories;
     }
 
-    public void setCategories(ArrayList<String> categories) {
+    public void setCategories(List<String> categories) {
         this.categories = categories;
     }
 
-    ArrayList<String> categories;
+    List<String> categories;
 
     @JsonProperty("maturityRating")
     public String getMaturityRating() {

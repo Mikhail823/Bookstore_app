@@ -2,7 +2,7 @@ package com.example.bookshop.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class Root {
     @JsonProperty("kind")
@@ -28,13 +28,13 @@ public class Root {
     int totalItems;
 
     @JsonProperty("items")
-    public ArrayList<Item> getItems() {
+    public List<Item> getItems() {
         return this.items;
     }
 
-    public void setItems(ArrayList<Item> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 
-    ArrayList<Item> items;
+    List<Item> items;
 }

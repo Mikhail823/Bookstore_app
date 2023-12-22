@@ -1,6 +1,4 @@
 package com.example.bookshop.security.jwt.blacklist;
-
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
@@ -13,10 +11,14 @@ import java.util.Arrays;
 import java.util.Objects;
 
 @Service
-@RequiredArgsConstructor
 public class JWTBlackList implements LogoutHandler {
-    @Autowired
+
     private final JWTBlackListRepository jwtBlackListRepository;
+
+    @Autowired
+    public JWTBlackList(JWTBlackListRepository jwtBlackListRepository) {
+        this.jwtBlackListRepository = jwtBlackListRepository;
+    }
 
     @Override
     public void logout(HttpServletRequest httpServletRequest,

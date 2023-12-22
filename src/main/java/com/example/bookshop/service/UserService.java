@@ -5,7 +5,6 @@ import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import org.springframework.security.core.userdetails.User;
 
 public interface UserService {
     UserEntity getUserById(Integer id);

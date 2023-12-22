@@ -1,7 +1,6 @@
 package com.example.bookshop.security;
 
 import com.example.bookshop.struct.user.RoleEntity;
-import com.example.bookshop.struct.user.RoleType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +23,7 @@ public class BookstoreUserDetails implements UserDetails, OAuth2User {
 
     @Override
     public Map<String, Object> getAttributes() {
-        return null;
+        return new HashMap<>();
     }
 
     @Override

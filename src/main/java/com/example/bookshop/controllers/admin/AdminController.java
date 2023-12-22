@@ -5,7 +5,6 @@ import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.service.*;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -16,25 +15,32 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/api/admin")
 public class AdminController {
-    private final static String REDIRECT = "redirect:/api/admin/users";
-    private final static String REDIRECT_GENRES = "redirect:/api/books/genres";
-    @Autowired
+    private static final  String REDIRECT = "redirect:/api/admin/users";
+    private static final  String REDIRECT_GENRES = "redirect:/api/books/genres";
     private final AdminService adminService;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final BookService bookService;
-    @Autowired
     private final GenreService genreService;
-    @Autowired
     private final TagService tagService;
-    @Autowired
     private final BookReviewService bookReviewService;
-    @Autowired
     private final AuthorService authorService;
+
+    @Autowired
+    public AdminController(AdminService adminService, UserService userService,
+                           BookService bookService, GenreService genreService,
+                           TagService tagService, BookReviewService bookReviewService,
+                           AuthorService authorService) {
+
+        this.adminService = adminService;
+        this.userService = userService;
+        this.bookService = bookService;
+        this.genreService = genreService;
+        this.tagService = tagService;
+        this.bookReviewService = bookReviewService;
+        this.authorService = authorService;
+    }
 
     @GetMapping("/users")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")

@@ -7,7 +7,6 @@ import com.example.bookshop.service.AdminService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.example.bookshop.struct.user.links.User2Role;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,14 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class AdminServiceImpl implements AdminService {
-    @Autowired
+
     private final UserRepository userRepository;
-    @Autowired
     private final User2RoleRepository user2RoleRepository;
-    @Autowired
     private final BookRepository bookRepository;
+
+    @Autowired
+    public AdminServiceImpl(UserRepository userRepository,
+                            User2RoleRepository user2RoleRepository,
+                            BookRepository bookRepository) {
+        this.userRepository = userRepository;
+        this.user2RoleRepository = user2RoleRepository;
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public List<UserEntity> getAllUsersShop() {

@@ -2,7 +2,7 @@ package com.example.bookshop.google;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class SaleInfo {
     @JsonProperty("country")
@@ -72,13 +72,13 @@ public class SaleInfo {
     String buyLink;
 
     @JsonProperty("offers")
-    public ArrayList<Offer> getOffers() {
+    public List<Offer> getOffers() {
         return this.offers;
     }
 
-    public void setOffers(ArrayList<Offer> offers) {
+    public void setOffers(List<Offer> offers) {
         this.offers = offers;
     }
 
-    ArrayList<Offer> offers;
+    List<Offer> offers;
 }

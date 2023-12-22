@@ -7,7 +7,6 @@ import com.example.bookshop.service.InspectorService;
 import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -17,26 +16,34 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.Random;
 
 @Component
-@RequiredArgsConstructor
 public class InspectorServiceImpl implements InspectorService {
-    @Autowired
-    private final SmsServiceImpl smsServiceImpl;
-    @Autowired
-    private final UserServiceImp userServiceImp;
-    @Autowired
-    private final BookstoreUserRegister userRegister;
-    @Autowired
-    private final JavaMailSender javaMailSender;
-    @Autowired
-    private final RestTemplate restTemplate;
 
+    private final SmsServiceImpl smsServiceImpl;
+    private final UserServiceImp userServiceImp;
+    private final BookstoreUserRegister userRegister;
+    private final JavaMailSender javaMailSender;
+    private final RestTemplate restTemplate;
     @Value("${sms.api_id}")
     private String apiId;
+
+    private static  Random random = new Random();
+
+    @Autowired
+    public InspectorServiceImpl(SmsServiceImpl smsServiceImpl, UserServiceImp userServiceImp,
+                                BookstoreUserRegister userRegister, JavaMailSender javaMailSender,
+                                RestTemplate restTemplate) {
+        this.smsServiceImpl = smsServiceImpl;
+        this.userServiceImp = userServiceImp;
+        this.userRegister = userRegister;
+        this.javaMailSender = javaMailSender;
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public void sendTheCodeToMailUser(ContactConfirmationPayload payload, HttpServletRequest request){
@@ -65,15 +72,15 @@ public class InspectorServiceImpl implements InspectorService {
          HttpHeaders headers = new HttpHeaders();
          UserEntity userAny = userServiceImp.findByUserFromHash(userRegister.getHashOfTheUserFromCookie(request));
 
-         String URL = "https://sms.ru/code/call" +
+         String url = "https://sms.ru/code/call" +
                  "?phone=" + payload.getContact() +
                  "&ip="  + createRandomIpAddress() +
                  "&api_id=" + apiId;
 
          headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-         HttpEntity<String> entity = new HttpEntity<String>(headers);
+         HttpEntity<String> entity = new HttpEntity<>(headers);
          ResponseEntity<ResponseBodyCode> code =
-                 restTemplate.exchange(URL, HttpMethod.GET, entity, ResponseBodyCode.class);
+                 restTemplate.exchange(url, HttpMethod.GET, entity, ResponseBodyCode.class);
 
          StringBuilder sb = new StringBuilder();
          sb.append(code.getBody().getCode());
@@ -90,9 +97,9 @@ public class InspectorServiceImpl implements InspectorService {
 
      @Override
      public String createRandomIpAddress(){
-         Random r = new Random();
-         return r.nextInt(255) + "." + r.nextInt(255)
-                 + "." + r.nextInt(255) + "." + r.nextInt(255);
+
+          return random.nextInt(255) + "." + random.nextInt(255)
+                 + "." + random.nextInt(255) + "." + random.nextInt(255);
      }
 
 }

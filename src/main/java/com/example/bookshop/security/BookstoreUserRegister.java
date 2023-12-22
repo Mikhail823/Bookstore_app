@@ -1,16 +1,13 @@
 package com.example.bookshop.security;
 
 import com.example.bookshop.aop.annotations.LoggableExceptionHandler;
-import com.example.bookshop.repository.User2RoleRepository;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.security.jwt.JWTUtil;
 import com.example.bookshop.service.RoleService;
 import com.example.bookshop.struct.user.RoleEntity;
-import com.example.bookshop.struct.user.RoleType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -26,25 +23,29 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @Service
-@RequiredArgsConstructor
 public class BookstoreUserRegister {
 
-    @Autowired
     private final UserRepository userRepository;
-    @Autowired
     private final RoleService roleService;
-    @Autowired
     private final UserContactRepository contactRepository;
-    @Autowired
     private final PasswordEncoder passwordEncoder;
-    @Autowired
     private final AuthenticationManager authenticationManager;
-    @Autowired
     private final JWTUtil jwtUtil;
-    @Autowired
     private final BookstoreUserDetailsService bookstoreUserDetailsService;
+
     @Autowired
-    private final User2RoleRepository user2RoleRepository;
+    public BookstoreUserRegister(UserRepository userRepository, RoleService roleService,
+                                 UserContactRepository contactRepository, PasswordEncoder passwordEncoder,
+                                 AuthenticationManager authenticationManager, JWTUtil jwtUtil,
+                                 BookstoreUserDetailsService bookstoreUserDetailsService) {
+        this.userRepository = userRepository;
+        this.roleService = roleService;
+        this.contactRepository = contactRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
+        this.jwtUtil = jwtUtil;
+        this.bookstoreUserDetailsService = bookstoreUserDetailsService;
+    }
 
     @Transactional
     public void registrationNewUser(RegistrationForm registrationForm, HttpServletRequest request){
@@ -82,7 +83,7 @@ public class BookstoreUserRegister {
     }
 
     @LoggableExceptionHandler
-    public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload) throws Exception{
+    public ContactConfirmationResponse jwtLogin(ContactConfirmationPayload payload){
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(payload.getContact(),
                 payload.getCode()));
         BookstoreUserDetails userDetails =
@@ -94,7 +95,7 @@ public class BookstoreUserRegister {
     }
 
     @LoggableExceptionHandler
-    public ContactConfirmationResponse jwtLoginByPhoneNumber(ContactConfirmationPayload payload) throws Exception{
+    public ContactConfirmationResponse jwtLoginByPhoneNumber(ContactConfirmationPayload payload){
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         UserDetails userDetails = bookstoreUserDetailsService.loadUserByUsername(payload.getContact());
         String jwtToken = jwtUtil.generateToken(userDetails);
@@ -123,13 +124,9 @@ public class BookstoreUserRegister {
         return uuid.replace("-", "");
     }
 
-    public boolean isAuthUser(){
+    public boolean isAuthUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String anonymousUser = String.valueOf(auth.getPrincipal());
-        if (anonymousUser.equals("anonymousUser")){
-            return false;
-        } else {
-            return true;
-        }
+        return (anonymousUser.equals("anonymousUser"));
     }
 }

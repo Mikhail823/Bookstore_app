@@ -10,8 +10,6 @@ import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,20 +21,23 @@ import java.security.NoSuchAlgorithmException;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
-@Slf4j
 public class ProfileUserPageController {
-    private final String PROF_REDIRECT = "redirect:/profile";
-    @Autowired
-    private final BookstoreUserRegister userRegister;
-    @Autowired
+
+    private static final String PROF_REDIRECT = "redirect:/profile";
+    private static final String PROFILE = "profile";
     private final UserService userService;
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
+    private final PaymentService paymentService;
     private final BookService bookService;
 
+    @Autowired
+    public ProfileUserPageController(UserService userService,
+                                     PaymentService paymentService,
+                                     BookService bookService) {
 
+        this.userService = userService;
+        this.paymentService = paymentService;
+        this.bookService = bookService;
+    }
 
     @GetMapping("/my")
     public String handleMy(@AuthenticationPrincipal BookstoreUserDetails user, Model model) {
@@ -55,7 +56,7 @@ public class ProfileUserPageController {
         model.addAttribute("email", email.getContact());
         model.addAttribute("phone", phone.getContact());
         model.addAttribute("curUsr", user.getContact().getUserId());
-        return "profile";
+        return PROFILE;
     }
 
     @GetMapping("/archive")
@@ -67,7 +68,7 @@ public class ProfileUserPageController {
     @PostMapping("/profile/save")
     public String updateProfile(ProfileFormDto profileDto) throws JsonProcessingException {
         userService.confirmChangingUserProfile(profileDto);
-        return "redirect:/profile";
+        return PROF_REDIRECT;
     }
 
     @PostMapping("/payment")
@@ -80,7 +81,7 @@ public class ProfileUserPageController {
     @GetMapping("/profile/verify/{token}")
     public String handleProfileVerification(@PathVariable String token) throws JsonProcessingException {
         userService.changeUserProfile(token);
-        return "redirect:/profile";
+        return PROF_REDIRECT;
     }
 
 

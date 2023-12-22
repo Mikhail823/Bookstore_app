@@ -5,7 +5,6 @@ import com.example.bookshop.repository.TagRepository;
 import com.example.bookshop.service.TagService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.tags.TagEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,14 +14,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class TagServiceImpl implements TagService {
 
-    @Autowired
     private final TagRepository tagRepository;
+    private final BookRepository bookRepository;
 
     @Autowired
-    private final BookRepository bookRepository;
+    public TagServiceImpl(TagRepository tagRepository, BookRepository bookRepository) {
+        this.tagRepository = tagRepository;
+        this.bookRepository = bookRepository;
+    }
 
     @Override
     public List<TagEntity> getTags(){

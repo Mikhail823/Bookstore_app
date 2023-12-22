@@ -4,7 +4,6 @@ import com.example.bookshop.dto.BooksPageDto;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.TagService;
 import com.example.bookshop.struct.book.BookEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -13,13 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class TagController {
 
-    @Autowired
     private final TagService tagService;
-    @Autowired
     private final BookService bookService;
+
+    @Autowired
+    public TagController(TagService tagService, BookService bookService) {
+        this.tagService = tagService;
+        this.bookService = bookService;
+    }
 
     @GetMapping("/tags/{id}")
     public String getTagPage(@PathVariable(value = "id") Integer id, Model model){

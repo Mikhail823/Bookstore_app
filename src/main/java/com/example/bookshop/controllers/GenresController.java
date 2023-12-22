@@ -5,7 +5,6 @@ import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.GenreService;
 import com.example.bookshop.struct.enums.GenreType;
 import com.example.bookshop.struct.genre.GenreEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,12 +12,16 @@ import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/api")
-@RequiredArgsConstructor
 public class GenresController {
-    @Autowired
+
     private final GenreService genreService;
-    @Autowired
     private final BookService bookService;
+
+    @Autowired
+    public GenresController(GenreService genreService, BookService bookService) {
+        this.genreService = genreService;
+        this.bookService = bookService;
+    }
 
     @GetMapping("/genres")
     public String genresPage(Model model)

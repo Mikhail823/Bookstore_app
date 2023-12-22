@@ -9,7 +9,7 @@ public class MessageFormDto {
 
     @NotBlank
     private String name;
-    @Pattern(regexp = "\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}", message = "Не соответствует формату email адреса")
+    @Pattern(regexp = "^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$", message = "Не соответствует формату email адреса")
     private String mail;
     @NotNull(message = "Введите название")
     private String topic;

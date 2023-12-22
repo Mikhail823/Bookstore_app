@@ -1,4 +1,4 @@
-package com.example.bookshop.service;
+package bookshop.service;
 
 import com.example.bookshop.dto.BookReviewDto;
 import com.example.bookshop.dto.LikeReviewBookDto;
@@ -7,6 +7,8 @@ import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.repository.BookReviewRepository;
 import com.example.bookshop.repository.RatingRepository;
 import com.example.bookshop.repository.UserRepository;
+import com.example.bookshop.service.BookReviewService;
+import com.example.bookshop.service.BooksRatingAndPopulatityService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.ratings.RatingBookEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
@@ -55,7 +57,7 @@ class BooksRatingAndPopulatityServiceTests {
 
         assertNotNull(ratingBookEntity);
 
-        assertEquals(ratingBookEntity.getFiveStar(), 247);
+        assertEquals(247, ratingBookEntity.getFiveStar());
     }
 
     @SneakyThrows

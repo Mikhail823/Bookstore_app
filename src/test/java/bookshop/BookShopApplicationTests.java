@@ -1,5 +1,6 @@
-package com.example.bookshop;
+package bookshop;
 
+import com.example.bookshop.BookShopApplication;
 import lombok.RequiredArgsConstructor;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;

@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +21,9 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode
-public class AuthorEntity {
+public class AuthorEntity implements Serializable {
+
+    private  static  final Long  serialVersionUID  =  8957262041950289547L ;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

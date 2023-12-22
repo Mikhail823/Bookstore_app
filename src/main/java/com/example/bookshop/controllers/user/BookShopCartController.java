@@ -10,7 +10,6 @@ import com.example.bookshop.service.UserService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,22 +31,31 @@ import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusB
 
 @Controller
 @RequestMapping("/api/books")
-@RequiredArgsConstructor
 @Slf4j
 public class BookShopCartController {
 
-    @Autowired
-    private final BookService bookService;
-    @Autowired
-    private final BookstoreUserRegister userRegister;
-    @Qualifier("cookieService")
-    private final CookieService cookieService;
-    @Autowired
-    private final UserService userService;
-    @Autowired
-    private final PaymentService paymentService;
     public static final String REDIRECT_SLUG = "redirect:/api/books/";
     private static final String REDIRECT_CART = "redirect:/api/books/cart";
+
+    private final BookService bookService;
+    private final BookstoreUserRegister userRegister;
+    @Qualifier("cookieService")private final CookieService cookieService;
+    private final UserService userService;
+    private final PaymentService paymentService;
+
+    @Autowired
+    public BookShopCartController(BookService bookService,
+                                  BookstoreUserRegister userRegister,
+                                  CookieService cookieService,
+                                  UserService userService,
+                                  PaymentService paymentService) {
+        this.bookService = bookService;
+        this.userRegister = userRegister;
+        this.cookieService = cookieService;
+        this.userService = userService;
+        this.paymentService = paymentService;
+    }
+
 
     @GetMapping("/cart")
     public String handleCartRequest(@CookieValue(name = "cartContents", required = false) String cartContents,
@@ -118,7 +126,7 @@ public class BookShopCartController {
             bookService.updateCountBooksCart(slug, book.getQuantityTheBasket() - 1);
             cookieService.clearCookie(response, request);
         }
-        return "redirect:/cart";
+        return REDIRECT_CART;
     }
 
     @GetMapping("/pay")
@@ -148,7 +156,7 @@ public class BookShopCartController {
         transaction.setValue(allSumBooks);
         transaction.setTime(LocalDateTime.now());
         paymentService.saveTransaction(transaction);
-        return "redirect:/api/books/cart";
+        return REDIRECT_CART;
     }
 }
 

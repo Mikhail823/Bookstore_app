@@ -17,10 +17,8 @@ import com.example.bookshop.struct.enums.GenreType;
 import com.example.bookshop.struct.genre.GenreEntity;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -40,32 +38,32 @@ import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusB
 import static java.util.Objects.nonNull;
 
 @Service
-@RequiredArgsConstructor
 public class BookServiceImpl implements BookService {
 
-    @Autowired
     private final BookRepository bookRepository;
-
-    @Autowired
     private final BookReviewRepository bookReviewRepository;
-
-    @Autowired
     private final Book2UserRepository book2UserRepository;
-
-    @Autowired
     private final Book2UserTypeRepository book2UserTypeRepository;
-
-    @Autowired
     private final BookstoreUserRegister registerUser;
-
-    @Autowired
     private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
-
-    @Autowired
     private final BalanceTransactionRepository transactionRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    private final UserRepository userRepository;
+    public BookServiceImpl(BookRepository bookRepository, BookReviewRepository bookReviewRepository,
+                           Book2UserRepository book2UserRepository, Book2UserTypeRepository book2UserTypeRepository,
+                           BookstoreUserRegister registerUser,
+                           BooksRatingAndPopulatityService booksRatingAndPopulatityService,
+                           BalanceTransactionRepository transactionRepository, UserRepository userRepository) {
+        this.bookRepository = bookRepository;
+        this.bookReviewRepository = bookReviewRepository;
+        this.book2UserRepository = book2UserRepository;
+        this.book2UserTypeRepository = book2UserTypeRepository;
+        this.registerUser = registerUser;
+        this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
+        this.transactionRepository = transactionRepository;
+        this.userRepository = userRepository;
+    }
 
     @Override
     public List<BookEntity> getBooksByTitle(String title) throws BookStoreApiWrongParameterException {
@@ -74,7 +72,7 @@ public class BookServiceImpl implements BookService {
             throw new BookStoreApiWrongParameterException("Wrong values paseed to one more parameters");
         } else {
             List<BookEntity> data = bookRepository.findBooksByTitleContaining(title);
-            if (data.size() > 0) {
+            if (data.isEmpty()) {
                 return data;
             } else {
                 throw new BookStoreApiWrongParameterException("Data not found parameters!");
@@ -237,7 +235,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @LogSQLException
-    @Transactional
     @Override
     public void saveBook2User(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type) {
         Book2UserEntity newBook2User =
@@ -291,7 +288,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public void purchaseOfBooksByTheUser(UserEntity user, Model model){
         List<BookEntity> bookList = bookRepository.getBooksCartUser(user.getId());
-        Double allSumBooks = bookList.stream().mapToDouble(BookEntity::getPrice).sum();
+        double allSumBooks = bookList.stream().mapToDouble(BookEntity::getPrice).sum();
 
         if (user.getBalance() < allSumBooks){
             model.addAttribute("error", "true");

@@ -1,4 +1,4 @@
-package com.example.bookshop.controllers;
+package bookshop.controllers;
 
 
 import org.junit.jupiter.api.DisplayName;

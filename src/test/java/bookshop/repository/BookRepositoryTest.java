@@ -1,5 +1,6 @@
-package com.example.bookshop.repository;
+package bookshop.repository;
 
+import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.struct.book.BookEntity;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

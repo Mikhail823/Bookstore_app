@@ -1,12 +1,9 @@
 package com.example.bookshop.security;
 
-
 import com.example.bookshop.security.exception.UserNotFoundException;
 
 import com.example.bookshop.service.InspectorService;
 import com.example.bookshop.service.SmsService;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,21 +12,22 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 
 @Controller
-@RequiredArgsConstructor
-@Slf4j
 public class AuthUserController {
 
-    @Autowired
     private final BookstoreUserRegister userRegister;
-    @Autowired
     private final SmsService smsService;
-    @Autowired
     private final InspectorService inspectorService;
 
+    @Autowired
+    public AuthUserController(BookstoreUserRegister userRegister,
+                              SmsService smsService,
+                              InspectorService inspectorService) {
+        this.userRegister = userRegister;
+        this.smsService = smsService;
+        this.inspectorService = inspectorService;
+    }
 
     @GetMapping("/signin")
     public String handleSignin() {
@@ -57,7 +55,7 @@ public class AuthUserController {
     @PostMapping("/requestContactConfirmation")
     @ResponseBody
     public ContactConfirmationResponse handleRequestContactConfirmation
-            (@RequestBody ContactConfirmationPayload payload, HttpServletRequest request) throws IOException {
+            (@RequestBody ContactConfirmationPayload payload, HttpServletRequest request) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
             response.setResult("true");
         if (!payload.getContact().contains("@")){
@@ -70,7 +68,7 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
         ContactConfirmationResponse response = new ContactConfirmationResponse();
-        if(smsService.verifyCode(payload.getCode())){
+        if(Boolean.TRUE.equals(smsService.verifyCode(payload.getCode()))){
             response.setResult("true");
             return response;
         }
@@ -88,7 +86,7 @@ public class AuthUserController {
     @PostMapping("/login")
     @ResponseBody
     public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload,
-                                                   HttpServletResponse httpServletResponse) throws Exception {
+                                                   HttpServletResponse httpServletResponse){
 
         ContactConfirmationResponse loginResponse = userRegister.jwtLogin(payload);
                 Cookie cookie = new Cookie("token", loginResponse.getResult());
@@ -99,9 +97,9 @@ public class AuthUserController {
     @PostMapping("/login-by-phone-number")
     @ResponseBody
     public ContactConfirmationResponse handleLoginByNumber(@RequestBody ContactConfirmationPayload payload,
-                                                           HttpServletResponse response) throws Exception {
+                                                           HttpServletResponse response) {
 
-        if (smsService.verifyCode(payload.getCode())){
+        if (Boolean.TRUE.equals(smsService.verifyCode(payload.getCode()))){
             ContactConfirmationResponse loginNumberResponse = userRegister.jwtLoginByPhoneNumber(payload);
             Cookie cookie = new Cookie("token", loginNumberResponse.getResult());
             response.addCookie(cookie);

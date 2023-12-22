@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,8 +15,9 @@ import java.util.List;
 @Table(name = "genres")
 @Setter
 @Getter
-public class GenreEntity {
+public class GenreEntity implements Serializable {
 
+    private static final Long serialVersionUID  =  2405172041950251807L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

@@ -1,5 +1,8 @@
-package com.example.bookshop.security;
+package bookshop.security;
 
+import com.example.bookshop.security.BookstoreUserRegister;
+import com.example.bookshop.security.ContactConfirmationPayload;
+import com.example.bookshop.security.ContactConfirmationResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.junit.jupiter.api.DisplayName;

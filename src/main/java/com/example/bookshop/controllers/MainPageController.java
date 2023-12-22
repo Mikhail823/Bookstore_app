@@ -8,7 +8,6 @@ import com.example.bookshop.service.TagService;
 import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.tags.TagEntity;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,15 +18,18 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 @Controller
-@RequiredArgsConstructor
 public class MainPageController {
 
-    @Autowired
     private final BookService bookService;
-    @Autowired
     private final TagService tagService;
-    @Autowired
     private final CookieService cookieService;
+
+    @Autowired
+    public MainPageController(BookService bookService, TagService tagService, CookieService cookieService) {
+        this.bookService = bookService;
+        this.tagService = tagService;
+        this.cookieService = cookieService;
+    }
 
     @ModelAttribute("recommendedBooks")
     public List<BookEntity> recommendedBooks(){

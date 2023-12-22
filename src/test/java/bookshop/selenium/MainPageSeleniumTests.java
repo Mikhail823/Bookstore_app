@@ -1,4 +1,5 @@
-package com.example.bookshop.selenium;
+package bookshop.selenium;
+
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -18,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class MainPageSeleniumTests {
     private static ChromeDriver driver;
-
+    private static final String CART = "CART";
     @BeforeAll
     static void setup(){
         System.setProperty("webdriver.chrome.driver", "C:\\Users\\User\\Desktop\\chromedriver\\chromedriver.exe");
@@ -31,7 +32,7 @@ class MainPageSeleniumTests {
         driver.close();
     }
     @Test
-    public void testMainPageAccessTest() throws InterruptedException {
+    void testMainPageAccessTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -41,7 +42,7 @@ class MainPageSeleniumTests {
     }
 
     @Test
-    public void testMainPageSearchByQueryTest() throws InterruptedException {
+    void testMainPageSearchByQueryTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -55,7 +56,7 @@ class MainPageSeleniumTests {
     }
     @Test
     @DisplayName("Навигация по сайту")
-    public void nevigatelTest() throws InterruptedException {
+    void nevigatelTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -77,7 +78,7 @@ class MainPageSeleniumTests {
 
     @Test
     @DisplayName("Проверка авторизации пользователя")
-    public void authUserBookShopTest() throws InterruptedException {
+    void authUserBookShopTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -99,7 +100,7 @@ class MainPageSeleniumTests {
 
     @Test
     @DisplayName("Проверка регистрации нового порльзователя")
-    public void regNewUserTest() throws InterruptedException {
+    void regNewUserTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -150,7 +151,7 @@ class MainPageSeleniumTests {
 
     @Test
     @DisplayName("Проверка добавления книги в корзину авторизированным пользователем")
-    public void addBookCartAuthUserTest() throws InterruptedException {
+    void addBookCartAuthUserTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -179,7 +180,7 @@ class MainPageSeleniumTests {
 
     @Test
     @DisplayName("Проверка добавления книги в корзину анонимным пользователем")
-    public void addBookCartAnyUserTest() throws InterruptedException {
+    void addBookCartAnyUserTest() throws InterruptedException {
         MainPage mainPage = new MainPage(driver);
         mainPage
                 .callPage()
@@ -192,6 +193,6 @@ class MainPageSeleniumTests {
                 .pause();
 
         Set<Cookie> cookies = driver.manage().getCookies();
-        assertTrue(cookies.contains("CART="));
+        assertTrue(cookies.contains(CART + "="));
     }
 }
