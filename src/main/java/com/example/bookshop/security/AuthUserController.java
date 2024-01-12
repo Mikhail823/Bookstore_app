@@ -66,14 +66,13 @@ public class AuthUserController {
 
     @PostMapping("/approveContact")
     @ResponseBody
-    public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload) {
+    public ContactConfirmationResponse handleApproveContact(@RequestBody ContactConfirmationPayload payload){
         ContactConfirmationResponse response = new ContactConfirmationResponse();
         if(Boolean.TRUE.equals(smsService.verifyCode(payload.getCode()))){
             response.setResult("true");
             return response;
         }
         return new ContactConfirmationResponse();
-
     }
 
     @PostMapping("/reg")

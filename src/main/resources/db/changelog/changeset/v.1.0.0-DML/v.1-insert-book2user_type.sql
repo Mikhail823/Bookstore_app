@@ -1,6 +1,7 @@
---liquibase formatted sqlbook2user_type-01
+--liquibase formatted sql
+--changeset Mikhail Popov:insert-book2user_type
 
-insert into book2user_type (id, code, name) values (1, 'KEPT', 'Отложена');
-insert into book2user_type (id, code, name) values (2, 'CART', 'В корзине');
-insert into book2user_type (id, code, name) values (3, 'PAID', 'Куплена');
-insert into book2user_type (id, code, name) values (4, 'ARCHIVED', 'В архиве');
+insert into book2user_type (code, name) values ('KEPT', 'Отложена');
+insert into book2user_type (code, name) values ('CART', 'В корзине');
+insert into book2user_type (code, name) values ('PAID', 'Куплена');
+insert into book2user_type (code, name) values ('ARCHIVED', 'В архиве');

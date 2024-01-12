@@ -11,8 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"
                              xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!--<![endif]-->
-<head th:replace="~{fragments/common_head_fragment :: head(title='Authors')}">
-</head>
+<head th:replace="~{fragments/common_head_fragment :: head(title='Authors')}"></head>
 <body class="Site">
   <header class="Header" th:replace="~{fragments/header_fragment :: header(authors='menu-item menu-item_ACTIVE', status='unauthorized')}"> </header>
   <div class="Middle">

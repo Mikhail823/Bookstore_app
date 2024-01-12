@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-roles-01
+--changeset Mikhail Popov:insert-roles
 
 insert into roles (name) values ('ROLE_ADMIN');
 insert into roles (name) values ('ROLE_USER');

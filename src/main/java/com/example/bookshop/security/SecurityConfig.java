@@ -4,9 +4,11 @@ import com.example.bookshop.security.jwt.JWTRequestFilter;
 import com.example.bookshop.security.jwt.blacklist.JWTBlackList;
 import com.example.bookshop.security.oauth.CustomOAuth2UserService;
 
+import com.example.bookshop.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AnonymousAuthenticationProvider;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -71,7 +73,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf()
                 .disable()
                 .authorizeRequests()
-
                 .antMatchers("/my", "/profile").authenticated()
                 .antMatchers("/login", "/oauth/**", "/**").permitAll()
                 .and().formLogin()
@@ -89,8 +90,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     protected AnonymousAuthenticationFilter anonymousAuthenticationFilter(){
-        return new AnonymousAuthenticationFilter("userKey", "anonymousUser" ,
-                Arrays.asList(new SimpleGrantedAuthority("ROLE_ANONYMOUS")));
+        return new AnonymousAuthenticationFilter("userKey", "anonymousUser",
+                Collections.singletonList(new SimpleGrantedAuthority("ROLE_ANONYMOUS")));
     }
 
     @Bean

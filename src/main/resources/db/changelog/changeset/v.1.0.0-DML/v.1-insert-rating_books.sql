@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-rating_books-01
+--changeset Mikhail Popov:insert-rating_books
 
 insert into rating_book (book_id, one_star, two_star, three_star, four_star, five_star) values (1, 92, 57, 223, 135, 321);
 insert into rating_book (book_id, one_star, two_star, three_star, four_star, five_star) values (2, 91, 79, 150, 273, 394);

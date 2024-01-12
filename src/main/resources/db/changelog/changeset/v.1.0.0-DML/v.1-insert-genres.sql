@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:inset-genres-01
+--changeset Mikhail Popov:insert-genres
 
 INSERT INTO genres (id,parent_id,slug,name)
 VALUES

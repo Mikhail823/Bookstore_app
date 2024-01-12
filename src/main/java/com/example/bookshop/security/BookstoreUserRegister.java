@@ -117,6 +117,7 @@ public class BookstoreUserRegister {
 
     public Object getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
     }
 
     public static String generateString() {
@@ -124,7 +125,7 @@ public class BookstoreUserRegister {
         return uuid.replace("-", "");
     }
 
-    public boolean isAuthUser() {
+    public boolean isAuthAnonymousUser() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         String anonymousUser = String.valueOf(auth.getPrincipal());
         return (anonymousUser.equals("anonymousUser"));

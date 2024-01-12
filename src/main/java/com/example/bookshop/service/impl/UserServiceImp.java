@@ -63,6 +63,7 @@ public class UserServiceImp implements UserService {
         return userRepository.findUserEntityById(id);
     }
 
+
     @Override
     public UserEntity findByUserFromHash(String hash) {
         return userRepository.findByHash(hash);
@@ -106,7 +107,6 @@ public class UserServiceImp implements UserService {
     public void updateUserProfile(ProfileFormDto profileDto, Integer userId) {
         UserEntity userEntity = getUserById(userId);
         List<UserContactEntity> listContactUser = userEntity.getListContact();
-        if (userEntity != null) {
             userEntity.setName(profileDto.getName());
             userEntity.setPassword(encoder.encode(profileDto.getPassword()));
             userEntity.setRegTime(new Date());
@@ -121,14 +121,14 @@ public class UserServiceImp implements UserService {
                 contact.setContact(profileDto.getPhone());
                 contactRepository.save(contact);
             }
-        }
+
     }
 
     @Transactional
     @Override
     public void saveBalanceUser(UserEntity user, Double balance) {
         UserEntity userEntity = userRepository.findUserEntityById(user.getId());
-        Double count = user.getBalance() + balance;
+       double count = user.getBalance() + balance;
         userEntity.setBalance(count);
         userRepository.save(userEntity);
     }
@@ -153,6 +153,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional
     public void changeUserProfile(String token) throws JsonProcessingException {
         Object user = registerUser.getCurrentUser();
         if (user instanceof BookstoreUserDetails) {

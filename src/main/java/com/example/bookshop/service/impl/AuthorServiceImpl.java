@@ -6,6 +6,7 @@ import com.example.bookshop.service.AuthorService;
 import com.example.bookshop.struct.book.author.AuthorEntity;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Transient;
@@ -24,6 +25,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+
     public Map<String, List<AuthorEntity>> getAuthorsMap(){
         List<AuthorEntity> authors = authorRepository.findAll();
         return authors.stream().collect(Collectors.groupingBy((AuthorEntity a)-> a.getLastName().substring(0,1)));
@@ -55,6 +57,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
+
     public List<AuthorEntity> getAllAuthors(){
         return authorRepository.findAll();
     }

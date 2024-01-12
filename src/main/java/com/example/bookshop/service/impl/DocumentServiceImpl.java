@@ -4,6 +4,7 @@ import com.example.bookshop.repository.DocumentRepository;
 import com.example.bookshop.service.DocumentService;
 import com.example.bookshop.struct.other.DocumentEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,7 +25,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-
+    @Cacheable("allDocuments")
     public List<DocumentEntity> getAllDocument() {
         return documentRepository.findAll();
     }

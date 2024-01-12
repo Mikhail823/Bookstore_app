@@ -7,6 +7,7 @@ import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Service
+@Slf4j
 public class BookstoreUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
@@ -34,23 +36,16 @@ public class BookstoreUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String contact) throws UsernameNotFoundException {
 
         UserContactEntity userContact = contactRepository.findFirstByContactAndType(contact, ContactType.EMAIL);
-        UserEntity user = userRepository.findUserEntityById(userContact.getUserId().getId());
 
-        if (user != null){
+        if (userContact != null) {
             return new BookstoreUserDetails(userContact);
         }
-        Set<GrantedAuthority> authorities = new HashSet<>();
-        for (RoleEntity role : userContact.getUserId().getRoles()){
-            authorities.add(new SimpleGrantedAuthority(role.getAuthority()));
-        }
         userContact = contactRepository.findFirstByContactAndType(contact, ContactType.PHONE);
-        user = userRepository.findUserEntityById(userContact.getUserId().getId());
-        if (user != null){
-            return new PhoneNumberUserDetailsService(userContact);
-        }
-        else {
+
+        if (userContact != null) {
+           return new PhoneNumberUserDetailsService(userContact);
+        } else {
             throw new UserNotFoundException("Пользователь не зарегистрирован!!!");
         }
-
     }
 }

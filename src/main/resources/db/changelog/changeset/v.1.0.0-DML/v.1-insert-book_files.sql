@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-book_files-01
+--changeset Mikhail Popov:insert-book_files
 
 insert into book_file (id, hash, type_id, path, book_id) values (1 , 'fsdl342ladads76432', 1, '/Virunga.pdf', 1);
 insert into book_file (id, hash, type_id, path, book_id) values (2 , 'asdl35436dads34235', 2, '/Virunga.epub', 1);

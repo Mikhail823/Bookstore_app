@@ -6,7 +6,7 @@
             <div class="Card-picture">
                 <a href="#" th:href="@{'/api/books/' + ${book.slug}}">
                     <img src="/assets/img/content/main/card.jpg" th:src="${book.image}" alt="card.jpg"/></a>
-                <div class="Card-sale" th:text="${book.discount} * 100 + ' % скидка'">30% скидка
+                <div class="Card-sale" th:text="${book.discountCart()} + ' % скидка'">30% скидка
                 </div>
                 <div class="Card-ribbon">
                     <span class="Card-ribbonText" th:if="${book.isBesteller} == 1" th:text="#{book.besttseller}">Бестселлер</span>
@@ -24,7 +24,7 @@
                         <a th:href="${'/api/author/' + author.id}" href="/authors/slug.html"
                            th:text="${author.toString()}">Абгарян Наринэ</a>
                     </div>
-                </div>book.authors[0] + (book.authors.length ==0 ? '' : ' и другие')
+                </div>
                 <div class="Card-cost">
                     <span class="Card-priceOld" th:text="${'₽' + book.priceOld}"></span>
                     <span class="Card-price" th:text="${'₽' + book.discountPrice()}">₽50.00</span>
@@ -32,6 +32,7 @@
             </div>
         </div>
         <div class="Cards-footer Cards-footer_center">
+
             <a class="btn btn_primary"
                href="#"
                th:data-refreshshow="${refreshshow}"

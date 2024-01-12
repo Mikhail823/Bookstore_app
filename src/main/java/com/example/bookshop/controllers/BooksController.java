@@ -3,6 +3,7 @@ package com.example.bookshop.controllers;
 import com.example.bookshop.dto.*;
 import com.example.bookshop.security.exception.RequestException;
 import com.example.bookshop.service.*;
+import com.example.bookshop.service.util.DateFormatter;
 import com.example.bookshop.struct.book.BookEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,6 @@ import java.nio.file.Path;
 import java.util.Calendar;
 import java.util.Date;
 
-import static com.example.bookshop.service.util.DateFormatter.getToDateFormat;
 
 @Controller
 @RequestMapping("/api/books")
@@ -38,6 +38,7 @@ public class BooksController {
     private final ViewedBooksService viewedBooksService;
     private static final String REDIRECT = "redirect:/api/books/";
 
+    private DateFormatter dateFormatter = new DateFormatter();
     @Autowired
     public BooksController(BookService bookService, BooksRatingAndPopulatityService booksRatingAndPopulatityService,
                            ResourceStorageService storage, BookReviewService bookReviewService,
@@ -119,8 +120,8 @@ public class BooksController {
             @RequestParam("limit") Integer limit,
             @RequestParam(value = "from", defaultValue = "") String from,
             @RequestParam(value = "to", defaultValue = "") String to) {
-        return new BooksPageDto(bookService.getPageOfRecentBooksData(getToDateFormat(from),
-                getToDateFormat(to), offset, limit).getContent());
+        return new BooksPageDto(bookService.getPageOfRecentBooksData(dateFormatter.getToDateFormat(from),
+                dateFormatter.getToDateFormat(to), offset, limit).getContent());
     }
 
     @PostMapping("/rateBook/{slug}")
@@ -140,8 +141,6 @@ public class BooksController {
         return new ModelAndView(REDIRECT + slug);
     }
 
-
-
     @PostMapping("/rateBookReview/{slug}")
     public String likeTheReviewBook(@RequestBody LikeReviewBookDto reviewBookDto,
                                     @PathVariable("slug") String slug){
@@ -150,17 +149,4 @@ public class BooksController {
         return REDIRECT + slug;
     }
 
-    @GetMapping("/recently")
-    public String handlerPageRecently(Model model, HttpServletRequest request){
-        BooksPageDto booksPageDto = new BooksPageDto(bookService.getListViewedBooksUser(0, 6, request).getContent());
-        model.addAttribute("booksRecently", booksPageDto.getBooks());
-        return "/books/recently_viewed";
-    }
-
-    @GetMapping("/recently/page")
-    @ResponseBody
-    public BooksPageDto handlerRecently(@RequestParam("offset") Integer offset,
-                                            @RequestParam("limit") Integer limit, HttpServletRequest request){
-        return new BooksPageDto(bookService.getListViewedBooksUser(offset, limit, request).getContent());
-    }
 }

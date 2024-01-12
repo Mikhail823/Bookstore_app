@@ -1,5 +1,6 @@
 package com.example.bookshop.service;
 
+
 import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.exeption.BookStoreApiWrongParameterException;
 import com.example.bookshop.struct.book.BookEntity;
@@ -11,7 +12,6 @@ import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
 
@@ -76,7 +76,7 @@ public interface BookService {
 
     void updateCountPostponedBook(String slug, Integer post);
 
-    Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit, HttpServletRequest request);
+    Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit);
 
     void updateCountBooksCart(String slug, Integer count);
 

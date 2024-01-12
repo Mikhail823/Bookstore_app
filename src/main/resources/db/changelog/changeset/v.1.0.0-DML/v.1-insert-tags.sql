@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-tags-01
+--changeset Mikhail Popov:insert-tags
 
 insert into tag (id, name) values (1, 'История');
 insert into tag (id, name) values (2, 'магия');

@@ -1,5 +1,6 @@
 package com.example.bookshop.controllers;
 
+import com.example.bookshop.exeption.CodeVerificationException;
 import com.example.bookshop.exeption.EmptySearchException;
 import com.example.bookshop.security.exception.JWTAuthException;
 import com.example.bookshop.security.exception.UserNotFoundException;
@@ -15,32 +16,36 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class GlobalExceptionHandlerController {
 
+    public static final String REDIRECT_SIGNIN = "redirect:/signin";
+    public static final String REDIRECT_SIGNUP = "redirect:/signup";
     @ExceptionHandler(EmptySearchException.class)
     public String emptySearchHandlerException(EmptySearchException e, RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("searchError", e);
         return "redirect:/";
     }
 
-
-
     @ExceptionHandler(JWTAuthException.class)
     public String securityLoginHandlerException(JWTAuthException e, RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("loginError", e.getLocalizedMessage());
         log.info(e.getLocalizedMessage());
-        return "redirect:/signup";
+        return REDIRECT_SIGNUP;
     }
 
     @ExceptionHandler(UserNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
     public String userNameException(UserNotFoundException us, RedirectAttributes redirectAttributes){
         redirectAttributes.addAttribute("userError", us);
-        return "redirect:/signin";
+        return REDIRECT_SIGNIN;
     }
 
     @ExceptionHandler(JwtException.class)
     public String handleJwtException(JwtException jwtException) {
         log.info(jwtException.getLocalizedMessage());
-        return "redirect:/signin";
+        return REDIRECT_SIGNIN;
     }
 
+    @ExceptionHandler(CodeVerificationException.class)
+    public String handlerCodeException(CodeVerificationException e, RedirectAttributes redirect){
+        redirect.addAttribute("codeError", e);
+        return REDIRECT_SIGNIN;
+    }
 }

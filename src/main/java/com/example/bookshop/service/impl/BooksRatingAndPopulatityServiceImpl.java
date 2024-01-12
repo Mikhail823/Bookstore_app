@@ -15,6 +15,7 @@ import com.example.bookshop.struct.book.review.BookReviewEntity;
 import com.example.bookshop.struct.book.review.BookReviewLikeEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,7 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
     }
 
     @Override
+    @Cacheable("starts")
     public RatingCountDto getTotalAndAvgStars(Integer bookId) {
         RatingCountI totalAndAvgStars = ratingRepository.getTotalAndAvgStars(bookId);
         BookEntity book = bookRepository.getOne(bookId);
@@ -140,9 +142,10 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
         Integer quantityBookCart = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
         Integer quantityBookPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
         Integer quantityBookPaid = book.getNumberOfPurchased() == null ? 0 : book.getNumberOfPurchased();
+        Integer countViews = book.getCountOfViews() == null ? 0 : book.getCountOfViews();
 
         Integer popularity = (int)(quantityBookPaid +  0.7 * quantityBookCart
-                + 0.4 * quantityBookPostponed);
+                + 0.4 * quantityBookPostponed + countViews * 0.1);
         bookRepository.updatePopularityBook(popularity, book.getId());
     }
 }

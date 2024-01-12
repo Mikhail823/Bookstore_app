@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:inser-documents-01
+--changeset Mikhail Popov:insert-documents
 
 insert into document (slug, sort_index, title, text, paragraph) values ('document-059587', 0 , 'Публичная оферта', '
 <p>Интернет-магазин &laquo;BookShop&raquo;, расположенный на доменном имени

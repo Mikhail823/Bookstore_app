@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-book_file_type-01
+--changeset Mikhail Popov:insert-book_file_type
 
 insert into book_file_type (id, name, description) values (1, 'PDF', 'PDF - это широко используемый формат файлов, разработанный Adobe в 1992 году. Он используется во всех видах бизнеса для представления и обмена документами. Файл PDF содержит все элементы печатного документа в виде электронного изображения. Помимо текста и изображений, PDF-файлы также могут содержать гиперссылки, встроенные шрифты, видео, кнопки и многое другое.');
 insert into book_file_type (id, name, description) values (2, 'EPUB', 'EPUB - это формат файла электронной книги, который использует расширение файла ".epub". Этот термин является сокращением для обозначения электронной публикации и иногда называется ePub.');

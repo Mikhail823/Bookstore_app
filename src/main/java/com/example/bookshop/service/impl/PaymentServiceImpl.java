@@ -1,5 +1,6 @@
 package com.example.bookshop.service.impl;
 
+import com.example.bookshop.dto.PaymentDto;
 import com.example.bookshop.repository.BalanceTransactionRepository;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
@@ -8,6 +9,7 @@ import com.example.bookshop.struct.enums.PaymentStatusType;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,7 +47,8 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public String getPaymentUrl(UserEntity user, Double sum) throws NoSuchAlgorithmException {
+    public String getPaymentUrl(UserEntity user,
+                                PaymentDto paymentDto) throws NoSuchAlgorithmException {
         List<UserContactEntity> userContactList = contactRepository.findUserContactEntitiesByUserId(user);
         String email = "";
         for (UserContactEntity contact : userContactList){
@@ -54,14 +57,14 @@ public class PaymentServiceImpl implements PaymentService {
             }
         }
         MessageDigest md = MessageDigest.getInstance("MD5");
-        Integer invId = user.getId();
-        md.update((merchantLogin + ":" + sum.toString() + ":"
-                + invId + ":" + towTestPass).getBytes());
+        int invId = user.getId();
+        md.update((merchantLogin + ":" + paymentDto.getSum() + ":"
+                + invId + ":" + firstTestPass).getBytes());
         return "https://auth.robokassa.ru/Merchant/Index.aspx" +
                 "?MerchantLogin=" + merchantLogin + "&Pass1=" + firstTestPass +
                 "&InvId=" + invId +
-                "&OutSum=" + sum.toString() +
-                "&Description=" + "Buying books" +
+                "&OutSum=" + paymentDto.getSum() +
+                "&Description=" + "Adding funds to your account" +
                 "&Email=" + email +
                 "&Culture=ru"+
                 "&Encoding=utf-8"+
@@ -69,9 +72,11 @@ public class PaymentServiceImpl implements PaymentService {
                 "&IsTest=1";
     }
     @Override
-    public boolean isSignature(String signatureValue, Double sum, Integer invId) throws NoSuchAlgorithmException {
+    public boolean isSignature(String signatureValue,
+                               Double sum,
+                               Integer invId) throws NoSuchAlgorithmException {
         MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update((merchantLogin + ":" + sum.toString() + ":"
+        md.update((merchantLogin + ":" + sum + ":"
                 + invId + ":" + towTestPass).getBytes());
         signatureValue = DatatypeConverter.printHexBinary(signatureValue.getBytes()).toUpperCase();
         String value = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
@@ -83,17 +88,22 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Transactional
     @Override
-    public void savingTransaction(Double outSum, Integer invId, String description){
-        UserEntity user = userRepository.findUserEntityById(invId);
-        Double allSum = user.getBalance() + outSum;
-        userRepository.updateUserBalance(allSum, user.getId());
-        BalanceTransactionEntity transactionEntity = new BalanceTransactionEntity();
-        transactionEntity.setValue(outSum);
-        transactionEntity.setDescription(description);
-        transactionEntity.setPaymentStatus(PaymentStatusType.OK);
-        transactionEntity.setTime(LocalDateTime.now());
-        transactionEntity.setUserId(user);
-        balanceTransactionRepository.save(transactionEntity);
+    public void savingTransaction(String signatureValue,
+                                  Double outSum,
+                                  Integer invId,
+                                  String description) throws NoSuchAlgorithmException {
+        if (Boolean.TRUE.equals(isSignature(signatureValue, outSum, invId))) {
+            UserEntity user = userRepository.findUserEntityById(invId);
+            Double allSum = user.getBalance() + outSum;
+            userRepository.updateUserBalance(allSum, user.getId());
+            BalanceTransactionEntity transactionEntity = new BalanceTransactionEntity();
+            transactionEntity.setValue(outSum);
+            transactionEntity.setDescription(description);
+            transactionEntity.setPaymentStatus(PaymentStatusType.OK);
+            transactionEntity.setTime(LocalDateTime.now());
+            transactionEntity.setUserId(user);
+            balanceTransactionRepository.save(transactionEntity);
+        }
     }
 
     @Override

@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:inset-book2genres-01
+--changeset Mikhail Popov:insert-book2genres
 
 insert into book2genre (id, book_id, genre_id) values (1, 1, 4);
 insert into book2genre (id, book_id, genre_id) values (2, 2, 7);

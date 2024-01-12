@@ -23,7 +23,7 @@
                     <a class="menu-link" th:href="@{/api/authors}" href="/authors/index.html"
                        th:text="#{topbar.authors}">Авторы</a>
                 </li>
-                <li class="menu-item" th:class="${recently}"  sec:authorize="isAuthenticated()">
+                <li class="menu-item" th:class="${recently}" sec:authorize="isAuthenticated()">
                     <a class="menu-link" th:href="@{/api/books/recently}"
                        th:text="#{topbar.recently}">Недавно просмотренные</a>
                 </li>

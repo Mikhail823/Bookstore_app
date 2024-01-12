@@ -1,0 +1,37 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+  http://www.liquibase.org/xml/ns/dbchangelog
+  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.4.xsd">
+
+    <include file="v.1-create-authors-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-genres-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-tag-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-users-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-roles-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book2author-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book2tag-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book2genre-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book2user-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book2user_type-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-user2role-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-user_contact-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book_file-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book_file_type-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book_review-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-book_review_like-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-document-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-faq-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-file_download-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-jwt_black_list-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-message-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-rating_book-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-spring_session-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-viewed_books-table.sql" relativeToChangelogFile="true"/>
+    <include file="v.1-create-balance_transaction-table.sql" relativeToChangelogFile="true"/>
+<!--    <include file="v.1-create-tables.sql" relativeToChangelogFile="true"/>-->
+</databaseChangeLog>

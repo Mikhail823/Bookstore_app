@@ -33,4 +33,6 @@ public interface CookieService {
     Integer countBooksCookie(String cartContents);
 
     List<String> getListBooksAnonymousUser(String cartContents);
+
+    String getHashTheUserFromCookie(HttpServletRequest request);
 }

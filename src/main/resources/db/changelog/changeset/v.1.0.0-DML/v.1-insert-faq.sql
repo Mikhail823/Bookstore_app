@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-faq-01
+--changeset Mikhail Popov:insert-faq
 
 insert into faq (id, sort_index, question, answer) values (1, 2, 'Не получается скачать книгу. Что делать?', '<p>Здравствуте. Если книга у Вас куплена и находится в разделе "Мои книги", то необходимо написать сообщение менеджеру магазина по адресу: rabota822@bk.ru</p>
 <p>С уважением магазин Bookstore.</p>');

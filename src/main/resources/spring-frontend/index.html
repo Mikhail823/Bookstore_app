@@ -21,6 +21,7 @@
           <div th:replace="~{fragments/slider_carousel_fragment :: slider(${recommendedBooks}, #{slider.recommended}, 'recommended')}"> </div>
           <div th:replace="~{fragments/slider_carousel_fragment :: slider(${recentBooks}, #{slider.news}, 'recent')}"> </div>
           <div th:replace="~{fragments/slider_carousel_fragment :: slider(${popularBooks}, #{slider.popular}, 'popular')}"> </div>
+          <div sec:authorize="isAuthenticated()" th:replace="~{fragments/slider_carousel_fragment :: slider(${booksRecently}, #{topbar.recently}, 'recently')}"> </div>
         </div>
         <h2 class="Middle-title" th:text="#{title.tags}"></h2>
         <div class="Tags" id="tags" th:replace="~{fragments/tags_fragments :: tag(${tags})}"></div>

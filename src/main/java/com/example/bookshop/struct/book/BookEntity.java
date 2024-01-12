@@ -27,7 +27,6 @@ import java.util.*;
 
 public class BookEntity implements Serializable {
 
-        private  static  final  Long  serialVersionUID  =  1905122041950251207L ;
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,7 +41,7 @@ public class BookEntity implements Serializable {
         @JoinTable(name = "book2author",
                 joinColumns = {@JoinColumn(name = "book_id")},
                 inverseJoinColumns = {@JoinColumn(name = "author_id")})
-        private List<AuthorEntity> authors = new ArrayList<>();
+        private List<AuthorEntity> authors;
 
         @Column(name = "is_bestseller")
         @ApiModelProperty("if isBestseller = 1 so the book is considered to be bestseller and if 0 the book is not a " +
@@ -77,13 +76,12 @@ public class BookEntity implements Serializable {
             return priceOld - Math.toIntExact(Math.round(price * priceOld));
         }
 
+        @JsonProperty("discountCart")
         public Integer discountCart(){
-                Integer discount;
                 if (getPrice() == 1){
                         return 1;
                 } else {
-                        discount = (int)(getPrice() * 100);
-                        return discount;
+                        return (int)(getPrice() * 100);
                 }
         }
 
@@ -120,6 +118,9 @@ public class BookEntity implements Serializable {
 
         @Column(name = "quantity_basket")
         private Integer quantityTheBasket;
+
+        @Column(name = "count_of_views")
+        private Integer countOfViews;
 
         private Integer popularity;
 

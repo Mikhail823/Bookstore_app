@@ -24,10 +24,11 @@
                     <h1 class="Section-title" th:text="#{topbar.recently}">Недавно просмотренные
                     </h1>
                 </div>
+                <span th:if="${booksRecently} == null" th:text="#{'Вы не просмотрели ни одной книги((('}" style="color: red"></span>
                 <div class="Cards Cards_refresh"
                      th:replace="~{fragments/cards_fragment :: cardBook(${booksRecently}, 'recently', null)}">
                 </div>
-                <span th:if="${booksRecently} == null" th:text="#{'Вы не просмотрели ни одной книги((('}"></span>
+
             </div>
         </main>
     </div>

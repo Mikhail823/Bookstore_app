@@ -221,4 +221,15 @@ public class CookieComponent implements CookieService{
         }
         return listBooks;
     }
+    @Override
+    public String getHashTheUserFromCookie(HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        String hashAnonyUser = "";
+        for (Cookie cookie : cookies){
+            if (cookie.getName().equals("USER-ANONYMOUS")) {
+                hashAnonyUser = cookie.getValue();
+            }
+        }
+        return hashAnonyUser;
+    }
 }

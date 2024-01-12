@@ -5,6 +5,7 @@ import com.example.bookshop.service.FaqService;
 import com.example.bookshop.struct.other.FaqEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import springfox.documentation.annotations.Cacheable;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class FaqServiceImpl implements FaqService {
     }
 
     @Override
+    @Cacheable("allFaq")
     public List<FaqEntity> findAllFaq() {
         return faqRepository.findAll();
     }

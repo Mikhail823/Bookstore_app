@@ -169,7 +169,7 @@ CREATE TABLE book_review_like (
                                          CONSTRAINT fkl5konyr7ye2i76wv92vf9w6y2 FOREIGN KEY (review_id) REFERENCES book_review(id)
 );
 
-CREATE TABLE "document" (
+CREATE TABLE document (
                                    id serial4 NOT NULL,
                                    paragraph text NOT NULL,
                                    slug varchar(255) NOT NULL,

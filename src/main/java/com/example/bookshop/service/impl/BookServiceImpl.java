@@ -8,6 +8,7 @@ import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.BooksRatingAndPopulatityService;
+import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.service.util.DateFormatter;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserEntity;
@@ -17,17 +18,18 @@ import com.example.bookshop.struct.enums.GenreType;
 import com.example.bookshop.struct.genre.GenreEntity;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserEntity;
-import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
@@ -47,14 +49,18 @@ public class BookServiceImpl implements BookService {
     private final BookstoreUserRegister registerUser;
     private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
     private final BalanceTransactionRepository transactionRepository;
-    private final UserRepository userRepository;
+    private  UserRepository userRepository;
+    private final CookieService cookieService;
+
+    private DateFormatter dateFormatter = new DateFormatter();
 
     @Autowired
     public BookServiceImpl(BookRepository bookRepository, BookReviewRepository bookReviewRepository,
                            Book2UserRepository book2UserRepository, Book2UserTypeRepository book2UserTypeRepository,
                            BookstoreUserRegister registerUser,
                            BooksRatingAndPopulatityService booksRatingAndPopulatityService,
-                           BalanceTransactionRepository transactionRepository, UserRepository userRepository) {
+                           BalanceTransactionRepository transactionRepository, UserRepository userRepository,
+                           @Lazy CookieService cookieService) {
         this.bookRepository = bookRepository;
         this.bookReviewRepository = bookReviewRepository;
         this.book2UserRepository = book2UserRepository;
@@ -63,6 +69,7 @@ public class BookServiceImpl implements BookService {
         this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
         this.transactionRepository = transactionRepository;
         this.userRepository = userRepository;
+        this.cookieService = cookieService;
     }
 
     @Override
@@ -108,6 +115,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Cacheable("recentBooks")
     public Page<BookEntity> getPageOfRecentBooksData(Date dateFrom, Date dateTo, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findPageOfBooksByPubDateBetweenOrderByPubDate(dateFrom, dateTo, nextPage);
@@ -120,6 +128,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Cacheable("sliderRecentBooks")
     public Page<BookEntity> getPageRecentSlider(Integer offset, Integer limit) {
         Pageable nextPageRecent = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPageRecent);
@@ -312,41 +321,31 @@ public class BookServiceImpl implements BookService {
         Book2UserEntity b2u = book2UserRepository
                 .findBook2UserEntityByUserIdAndBookId
                         (((BookstoreUserDetails)user).getContact().getUserId().getId(), book.getId());
-        if (b2u == null){
-            return false;
-        }
-        return true;
+
+        return b2u != null;
     }
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public void updateCountPostponedBook(String slug, Integer post){
         bookRepository.updateCountPosponedBooks(slug, post);
     }
 
     @Override
-    public Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit, HttpServletRequest request){
+    public Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit){
         Pageable page = PageRequest.of(offset, limit);
-        Cookie[] cookies = request.getCookies();
-        String hashUser = "";
         Object curUser = registerUser.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails){
             return bookRepository.getViewedBooksUser(((BookstoreUserDetails) curUser).getContact().getUserId(), page);
         } else {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().equals("USER-ANONYMOUS")) {
-                    hashUser = cookie.getValue();
-                }
-            }
-            UserEntity anonyUser  = userRepository.findByHash(hashUser);
-            return bookRepository.getViewedBooksUser(anonyUser, page);
+
+            return bookRepository.findAllOrderByRating(page);
         }
     }
-    @Transactional
+
     @Override
     public void updateCountBooksCart(String slug, Integer count){
         bookRepository.updateCountCartBooks(slug,  count);
-
     }
 
     @Override
@@ -356,7 +355,7 @@ public class BookServiceImpl implements BookService {
         newBook.setDescription(bookDto.getDescription());
         newBook.setPrice(Double.parseDouble(bookDto.getPrice()));
         newBook.setPriceOld(Integer.parseInt(bookDto.getDiscountPrice()));
-        newBook.setPubDate(DateFormatter.getToDateFormat(bookDto.getPubDate()));
+        newBook.setPubDate(dateFormatter.getToDateFormat(bookDto.getPubDate()));
         newBook.setImage(bookDto.getImage());
         newBook.setAuthors(bookDto.getAuthors());
         newBook.setTagList(bookDto.getTags());

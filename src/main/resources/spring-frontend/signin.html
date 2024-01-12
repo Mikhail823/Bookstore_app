@@ -66,9 +66,11 @@ p.error-browser
                      id="mail" name="mail" type="text" placeholder="Введите e-mail" data-validate="mail require"/>
             </div>
             <div class="form-group form-group_center">
+
               <button class="btn btn_primary form-btn" type="button"
                       name="sendauth" id="sendauth" data-type="phone" data-send="">Далее
               </button>
+              <span th:if="${userError}" th:text="${userError.getLocalizedMessage()}" style="color: red"></span>
             </div>
           </div>
           <div class="Login-step Login-step_hide" data-type="phone">
@@ -85,6 +87,9 @@ p.error-browser
               <button class="btn btn_primary form-btn" type="button"
                       name="toComeInPhone" id="toComeInPhone" data-send="">Войти
               </button>
+
+              <span th:if="${codeError}" th:text="${codeError.getLocalizedMessage()}" style="color: red"></span>
+
             </div>
           </div>
           <div class="Login-step Login-step_hide" data-type="mail">
@@ -101,6 +106,7 @@ p.error-browser
               <button class="btn btn_primary form-btn" type="button"
                       name="toComeInMail" id="toComeInMail" data-send="">Войти
               </button>
+
             </div>
           </div>
           <div class="form-group form-group_center">

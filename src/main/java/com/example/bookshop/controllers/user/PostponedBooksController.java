@@ -110,7 +110,7 @@ public class PostponedBooksController {
     @PostMapping("/changeBookStatus/payAllPostponed/{books}")
     public String handlerPayAllPostponedBooks(@PathVariable("books") List<BookEntity> books,
                                              HttpServletRequest request){
-        if (userRegister.isAuthUser()) {
+        if (userRegister.isAuthAnonymousUser()) {
             for (BookEntity book : books) {
                 int quantityCart = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
                 bookService.saveBook2User(book,

@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:inset-book2author-01
+--changeset Mikhail Popov:insert-book2author
 
 insert into book2author (book_id, author_id, sort_index) values (1, 64, 1);
 insert into book2author (book_id, author_id, sort_index) values (2, 31, 0);

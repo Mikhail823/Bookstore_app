@@ -44,8 +44,8 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
 
     Page<BookEntity> findAll(Pageable next);
 
-    @Query(value = "SELECT * FROM book AS b JOIN book2author AS b2a ON b2a.book_id = b.id WHERE b2a.author_id =:id", nativeQuery = true)
-    Page<BookEntity> findBookEntityByAuthorId(@Param("id")Integer id, Pageable nextPage);
+    @Query(value = "SELECT b FROM BookEntity AS b JOIN Book2AuthorEntity AS b2a ON b2a.bookId = b.id WHERE b2a.authorId =?1")
+    Page<BookEntity> findBookEntityByAuthorId(Integer id, Pageable nextPage);
 
     Page<BookEntity> findAllByGenre_ParentId(GenreType type, Pageable nextPage);
 
@@ -84,8 +84,8 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
             " WHERE but.code = 'PAID' AND b2u.user_id = ?1", nativeQuery = true)
     List<BookEntity> getBooksPaid(Integer userId);
 
-    @Query(value = "SELECT * FROM book AS b " +
-            "JOIN viewed_books AS vb ON vb.book_id = b.id WHERE vb.user_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT b FROM BookEntity AS b " +
+            "JOIN ViewedBooks AS vb ON vb.book = b WHERE vb.user = ?1")
     Page<BookEntity> getViewedBooksUser(UserEntity userId, Pageable nextPage);
 
     @Modifying
@@ -104,14 +104,11 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     @Query(value = "UPDATE book b SET quantity_basket=:quantity WHERE slug=:slug", nativeQuery = true)
     void updateCountCartBooks(@Param("slug") String slug, @Param("quantity") Integer quantity);
 
-    @Query(value = "SELECT * FROM book AS b JOIN viewed_books AS vb ON vb.book_id=b.id WHERE vb.type='VIEWED'", nativeQuery = true)
+    @Query(value = "SELECT b FROM BookEntity AS b JOIN ViewedBooks AS vb ON vb.book = b WHERE vb.type='VIEWED'")
     Page<BookEntity> findBookEntityByViewed(Pageable  nextPage);
 
     @Query(value = "SELECT * FROM book AS b JOIN viewed_books AS vb" +
             " ON vb.book_id=b.id WHERE vb.time >= NOW() - INTERVAL '7 DAY' ORDER BY b.rating DESC", nativeQuery = true)
-//    @Query(value = "SELECT * FROM book ORDER BY rating DESC", nativeQuery = true)
-
-//    @Query(value = "SELECT b FROM book AS b JOIN viewed_books AS vb ON vb.book_id=b.id ORDER BY b.rating DESC", nativeQuery = true)
     Page<BookEntity> findAllOrderByRating(Pageable pageable);
 
 }

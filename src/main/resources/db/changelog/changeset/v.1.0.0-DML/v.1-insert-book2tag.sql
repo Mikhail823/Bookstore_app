@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset techgeeknext:insert-book2tag-01
+--changeset Mikhail Popov:insert-book2tag
 
 insert into book2tag (tag_id, book_id) values (3, 149);
 insert into book2tag (tag_id, book_id) values (6, 877);

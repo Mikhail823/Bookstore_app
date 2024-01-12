@@ -38,7 +38,7 @@
                             <div class="ProductCard-author" >
                                 <span class="ProductCard-titleProp" th:text="${slugBook.authors.size() > 1 ? 'Авторы:' : 'Автор:'}">Автор:</span>&#32;
                                 <div th:each="author : ${slugBook.authors}">
-                                    <a href="#" th:href="@{'/api/author/' + ${author.getId()}}"
+                                    <a href="#" th:href="@{'/api/author/' + ${author.id}}"
                                        th:text="${author.toString()}">Лия Арден</a>
                                 </div>
                             </div>

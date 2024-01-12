@@ -18,7 +18,6 @@ public class BookstoreUserDetails implements UserDetails, OAuth2User {
 
     public BookstoreUserDetails(UserContactEntity contact) {
         this.contact = contact;
-
     }
 
     @Override

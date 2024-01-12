@@ -48,7 +48,7 @@ public class UserEntity implements Serializable {
 
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<MessageEntity> listMessage = new ArrayList<>();
+    private transient List<MessageEntity> listMessage = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonIgnore

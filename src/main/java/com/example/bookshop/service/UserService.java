@@ -29,10 +29,12 @@ public interface UserService {
 
     void confirmChangingUserProfile(ProfileFormDto  profileForm) throws JsonProcessingException;
 
-     void changeUserProfile(String token) throws JsonProcessingException;
+    void changeUserProfile(String token) throws JsonProcessingException;
 
-     UserEntity saveUserEntity(UserEntity user);
+    UserEntity saveUserEntity(UserEntity user);
 
-     UserContactEntity findContactUser(UserEntity user, ContactType type);
+    UserContactEntity findContactUser(UserEntity user, ContactType type);
+
+
 
 }

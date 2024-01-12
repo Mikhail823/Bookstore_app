@@ -45,12 +45,12 @@ public class AuthorsController {
         return "/authors/index";
     }
 
-    @ApiOperation("method to get mapping")
-    @GetMapping("/api/authors")
-    @ResponseBody
-    public List<AuthorEntity> authors(){
-        return authorRepository.findAll();
-    }
+//    @ApiOperation("method to get mapping")
+//    @GetMapping("/api/authors")
+//    @ResponseBody
+//    public List<AuthorEntity> authors(){
+//        return authorRepository.findAll();
+//    }
 
     @GetMapping("/author/{id:\\d+}")
     public String getPageAuthor(@PathVariable(value = "id") Integer id, Model model){
@@ -71,7 +71,7 @@ public class AuthorsController {
     @GetMapping("/books/authors/{id}")
     public String getAuthorPageBooks(@PathVariable(value = "id") Integer id, Model model){
         model.addAttribute("author", authorService.getAuthorById(id));
-        model.addAttribute("booksAuthor", bookService.getBooksByAuthorId(id, 0, 5).getContent());
+        model.addAttribute("booksAuthor", bookService.getBooksByAuthorId(id, 0, 6).getContent());
         return "/books/author";
     }
 
