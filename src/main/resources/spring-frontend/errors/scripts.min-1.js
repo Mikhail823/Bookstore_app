@@ -2056,8 +2056,7 @@
                                         }
                                     }
                                 });
-                            };
-                            getData('/api/search/page/' + $this.find('.search-input').val(), {
+                            };getData('/api/search/page/' + $this.find('.search-input').val(), {
                                 offset: 0,
                                 limit: $this.data('searchlimit')
                             });
@@ -2092,13 +2091,15 @@
         Authors().init();
         var Card = function () {
             var bookTemplate = function (book) {
-                return '<div class="Card">' + '   <div class="Card-picture">' + '<a href="' + book.slug + '">' + '<img src="' + book.image + '">\n' + '</a>' +
-                    (book.discount ? '<div class="Card-sale">' + (book.discount * 100) + '% скидка</div>' : '') +
+                var next = (book.authors.length > 1) ? ' и другие' : '';
+
+                return '<div class="Card">' + '   <div class="Card-picture">' + '<a href="/api/books/' + book.slug + '">' + '<img src="' + book.image + '">\n' + '</a>' +
+                    (book.discount ? '<div class="Card-sale">' + (book.discount * 100) + ' % скидка</div>' : '') +
                     (book.isBestseller ? '<div class="Card-ribbon"><span class="Card-ribbonText">Бестселлер</span></div>' : '') +
                     (book.status === 'PAID' ? '<a class="Card-status" title="Куплена">Куплена</a>\n' : '') +
                     (book.status === 'CART' ? '<a class="Card-status" title="В корзине">В корзине</a>\n' : '') +
-                    (book.status === 'KEPT' ? '<a class="Card-status" title="Отложена"><img src="/assets/img/icons/heart.svg" alt="Отложена">Отложена</a>\n' : '') + '    </div>' + '              <div class="Card-content">\n' + '                <strong class="Card-title"><a href="#">' + book.title + '</a>\n' + '                </strong>\n' + '                <div class="Card-description">' + book.authors + '                </div>\n' + '                <div class="Card-cost">' +
-                    (book.discountPrice ? '<span class="Card-priceOld">₽' + book.discountPrice  + '</span>\n' : '') + '<span class="Card-price">₽' + book.discountPrice + '</span>\n' + '                </div>\n' + '              </div>\n' + '            </div>';
+                    (book.status === 'KEPT' ? '<a class="Card-status" title="Отложена"><img src="/assets/img/icons/heart.svg" alt="Отложена">Отложена</a>\n' : '') + '    </div>' + '              <div class="Card-content">\n' + '                <strong class="Card-title"><a href="/api/books/'+ book.slug +'">' + book.title + '</a>\n' + '                </strong>\n' + '                <div class="Card-description">' + '<a href="/api/author/' + book.authors[0].id + '">' + book.authors[0].fullName + next + '</a>                </div>\n' + '                <div class="Card-cost">' +
+                    (book.discountPrice ? '<span class="Card-priceOld">₽' + book.price  + '</span>\n' : '') + '<span class="Card-price">₽' + book.discountPrice + '</span>\n' + '                </div>\n' + '              </div>\n' + '            </div>';
             }
             return {
                 init: function () {
@@ -2282,7 +2283,6 @@
             };
         };
         Card().init();
-
         var Cart = function () {
             return {
                 init: function () {
@@ -2290,7 +2290,6 @@
             };
         };
         Cart().init();
-
         var CartBlock = function () {
             return {
                 init: function () {
@@ -2298,7 +2297,6 @@
             };
         };
         CartBlock().init();
-
         var Comments = function () {
             return {
                 init: function () {
@@ -2322,7 +2320,7 @@
                             }
                         });
                         if (!error) {
-                            Login().postData('/api/books/bookReview/' + $this.data('bookid')), {
+                            Login().postData('/api/books/bookReview/' + $this.data('bookid'), {
                                 bookId: $this.data('bookid'),
                                 text: $this.find('.Comments-review').val()
                             }, function (result) {
@@ -2332,7 +2330,7 @@
                                     var $textarea = $this.find('.Comments-review');
                                     $textarea.addClass('form-textarea_error').after('<div class="form-error">' + result.error + '</div>');
                                 }
-                            }
+                            })
                         }
                     });
                     $('[data-likeid]').on('click', function (e) {
@@ -2352,29 +2350,23 @@
                                     $('[data-btnradio="' + $this.data('btnradio') + '"]').each(function (e) {
                                         if ($(this).data('check') && !$(this).is($this)) {
                                             $(this).find('.btn-content').text(parseFloat($(this).text()) - 1);
-                                            window.location.reload(true);
                                         }
                                     });
-                                    window.location.reload(true);
                                 }
                                 if ($this.data('check')) {
                                     $this.find('.btn-content').text(parseFloat($this.text()) - 1);
-                                    window.location.reload(true);
                                 } else {
                                     $this.find('.btn-content').text(parseFloat($this.text()) + 1);
-                                    window.location.reload(true);
                                 }
                                 ProductCard().shiftCheck($this);
                                 window.location.reload(true);
                             }
                         });
-                        window.location.reload(true);
                     });
                 }
             };
         };
         Comments().init();
-
         var Contacts = function () {
             return {
                 init: function () {
@@ -2391,7 +2383,6 @@
             };
         };
         Contacts().init();
-
         var Documents = function () {
             return {
                 init: function () {
@@ -2399,7 +2390,6 @@
             };
         };
         Documents().init();
-
         var FAQ = function () {
             return {
                 init: function () {
@@ -2407,7 +2397,6 @@
             };
         };
         FAQ().init();
-
         var HideBlock = function () {
             var $HideBlock = $('.HideBlock');
             var $trigger = $HideBlock.find('.HideBlock-trigger');
@@ -2435,7 +2424,6 @@
             };
         };
         HideBlock().init();
-
         var Login = function () {
             var $Login = $('.Login');
             var $Registration = $Login.filter('.Login_registration');
@@ -2463,9 +2451,10 @@
                         if (result.status === 200) {
                             cb(result.responseJSON);
                         } else {
-                            alert(cbErr.toString());
+
                             if (cbErr) {
                                 cbErr(result.responseJSON);
+                                alert(result);
                             }
                         }
                     }
@@ -2684,7 +2673,7 @@
                                             $thisStep.find('.form-input:not(.form-input_hide)[type="text"]').val('');
                                             $thisStep = $thisStep.prevAll('.Login-step_completed').last();
                                             $thisStep.removeClass('Login-step_hide');
-                                            $thisStep.find('.form-input:not(.form-input_hide)[type="text"]').addClass('form-input_error').after('<div class="form-error">' + result.error + '</div>');
+                                            $thisStep.find('.form-input:not(.form-input_hide)[type="text"]').addClass('form-input_error').after('<div class="form-error">' + 'Пользователь не найден или неверный логин\/пароль!'+ '</div>');
                                         } else {
                                             $thisStep.find('.form-input:not(.form-input_hide)[type="text"]').addClass('form-input_error').after('<div class="form-error">' + 'Пользователь не найден или неверный логин\/пароль!' + '</div>');
                                         }
@@ -2698,7 +2687,6 @@
             };
         };
         Login().init();
-
         var Middle = function () {
             return {
                 init: function () {
@@ -2706,7 +2694,6 @@
             };
         };
         Middle().init();
-
         var Product = function () {
             return {
                 init: function () {
@@ -3074,7 +3061,7 @@
                 var e = this;
                 e.$slides = e.$slider.children(e.options.slide + ":not(.slick-cloned)").addClass("slick-slide"), e.slideCount = e.$slides.length, e.$slides.each(function (e, t) {
                     i(t).attr("data-slick-index", e).data("originalStyling", i(t).attr("style") || "")
-                }), e.$slider.addClass("slick-slider"), e.$slideTrack = 0 === e.slideCount ? i('<div class="slick-track"/>').appendTo(e.$slider) : e.$slides.wrapAll('<div class="slick-track"/>').parent(), e.$list = e.$slideTrack.wrap('<div class="slick-list"/>').parent(), e.$slideTrack.css("opacity", 0), !0 !== e.options.centerMode && !0 !== e.options.swipeToSlide || (e.options.slidesToScroll = 1), i("img[data-lazy]", e.$slider).not("[src]").addClass("slick-loading"), e.setupInfinite(), e.buildArrows(), e.buildDots(), e.updateDots(), e.setSlideClasses("number" == typeof e.currentSlide ? e.currentSlide : 0), !0 === e.options.draggable && e.$list.addClass("draggable")
+                }), e.$slider.addClass("slick-slider"), e.$slideTrack = 0 === e.slideCount ? i('<div class="slick-track"/>').appendTo(e.$slider) : e.$slides.wrapAll('<div class="slick-track"/>').parent(), e.$list = e.$slideTrack.wrap('<div class="slick-list"/>').parent().width('100%'), e.$slideTrack.css("opacity", 0), !0 !== e.options.centerMode && !0 !== e.options.swipeToSlide || (e.options.slidesToScroll = 1), i("img[data-lazy]", e.$slider).not("[src]").addClass("slick-loading"), e.setupInfinite(), e.buildArrows(), e.buildDots(), e.updateDots(), e.setSlideClasses("number" == typeof e.currentSlide ? e.currentSlide : 0), !0 === e.options.draggable && e.$list.addClass("draggable")
             }, e.prototype.buildRows = function () {
                 var i, e, t, o, s, n, r, l = this;
                 if (o = document.createDocumentFragment(), n = l.$slider.children(), l.options.rows > 1) {
@@ -3560,7 +3547,10 @@
                                                 sendData('/api/recent/page')
                                                 break;
                                             case'popular':
-                                                sendData('/api/popular/page"')
+                                                sendData('/api/popular/page')
+                                                break;
+                                            case'recently':
+                                                sendData('/api/books/recently/page')
                                                 break;
                                         }
                                     }
@@ -3676,6 +3666,7 @@
             };
         };
         Tags().init();
+
         var Topup = function () {
             return {
                 init: function () {
@@ -3694,6 +3685,8 @@
             };
         };
         Topup().init();
+
+
         var Transactions = function () {
             var transactionTemplate = function (transaction) {
                 var date = new Date(+transaction.time),

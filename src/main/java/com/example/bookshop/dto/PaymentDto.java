@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 public class PaymentDto {
 
-    private Double sum;
+    private String hash;
+    private String sum;
     private Date time;
 }

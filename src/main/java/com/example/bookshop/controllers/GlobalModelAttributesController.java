@@ -11,17 +11,15 @@ import org.springframework.context.annotation.Primary;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ControllerAdvice;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Objects.nonNull;
 
-@ControllerAdvice(annotations = Controller.class)
-@Primary
+@ControllerAdvice
 public class GlobalModelAttributesController {
 
     private final BookService bookService;
@@ -50,53 +48,53 @@ public class GlobalModelAttributesController {
     public Object getCurrentUserBookShop(){
         Object curUser = userRegister.getCurrentUser();
 
-        if (curUser instanceof BookstoreUserDetails){
-            return ((BookstoreUserDetails) curUser).getContact().getUserId().getName();
-        }
-        else {
-            return "Гость";
-        }
+        return (curUser instanceof BookstoreUserDetails) ?
+                ((BookstoreUserDetails) curUser).getContact().getUserId().getName() : "Гость";
     }
 
     @ModelAttribute("countBooksCart")
     public Integer getCountBooksCart(){
         Object curUser = userRegister.getCurrentUser();
-        if (curUser instanceof BookstoreUserDetails){
-            return bookService.getBooksCart(((BookstoreUserDetails) curUser).getContact().getUserId()).size();
-        }
-        else {
-            return 0;
-        }
+
+        return (curUser instanceof BookstoreUserDetails) ?
+                bookService.getBooksCart(((BookstoreUserDetails) curUser).getContact().getUserId()).size() : 0;
     }
 
     @ModelAttribute("countBooksCartAnyUser")
     public Integer getCountBooksCartAnyUser(@CookieValue(name = "cartContents", required = false) String cartContents){
-        Integer count = cookieComponent.countBooksCookie(cartContents);
-        return (count == 0) ? 0 : count;
+        return (cookieComponent.countBooksCookie(cartContents) == 0) ? 0 : cookieComponent.countBooksCookie(cartContents);
     }
 
     @ModelAttribute("countPostponedBooksAnyUser")
     public Integer getCountBooksPostponedAnyUser(@CookieValue(name = "postponedBook", required = false) String postponedBook){
-        Integer count = cookieComponent.countBooksCookie(postponedBook);
-        return (count == 0) ? 0 : count;
+
+        return (cookieComponent.countBooksCookie(postponedBook) == 0) ? 0 : cookieComponent.countBooksCookie(postponedBook);
     }
 
     @ModelAttribute("countBooksPostponed")
     public Integer getCountBooksPostponed() {
         Object curUser = userRegister.getCurrentUser();
-        if (curUser instanceof BookstoreUserDetails) {
-            return bookService.getListPostponedBooks(((BookstoreUserDetails) curUser).getContact().getUserId()).size();
-        } else {
-            return 0;
-        }
+
+        return (curUser instanceof BookstoreUserDetails) ?
+                bookService.getListPostponedBooks(((BookstoreUserDetails) curUser).getContact().getUserId()).size() : 0;
     }
 
     @ModelAttribute("accountMoney")
-    public Double getAccountMoney(@AuthenticationPrincipal BookstoreUserDetails user){
-        if (nonNull(user)) {
-            Double balanceAccount = user.getContact().getUserId().getBalance();
-            return balanceAccount == 0 ? 0.0 : balanceAccount;
-        }
-        return 0.0;
+    public Double getAccountMoney(){
+        Object curUser = userRegister.getCurrentUser();
+            return (curUser instanceof BookstoreUserDetails &&
+                    ((BookstoreUserDetails) curUser).getContact().getUserId().getBalance()!= 0) ?
+                    ((BookstoreUserDetails) curUser).getContact().getUserId().getBalance() : 0.0;
     }
+
+    @ModelAttribute("countNotReadBook")
+    public Integer getCountNotReadBook(){
+        Object curUser = userRegister.getCurrentUser();
+        return (curUser instanceof BookstoreUserDetails) ?
+                bookService.getNotReadBooks(((BookstoreUserDetails)curUser).getContact().getUserId().getId()).size()
+                : 0;
+
+    }
+
+
 }

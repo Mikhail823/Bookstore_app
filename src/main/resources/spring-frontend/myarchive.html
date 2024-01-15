@@ -10,7 +10,25 @@
 <html class="ie9" lang="ru">
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
-<head th:replace="~{fragments/common_head_fragment :: head(title='My archive')}">
+<head>
+  <title>Тут название страницы написать</title>
+  <meta name="description" content="Описание страницы">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <!--meta( http-equiv="cache-control" content="no-cache")-->
+  <!--meta( http-equiv="expires" content="0")-->
+  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+  <link href="favicon.ico" rel="shortcut icon">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=40509588">
+  <link rel="stylesheet" href="/assets/css/basic.min.css?v=40509588">
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=40509588"><!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script defer src="/assets/js/scripts.min.js?v=40509588"></script>
+  <script th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
    <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
@@ -40,7 +58,8 @@
                 <strong class="Card-title" >
                   <a href="#" th:text="${book.title}">Английский язык. 5 класс. Английский в фокусе. Рабочая тетрадь. ФГОС</a>
                 </strong>
-                <div class="Card-description" th:text="${book.author}">Ваулина, Дули, Подоляко
+                <div th:each="book : ${book.authors}">
+                  <div class="Card-description" th:text="${author}"></div>
                 </div>
                 <div class="Card-cost">
                   <span class="Card-priceOld" th:text="${'₽' + book.priceOld}">₽250.00</span>

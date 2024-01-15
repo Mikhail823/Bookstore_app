@@ -11,7 +11,26 @@
 <![endif]-->
 <!--[if gt IE 9]><!-->
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"> <!--<![endif]-->
-<head th:replace="~{fragments/common_head_fragment :: head(title='Cart')}">
+<head>
+  <title>Тут название страницы написать</title>
+  <meta name="description" content="Описание страницы">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+  <!--meta( http-equiv="cache-control" content="no-cache")-->
+  <!--meta( http-equiv="expires" content="0")-->
+  <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+  <link href="favicon.ico" th:href="@{/favicon.ico}" rel="shortcut icon">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+  <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+  <link rel="stylesheet" href="/assets/css/fonts.min.css?v=22193648">
+  <link rel="stylesheet" href="/assets/css/basic.min.css?v=22193648">
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=22193648"><!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script defer src="/assets/js/scripts.min.js?v=22193648"></script>
+  <script  type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
+</head>
 </head>
 <body class="Site">
   <header class="Header" th:replace="~{fragments/header_fragment :: header}"></header>
@@ -20,8 +39,8 @@
       <main class="Middle-main">
         <h1 class="Middle-title" th:text="#{prof.basket}">Корзина
         </h1>
-        <h3 sec:authorize="!isAuthenticated()" th:if="${isEmptyCart}" style="color: red"
-        th:text="#{basket.isempty}">Корзина пуста :((</h3>
+        <h3 th:if="${isEmptyCart}" style="color: red"  th:text="#{basket.isempty}">Корзина пуста :((</h3>
+        <h2 sec:authorize="isAuthenticated()" th:if="${noMoney}" th:text="#{cart.moneyUser}" style="color: red"></h2>
         <form class="form Cart" action="#" method="post">
           <div class="Cart-product" th:each="book : ${bookCart}">
             <div class="Cart-block Cart-block_row">
@@ -32,7 +51,9 @@
               <div class="Cart-block Cart-block_row">
                 <div class="Cart-block Cart-block_info">
                   <div class="Cart-author">
-                    <a href="#" th:text="${book.author.toString()}">Борис Васильевич Бедный</a>
+                    <div th:each="author : ${book.authors}">
+                      <a href="#" th:text="${author}">Борис Васильевич Бедный</a>
+                    </div>
                   </div>
                   <div class="Cart-title">
                     <a href="#" th:text="${book.title}">Жизнь</a>

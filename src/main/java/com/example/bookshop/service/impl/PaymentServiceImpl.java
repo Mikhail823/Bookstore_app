@@ -10,8 +10,12 @@ import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import io.swagger.models.auth.In;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@Slf4j
 public class PaymentServiceImpl implements PaymentService {
 
     @Value("${robokassa.merchant.login}")
@@ -71,31 +76,18 @@ public class PaymentServiceImpl implements PaymentService {
                 "&SignatureValue=" + DatatypeConverter.printHexBinary(md.digest()).toUpperCase() +
                 "&IsTest=1";
     }
-    @Override
-    public boolean isSignature(String signatureValue,
-                               Double sum,
-                               Integer invId) throws NoSuchAlgorithmException {
-        MessageDigest md = MessageDigest.getInstance("MD5");
-        md.update((merchantLogin + ":" + sum + ":"
-                + invId + ":" + towTestPass).getBytes());
-        signatureValue = DatatypeConverter.printHexBinary(signatureValue.getBytes()).toUpperCase();
-        String value = DatatypeConverter.printHexBinary(md.digest()).toUpperCase();
-        if (signatureValue.equals(value)) return true;
-        return false;
-
-    }
-
 
     @Transactional
     @Override
     public void savingTransaction(String signatureValue,
                                   Double outSum,
                                   Integer invId,
-                                  String description) throws NoSuchAlgorithmException {
-        if (Boolean.TRUE.equals(isSignature(signatureValue, outSum, invId))) {
+                                  String description){
+
             UserEntity user = userRepository.findUserEntityById(invId);
             Double allSum = user.getBalance() + outSum;
             userRepository.updateUserBalance(allSum, user.getId());
+
             BalanceTransactionEntity transactionEntity = new BalanceTransactionEntity();
             transactionEntity.setValue(outSum);
             transactionEntity.setDescription(description);
@@ -103,7 +95,7 @@ public class PaymentServiceImpl implements PaymentService {
             transactionEntity.setTime(LocalDateTime.now());
             transactionEntity.setUserId(user);
             balanceTransactionRepository.save(transactionEntity);
-        }
+
     }
 
     @Override
@@ -115,5 +107,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public void saveTransaction(BalanceTransactionEntity transactionEntity) {
         balanceTransactionRepository.save(transactionEntity);
+    }
+
+    @Override
+    public Page getPageTransactionalUser(UserEntity user, Integer offset, Integer limit){
+        Pageable nextPage = PageRequest.of(offset, limit);
+        return balanceTransactionRepository.findBalanceTransactionEntitiesByUserIdOrderByTimeAsc(user, nextPage);
     }
 }

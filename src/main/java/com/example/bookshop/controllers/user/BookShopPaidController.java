@@ -26,7 +26,7 @@ public class BookShopPaidController {
     private final BookService bookService;
 
     @Autowired
-    public BookShopPaidController(BookService bookService, PaymentService paymentService) {
+    public BookShopPaidController(BookService bookService) {
         this.bookService = bookService;
     }
 

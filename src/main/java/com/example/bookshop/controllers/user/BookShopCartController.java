@@ -64,8 +64,8 @@ public class BookShopCartController {
                                     HttpServletRequest request) {
         Object curUser = userRegister.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails) {
-            if (noMoney == null) {
-                model.addAttribute("noMoney", "На Вашем балансе не достаточно средств!!!");
+            if (Boolean.TRUE.equals(noMoney)) {
+                model.addAttribute("noMoney", true);
             }
             cookieService.clearCookie(response, request);
             bookService.getBooksTheCartOfUser(model);
@@ -99,19 +99,8 @@ public class BookShopCartController {
                                          @CookieValue(name = "cartContents", required = false) String cartContents,
                                          @RequestBody Map<String, String> allParams, Model model, HttpServletResponse response) {
 
-        Object curUser = userRegister.getCurrentUser();
-        BookEntity book = bookService.getBookPageSlug(slug);
-        int countCartBooks = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
-        if (curUser instanceof BookstoreUserDetails) {
-            UserEntity user = userService.getUserName(((BookstoreUserDetails) curUser).getContact().getUserId().getName());
-                bookService.saveBook2User(book, user, CART);
-                bookService.updateCountBooksCart(slug, countCartBooks + 1);
-                return REDIRECT_SLUG + slug;
-        } else {
-            cookieService.addBooksCookieCart(cartContents, model, allParams, response, slug);
-            bookService.updateCountBooksCart(slug, countCartBooks + 1);
-        }
-        return REDIRECT_SLUG + slug;
+        return bookService.addingBookStatusCart(slug, model, response, cartContents, REDIRECT_CART, allParams);
+
     }
 
     @PostMapping("/changeBookStatus/cart/remove/{slug}")
@@ -145,7 +134,7 @@ public class BookShopCartController {
 
         String bookStrong = (bookList.size() == 1) ? "книги: " : "книг: ";
         String booksName = bookList.stream().map(book -> book.getTitle() + ", ").collect(Collectors.joining());
-        Double balance = user.getContact().getUserId().getBalance() - allSumBooks;
+        double balance = user.getContact().getUserId().getBalance() - allSumBooks;
         user.getContact().getUserId().setBalance(balance);
         userService.saveUserEntity(user.getContact().getUserId());
         model.addAttribute("accountMoney", balance);

@@ -2,6 +2,8 @@ package com.example.bookshop.controllers.user;
 
 import com.example.bookshop.dto.PaymentDto;
 import com.example.bookshop.dto.ProfileFormDto;
+import com.example.bookshop.dto.TransactionPageDto;
+import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.BookService;
@@ -16,6 +18,8 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +34,7 @@ import java.util.List;
 @Slf4j
 public class ProfileUserPageController {
 
+    private static final String PROF_REDIRECT_PAY = "http://192.168.1.3:8081/profile";
     private static final String PROF_REDIRECT = "redirect:/profile";
     private static final String PROFILE = "profile";
     private final UserService userService;
@@ -63,11 +68,11 @@ public class ProfileUserPageController {
 
     @GetMapping("/profile")
     public String handlerProfile(@AuthenticationPrincipal BookstoreUserDetails user, Model model) {
-        List<BalanceTransactionEntity> listTransaction =
-                paymentService.getListTransactionUser(user.getContact().getUserId());
+
         UserContactEntity email = userService.findContactUser(user.getContact().getUserId(), ContactType.EMAIL);
         UserContactEntity phone = userService.findContactUser(user.getContact().getUserId(), ContactType.PHONE);
-        model.addAttribute("transactionList", listTransaction);
+        model.addAttribute("transactionList",
+                paymentService.getPageTransactionalUser(user.getContact().getUserId(), 0, 6));
         model.addAttribute("email", email.getContact());
         model.addAttribute("phone", phone.getContact());
         model.addAttribute("curUsr", user.getContact().getUserId());
@@ -82,48 +87,59 @@ public class ProfileUserPageController {
     }
 
     @PostMapping("/profile/save")
-    public String updateProfile(ProfileFormDto profileDto) throws JsonProcessingException {
-        userService.confirmChangingUserProfile(profileDto);
+    public String updateProfile(@RequestBody ProfileFormDto profileDto, Model model)
+            throws JsonProcessingException {
+
+            userService.confirmChangingUserProfile(profileDto);
+            model.addAttribute("sendMessage", "На Вашу почту " +
+                    profileDto.getMail() + " сообщение для подверждения");
+
         return PROF_REDIRECT;
     }
 
     @PostMapping("/payment")
+    @ResponseBody
     public RedirectView handlerPayment(@RequestBody PaymentDto paymentDto) throws NoSuchAlgorithmException {
-    log.info("SUUUUM _____________________ " + paymentDto.getSum());
+
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
         String redirectUrl = paymentService.getPaymentUrl(user, paymentDto);
         return new RedirectView(redirectUrl);
     }
 
     @GetMapping("/profile/verify/{token}")
-    public String handleProfileVerification(@PathVariable String token) throws JsonProcessingException {
+    public String handleProfileVerification(@PathVariable String token, Model model) throws JsonProcessingException {
         userService.changeUserProfile(token);
+        model.addAttribute("successfulSave", true);
         return PROF_REDIRECT;
     }
 
     @GetMapping("/payment/success")
-    public RedirectView successURLHandler(@RequestParam(value = "outSum", required = false) Double outSum,
-                                          @RequestParam("invId") Integer invId,
-                                          @RequestParam("signatureValue") String signatureValue,
-                                          @RequestParam("Culture") String culture,
-                                          @RequestParam("IsTest") String isTest) throws NoSuchAlgorithmException {
+    public RedirectView successURLHandler(@RequestParam(value = "OutSum", required = false) Double outSum,
+                                          @RequestParam(value = "InvId", required = false) Integer invId,
+                                          @RequestParam("SignatureValue") String signatureValue,
+                                          @RequestParam("IsTest") String isTest,
+                                          @RequestParam("Culture") String culture) throws NoSuchAlgorithmException {
+
 
         String description = "Пополнение счета через сервис ROBOKASSA на сумму " + outSum + " руб.";
         paymentService.savingTransaction(signatureValue, outSum, invId, description);
-        return new RedirectView(PROF_REDIRECT);
+        return new RedirectView(PROF_REDIRECT_PAY);
     }
 
     @GetMapping("/payment/result")
     public RedirectView resultUrlHandler(@RequestParam("OutSum") Double outSum,
-                                         @RequestParam("invId") Integer invId,
+                                         @RequestParam("InvId") Integer invId,
                                          @RequestParam("SignatureValue") String signatureValue,
                                          @RequestParam("Culture") String culture,
-                                         @RequestParam("IsTest") String isTest, Model model) throws NoSuchAlgorithmException {
-        if(paymentService.isSignature(signatureValue, outSum, invId)){
+                                         @RequestParam("IsTest") String isTest, Model model){
+
+
+            String description = "Пополнение счета через сервис ROBOKASSA на сумму " + outSum + " руб.";
+            paymentService.savingTransaction(signatureValue, outSum, invId, description);
             model.addAttribute("res", true);
             model.addAttribute("paymentResult", "Денежные средства зачислены на счет!");
-        }
-        return new RedirectView(PROF_REDIRECT);
+
+        return new RedirectView(PROF_REDIRECT_PAY);
 
     }
 
@@ -132,7 +148,15 @@ public class ProfileUserPageController {
                                               @RequestParam("InvId") Integer invId,
                                               @RequestParam("Culture") String culture, Model model){
         model.addAttribute("error", "Ошибка зачисления денежных средств!!!!!:((");
-        return new RedirectView(PROF_REDIRECT);
+        return new RedirectView(PROF_REDIRECT_PAY);
+    }
+
+    @GetMapping("/transaction/page")
+    @ResponseBody
+    public TransactionPageDto handlerPageTransactional(@RequestParam(value = "offset") Integer offset,
+                                                       @RequestParam(value = "limit") Integer limit){
+        UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
+        return new TransactionPageDto(paymentService.getPageTransactionalUser(user, offset, limit).getContent());
     }
 
 

@@ -23,7 +23,7 @@ import java.util.List;
 @EqualsAndHashCode
 public class AuthorEntity implements Serializable {
 
-    private  static  final Long  serialVersionUID  =  8957262041950289547L ;
+    private  static  final Long  serialVersionUID  =  1L ;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

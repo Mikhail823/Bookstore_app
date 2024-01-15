@@ -24,9 +24,10 @@ import java.util.*;
 @Table(name = "book")
 @Setter
 @Getter
-
+@EqualsAndHashCode
 public class BookEntity implements Serializable {
 
+        private  static  final  Long  serialVersionUID  =  1L ;
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

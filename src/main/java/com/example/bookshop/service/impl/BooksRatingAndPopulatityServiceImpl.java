@@ -139,13 +139,13 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
     @Override
     public void calculatingThePopularityOfBook(BookEntity book){
 
-        Integer quantityBookCart = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
-        Integer quantityBookPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
-        Integer quantityBookPaid = book.getNumberOfPurchased() == null ? 0 : book.getNumberOfPurchased();
-        Integer countViews = book.getCountOfViews() == null ? 0 : book.getCountOfViews();
+        int quantityBookCart = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
+        int quantityBookPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
+        int quantityBookPaid = book.getNumberOfPurchased() == null ? 0 : book.getNumberOfPurchased();
+        int countViews = book.getCountOfViews() == null ? 0 : book.getCountOfViews();
 
         Integer popularity = (int)(quantityBookPaid +  0.7 * quantityBookCart
-                + 0.4 * quantityBookPostponed + countViews * 0.1);
+                + 0.4 * quantityBookPostponed + countViews * 0.3);
         bookRepository.updatePopularityBook(popularity, book.getId());
     }
 }

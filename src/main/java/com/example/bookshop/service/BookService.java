@@ -3,6 +3,7 @@ package com.example.bookshop.service;
 
 import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.exeption.BookStoreApiWrongParameterException;
+import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
@@ -12,8 +13,10 @@ import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 public interface BookService {
@@ -87,4 +90,10 @@ public interface BookService {
     void updateCountPaidBooks(String slug, Integer count);
 
     BookEntity findBookById(Integer id);
+
+    String addingBookStatusCart(String slug, Model model,
+                                HttpServletResponse response,
+                                String cartContents,
+                                String redirect, Map<String, String> allParams);
+
 }

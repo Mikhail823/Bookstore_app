@@ -17,7 +17,8 @@ import java.util.List;
 @Getter
 public class GenreEntity implements Serializable {
 
-    private static final Long serialVersionUID  =  2405172041950251807L;
+    private  static  final  Long  serialVersionUID  =  1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

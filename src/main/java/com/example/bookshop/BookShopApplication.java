@@ -12,7 +12,6 @@ import org.springframework.context.annotation.EnableAspectJAutoProxy;
 @AutoConfigurationPackage
 @LiquibaseDataSource
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-@EnableCaching
 public class BookShopApplication {
 
     public static void main(String[] args) {

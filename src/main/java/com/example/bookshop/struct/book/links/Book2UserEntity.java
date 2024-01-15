@@ -1,4 +1,5 @@
 package com.example.bookshop.struct.book.links;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,6 +11,7 @@ import java.util.Date;
 @Table(name = "book2user")
 @Setter
 @Getter
+@EqualsAndHashCode
 public class Book2UserEntity implements Serializable {
 
     @Id
@@ -20,6 +22,7 @@ public class Book2UserEntity implements Serializable {
     private Date time;
 
     @Column(name = "book_id", columnDefinition = "INT NOT NULL")
+
     private Integer bookId;
 
     @Column(name = "user_id", columnDefinition = "INT NOT NULL")

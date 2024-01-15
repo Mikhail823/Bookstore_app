@@ -1,6 +1,7 @@
 package com.example.bookshop.service.impl;
 
 import com.example.bookshop.dto.ProfileFormDto;
+import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
@@ -23,6 +24,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 
 
 import java.util.*;
@@ -139,8 +141,7 @@ public class UserServiceImp implements UserService {
         message.setFrom("rabota822@bk.ru");
         message.setTo(profileForm.getMail());
         message.setSubject("User profile update verification!");
-        String token = uniqueTokenUtil.generateToken(profileForm);
-        message.setText("Verification link is: " + "http://localhost:8080/profile/verify/" + token + " please, follow it.");
+        message.setText(setMessageText(profileForm, uniqueTokenUtil.generateToken(profileForm)));
         javaMailSender.send(message);
     }
 
@@ -173,5 +174,16 @@ public class UserServiceImp implements UserService {
         return contactRepository.findFirstUserContactEntityByUserIdAndType(user, type);
     }
 
+    public String setMessageText(ProfileFormDto profileFormDto, String token){
+        StringBuilder sb = new StringBuilder();
+                    sb
+                    .append("You have changed your credentials!!! ")
+                    .append(" Name: " + profileFormDto.getName())
+                    .append(" E-mail: " + profileFormDto.getMail())
+                    .append(" Phone: " + profileFormDto.getPhone())
+                    .append(" New password: " + profileFormDto.getPassRepeated())
+                    .append(" Verification link is: " + "http://localhost:8081/profile/verify/" + token + " please, follow it.");
 
+        return sb.toString();
+    }
 }

@@ -5,6 +5,7 @@ import com.example.bookshop.struct.book.review.BookReviewEntity;
 import com.example.bookshop.struct.book.review.MessageEntity;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,7 +18,10 @@ import java.util.*;
 @Table(name = "users")
 @Setter
 @Getter
+@EqualsAndHashCode
 public class UserEntity implements Serializable {
+
+    private  static  final  Long  serialVersionUID  =  1L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -47,15 +51,15 @@ public class UserEntity implements Serializable {
     private Set<RoleEntity> roles;
 
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private transient List<MessageEntity> listMessage = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonIgnore
     @Transient
     private List<UserContactEntity> listContact = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "userId", fetch = FetchType.EAGER)
     @JsonIgnore
     private List<BookReviewEntity> review = new ArrayList<>();
 

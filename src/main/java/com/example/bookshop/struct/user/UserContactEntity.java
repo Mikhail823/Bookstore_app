@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Getter
 public class UserContactEntity implements Serializable {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

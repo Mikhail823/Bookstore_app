@@ -1,10 +1,12 @@
 package com.example.bookshop.service;
 
 import com.example.bookshop.dto.ProfileFormDto;
+import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.struct.enums.ContactType;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.ui.Model;
 
 public interface UserService {
     UserEntity getUserById(Integer id);
@@ -18,7 +20,6 @@ public interface UserService {
     String generateNameUser();
 
     UserEntity getUserName(String name);
-
 
     void updateUserProfile(ProfileFormDto profileDto, Integer userId);
 

@@ -20,7 +20,6 @@ import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,13 +29,14 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.ARCHIVED;
-import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.PAID;
+import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.*;
 import static java.util.Objects.nonNull;
 
 @Service
@@ -49,7 +49,7 @@ public class BookServiceImpl implements BookService {
     private final BookstoreUserRegister registerUser;
     private final BooksRatingAndPopulatityService booksRatingAndPopulatityService;
     private final BalanceTransactionRepository transactionRepository;
-    private  UserRepository userRepository;
+    private final UserRepository userRepository;
     private final CookieService cookieService;
 
     private DateFormatter dateFormatter = new DateFormatter();
@@ -115,7 +115,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Cacheable("recentBooks")
     public Page<BookEntity> getPageOfRecentBooksData(Date dateFrom, Date dateTo, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return bookRepository.findPageOfBooksByPubDateBetweenOrderByPubDate(dateFrom, dateTo, nextPage);
@@ -128,7 +127,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Cacheable("sliderRecentBooks")
     public Page<BookEntity> getPageRecentSlider(Integer offset, Integer limit) {
         Pageable nextPageRecent = PageRequest.of(offset, limit);
         return bookRepository.findAll(nextPageRecent);
@@ -238,7 +236,6 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-
     public List<BookEntity> getNotReadBooks(Integer userId) {
         return bookRepository.getBooksPaid(userId);
     }
@@ -344,11 +341,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void updateCountBooksCart(String slug, Integer count){
         bookRepository.updateCountCartBooks(slug,  count);
     }
 
     @Override
+
     public void addBook(BookDto bookDto) {
         BookEntity newBook = new BookEntity();
         newBook.setTitle(bookDto.getTitle());
@@ -392,8 +391,26 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public BookEntity findBookById(Integer id) {
-        return bookRepository.findBookEntityById(id);
+        return null;
     }
 
-
+    @Override
+    public String addingBookStatusCart(String slug, Model model,
+                                       HttpServletResponse response,
+                                       String cartContents,
+                                       String redirect, Map<String, String> allParams){
+        Object curUser = registerUser.getCurrentUser();
+        BookEntity book = getBookPageSlug(slug);
+        int countCartBooks = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
+        if (curUser instanceof BookstoreUserDetails) {
+            UserEntity user = userRepository.findUserEntityById(((BookstoreUserDetails) curUser).getContact().getUserId().getId());
+            saveBook2User(book, user, CART);
+            updateCountBooksCart(slug, countCartBooks + 1);
+            return redirect + slug;
+        } else {
+            cookieService.addBooksCookieCart(cartContents, model, allParams, response, slug);
+            updateCountBooksCart(slug, countCartBooks + 1);
+            return redirect + slug;
+        }
+    }
 }

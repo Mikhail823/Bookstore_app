@@ -3,7 +3,26 @@
 <html class="ie8" lang="ru">
 <html class="ie9" lang="ru">
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/common_head_fragment :: head(title='Add new author')}">
+<head>
+    <title>Тут название страницы написать</title>
+    <meta name="description" content="Описание страницы">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <!--meta( http-equiv="cache-control" content="no-cache")-->
+    <!--meta( http-equiv="expires" content="0")-->
+    <!--link(rel="preload" href="assets/css/extra.min.css?v=" + version as="style" crossorigin="anonymous")-->
+    <link href="../favicon.ico" rel="shortcut icon">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous">
+    <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/fonts.min.css?v=40130258">
+    <link rel="stylesheet" href="/assets/css/basic.min.css?v=40130258">
+    <link rel="stylesheet" href="/assets/css/extra.min.css?v=40130258"><!--[if lt IE 9]>
+    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+    <script defer src="/assets/js/scripts.min.js?v=40130258"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
 <header class="Header" th:replace="~{fragments/header_fragment :: header(admin='menu-item menu-item_ACTIVE', status='unauthorized')}">
@@ -19,12 +38,12 @@
                     <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{item.books}">Книги</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current">
-                    <span>Добавление новой книги</span>
+                    <span>Добавление нового автора</span>
                 </li>
             </ul>
             <div class="Section">
                 <div class="Section-header">
-                    <h1 class="Section-title">Добавление новой книги</h1>
+                    <h1 class="Section-title">Добавление нового автора</h1>
                     <span style="color: red" th:if="${saveAuthor}">Автор добавлен</span>
                 </div>
                 <div class="section_container">

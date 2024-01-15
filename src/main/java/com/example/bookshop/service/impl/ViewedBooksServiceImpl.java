@@ -13,6 +13,7 @@ import com.example.bookshop.struct.book.links.ViewedBooks;
 import com.example.bookshop.struct.user.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -48,9 +50,12 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
     public void saveViewedBooksUser(BookEntity book, HttpServletRequest request){
         ViewedBooks viewedBooks = new ViewedBooks();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
          if(userRegister.isAuthAnonymousUser()){
              UserEntity anonyUser = userService.findByUserFromHash(cookieService.getHashTheUserFromCookie(request));
-             if (getViewedBookUser(book, userService.getUserName(auth.getName())) != null) return;
+             if (getAllViewedBooksUser(anonyUser).contains(book.getId())){
+                 return;
+             }
              viewedBooks.setBook(book);
              viewedBooks.setUser(anonyUser);
              viewedBooks.setType(Book2UserTypeEntity.StatusBookType.VIEWED);
@@ -59,8 +64,8 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
              book.setStatus(Book2UserTypeEntity.StatusBookType.VIEWED);
              bookRepository.save(book);
          } else {
-             if (getViewedBookUser(book,
-                     ((BookstoreUserDetails) auth.getPrincipal()).getContact().getUserId()) != null) return;
+             if (getAllViewedBooksUser(
+                     ((BookstoreUserDetails) auth.getPrincipal()).getContact().getUserId()).contains(book.getId())) return;
              viewedBooks.setBook(book);
              viewedBooks.setUser(((BookstoreUserDetails) auth.getPrincipal()).getContact().getUserId());
              viewedBooks.setType(Book2UserTypeEntity.StatusBookType.VIEWED);
@@ -74,5 +79,9 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
 
     public ViewedBooks getViewedBookUser(BookEntity book, UserEntity user){
         return viewedBooksRepository.findFirstByBookAndUser(book, user);
+    }
+
+    public List<ViewedBooks> getAllViewedBooksUser(UserEntity user){
+        return viewedBooksRepository.findViewedBooksByUser(user);
     }
 }
