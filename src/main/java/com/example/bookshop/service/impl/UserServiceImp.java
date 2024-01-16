@@ -182,8 +182,13 @@ public class UserServiceImp implements UserService {
                     .append(" E-mail: " + profileFormDto.getMail())
                     .append(" Phone: " + profileFormDto.getPhone())
                     .append(" New password: " + profileFormDto.getPassRepeated())
-                    .append(" Verification link is: " + "http://localhost:8081/profile/verify/" + token + " please, follow it.");
+                    .append(" Verification link is: " + "http://192.168.1.3:8081/profile/verify/" + token + " please, follow it.");
 
         return sb.toString();
+    }
+
+    @Override
+    public UserEntity getUserRegistrationByContact(String contact){
+        return userRepository.findUserEntityByContact(contact);
     }
 }

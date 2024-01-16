@@ -54,10 +54,14 @@ public class PostponedBooksController {
 
     @GetMapping("/postponed")
     public ModelAndView handlePostponedRequest(@CookieValue(name = "postponedBook", required = false)
-                                                       String postponedBook, Model model, HttpServletResponse response,
+                                               @RequestParam(value = "isCart", required = false) Boolean isCart,
+                                               String postponedBook, Model model, HttpServletResponse response,
                                                HttpServletRequest request){
         Object curUser = userRegister.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails){
+            if (Boolean.TRUE.equals(isCart)){
+                model.addAttribute("isCart", true);
+            }
             cookieService.clearCookie(response, request);
             bookService.getPostponedBooksOfUser(model);
 
@@ -77,7 +81,7 @@ public class PostponedBooksController {
         BookEntity book = bookService.getBookPageSlug(slug);
         int quantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
         if (curUser instanceof BookstoreUserDetails){
-            UserEntity user = userServiceImp.getUserName(((BookstoreUserDetails) curUser).getName());
+            UserEntity user = userServiceImp.getUserById(((BookstoreUserDetails) curUser).getContact().getUserId().getId());
             bookService.saveBook2User(book, user, KEPT);
             bookService.updateCountPostponedBook(slug, quantityPostponed + 1);
         }

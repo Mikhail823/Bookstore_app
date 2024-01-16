@@ -53,15 +53,16 @@
           </li>
           <li class="menu-item">
             <a class="menu-link" th:href="@{/api/books/cart}"
-               th:text="${'Корзина ' + '(' + countBooksCart + ')'}"
-                                   href="/cart.html">Корзина (7)</a>
+               th:text="#{prof.basket} + '(' + ${countBooksCart} + ')'"
+                                   href="/cart.html" >Корзина (7)</a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" th:text="${'Отложено ' +  '(' + countBooksPostponed + ')'}"
-                                   href="/postponed.html">Отложено (2)</a>
+            <a class="menu-link" th:text="#{prof.postponed} +  '(' + ${countBooksPostponed} + ')'"
+                                   href="/postponed.html" >Отложено (2)</a>
           </li>
           <li class="menu-item">
-            <a class="menu-link" th:href="@{/profile}" href="/profile.html" th:text="#{prof.myProfile}">Мой профиль</a>
+            <a class="menu-link"
+               th:href="@{/profile}" href="/profile.html" th:text="#{prof.myProfile}">Мой профиль</a>
           </li>
         </ul>
       </div>

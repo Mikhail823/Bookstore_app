@@ -38,23 +38,24 @@
                     <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{item.books}">Книги</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current">
-                    <span>Добавление новой книги</span>
+                    <span th:text="#{addBook}">Добавление новой книги</span>
+
                 </li>
             </ul>
             <div class="Section">
                 <div class="Section-header">
-                    <h1 class="Section-title" >Добавление новой книги</h1>
-                    <span style="color: red" th:if="${saveBook}">Книга добавлена</span>
+                    <h1 class="Section-title" th:text="#{addBook}">Добавление новой книги</h1>
+                    <span style="color: red" th:if="${saveBook}" th:text="#{saveBook}">Книга добавлена</span>
                 </div>
                 <div>
                     <form action="#" method="post" th:object="${bookDto}" th:action="@{/api/admin/save-book}">
                         <div>
-                            <label>Ведите название книги</label>
-                            <input type="text" th:field="*{title}">
+                            <label th:text="#{name.book}">Ведите название книги</label>
+                            <input type="text" th:field="*{title}" th:placeholder="#{book.place.title}">
                         </div>
                         <div>
-                            <h3>Выберите автора книги</h3>
-                            <span>Если автор отсутствует в списке то перейдите по <a th:href="@{/api/admin/addAuthor}">ссылке</a></span>
+                            <h3 th:text="#{choose.author}">Выберите автора книги</h3>
+                            <span th:text="#{notAuthor}">Если автор отсутствует в списке то перейдите по <a th:href="@{/api/admin/addAuthor}" th:text="#{link}">ссылке</a></span>
                             <select multiple>
                                 <div th:each="author : ${authors}">
                                      <option th:text="${author}" th:field="*{authors}" th:value="${author.id}" value=""></option>
@@ -62,19 +63,19 @@
                             </select>
                         </div>
                         <div>
-                            <label>Введите описание книги</label>
+                            <label th:text="#{book.description}">Введите описание книги</label>
                             <textarea th:field="*{description}"></textarea>
                         </div>
                         <div>
-                            <label>Ведите цену книги</label>
-                            <input type="text" th:field="*{price}" placeholder="4520">
+                            <label th:text="#{book.price}">Ведите цену книги</label>
+                            <input type="text" th:field="*{price}" placeholder="1000">
                         </div>
                         <div>
-                            <label>Введите скидку на кгигу</label>
+                            <label th:text="#{book.discount}">Введите скидку на кгигу</label>
                             <input type="text" th:field="*{discountPrice}">
                         </div>
                         <div>
-                            <label>Выберите жанр</label>
+                            <label th:text="#{book.genre}">Выберите жанр</label>
                             <select>
                                 <div th:each="genre : ${genres}">
                                     <option th:text="${genre}" th:field="*{genre}" th:value="${genre.id}" value=""> </option>
@@ -82,7 +83,7 @@
                             </select>
                         </div>
                         <div>
-                            <label>Выберите один или несколько тегов</label>
+                            <label th:text="#{book.tags}">Выберите один или несколько тегов</label>
                             <select multiple>
                                 <div th:each="tag : ${tags}">
                                     <option th:text="${tag}" th:field="*{tags}" th:value="${tag.id}"></option>
@@ -90,20 +91,20 @@
                             </select>
                         </div>
                         <div>
-                            <label>Является книга бесцеллером</label>
+                            <label th:text="#{book.isBestseller}">Является книга бесцеллером</label>
                             <input type="text" placeholder="Yes and no" th:field="*{bestseller}">
                         </div>
                         <div>
-                            <label>Укажите дату публикации</label>
+                            <label th:text="#{book.pubDate}">Укажите дату публикации</label>
                             <input type="text" placeholder="12.01.2022" th:field="*{pubDate}">
                         </div>
                         <div>
-                                <label>Выберите обложку для книги</label>
+                                <label th:text="#{book.image}">Выберите обложку для книги</label>
                                 <input  type="file" accept="image/*" th:field="*{image}">
                         </div>
                         <br>
                         <button class="btn btn_primary btn_outline" type="submit">
-                            <span class="btn-content">Добавить</span>
+                            <span class="btn-content" th:text="#{btn.text.add}">Добавить</span>
                         </button>
                     </form>
                 </div>

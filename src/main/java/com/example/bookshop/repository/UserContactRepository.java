@@ -15,6 +15,8 @@ public interface UserContactRepository extends JpaRepository<UserContactEntity, 
 
     UserContactEntity findFirstByContact(String contact);
 
+    UserContactEntity findUserContactEntityByContactAndUserId(String contact, UserEntity user);
+
     List<UserContactEntity> findUserContactEntitiesByUserId(UserEntity userId);
 
     UserContactEntity findFirstUserContactEntityByUserIdAndType(UserEntity user, ContactType type);

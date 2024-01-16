@@ -36,6 +36,6 @@ public interface UserService {
 
     UserContactEntity findContactUser(UserEntity user, ContactType type);
 
-
+    UserEntity getUserRegistrationByContact(String contact);
 
 }

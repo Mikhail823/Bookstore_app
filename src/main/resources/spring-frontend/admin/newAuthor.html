@@ -38,35 +38,35 @@
                     <a href="/genres/index.html" th:href="@{/api/genres}" th:text="#{item.books}">Книги</a>
                 </li>
                 <li class="breadcrumbs-item breadcrumbs-item_current">
-                    <span>Добавление нового автора</span>
+                    <span th:text="#{add.author}">Добавление нового автора</span>
                 </li>
             </ul>
             <div class="Section">
                 <div class="Section-header">
-                    <h1 class="Section-title">Добавление нового автора</h1>
+                    <h1 class="Section-title" th:text="#{add.author}">Добавление нового автора</h1>
                     <span style="color: red" th:if="${saveAuthor}">Автор добавлен</span>
                 </div>
                 <div class="section_container">
                     <div class="section-content">
                         <form class="from__group" action="#" th:object="${authorDto}" th:action="@{/api/admin/save-author}" method="post">
                             <div class="firstname-author">
-                                <label>Введите имя автора</label>
-                                <input type="text"  th:field="*{firstName}">
+                                <label th:text="#{author.name}">Введите имя автора</label>
+                                <input type="text"  th:field="*{firstName}" th:placeholder="#{name}">
                             </div>
                             <div class="lastname-author">
-                                <label>Введите фамилию автора</label>
-                                <textarea th:field="*{lastName}"></textarea>
+                                <label th:text="#{author.lastName}">Введите фамилию автора</label>
+                                <input type="text" th:field="*{lastName}">
                             </div>
                             <div class="photo-author">
-                                <label>Добавте фото автора</label>
+                                <label th:text="#{author.photo}">Добавте фото автора</label>
                                 <input th:field="*{photo}" type="file">
                             </div>
                             <div class="description-author">
-                                <lable>Введите биографию атора</lable>
-                                <textarea th:field="*{description}" placeholder="Биография автора"></textarea>
+                                <lable th:text="#{author.description}">Введите биографию атора</lable>
+                                <textarea th:field="*{description}" th:placeholder="#{author.place}" placeholder="Биография автора"></textarea>
                             </div>
                             <button class="btn-add" type="submit">
-                                <span class="btn-add-content">Добавить</span>
+                                <span class="btn-add-content" th:text="#{btn.text.add}">Добавить</span>
                             </button>
                         </form>
                     </div>

@@ -86,11 +86,14 @@ public class AuthUserController {
     @ResponseBody
     public ContactConfirmationResponse handleLogin(@RequestBody ContactConfirmationPayload payload,
                                                    HttpServletResponse httpServletResponse){
-
-        ContactConfirmationResponse loginResponse = userRegister.jwtLogin(payload);
-                Cookie cookie = new Cookie("token", loginResponse.getResult());
-                httpServletResponse.addCookie(cookie);
-                return loginResponse;
+        if (Boolean.TRUE.equals(smsService.verifyCode(payload.getCode()))) {
+            ContactConfirmationResponse loginResponse = userRegister.jwtLogin(payload);
+            Cookie cookie = new Cookie("token", loginResponse.getResult());
+            httpServletResponse.addCookie(cookie);
+            return loginResponse;
+        } else {
+            throw new UserNotFoundException("Пользователь не зарегистрирован");
+        }
     }
 
     @PostMapping("/login-by-phone-number")

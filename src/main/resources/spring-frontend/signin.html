@@ -45,7 +45,7 @@ p.error-browser
 <div class="Middle Middle_form">
   <div class="Middle-top">
     <div class="wrap">
-      <h1 class="Middle-title">Вход
+      <h1 class="Middle-title" th:text="#{sig.entrance}">Вход
       </h1>
     </div>
   </div>
@@ -55,9 +55,9 @@ p.error-browser
         <div class="Login-ins">
           <div class="Login-step">
             <div class="form-group">
-              <label class="form-label Login-title">Введите e-mail или телефон
+              <label class="form-label Login-title" th:text="#{sig.enter.e-mail.phone}">Введите e-mail или телефон
                 <br>
-                <span th:if="${regOk}">Регистрация прошла успешно!</span>
+                <span th:if="${regOk}" th:text="#{sig.reg.info}">Регистрация прошла успешно!</span>
               </label>
             </div>
             <div class="form-group">
@@ -65,7 +65,7 @@ p.error-browser
                 <div class="row-block">
                   <label class="toggle Login-type">
                     <input type="radio" name="typeauth" value="phonetype" checked="checked"/>
-                    <span class="toggle-box"></span><span class="toggle-text">Телефон</span>
+                    <span class="toggle-box"></span><span class="toggle-text" th:text="#{sig.phone}">Телефон</span>
                   </label>
                 </div>
                 <div class="row-block">
@@ -86,14 +86,14 @@ p.error-browser
             <div class="form-group form-group_center">
 
               <button class="btn btn_primary form-btn" type="button"
-                      name="sendauth" id="sendauth" data-type="phone" data-send="">Далее
+                      name="sendauth" id="sendauth" data-type="phone" data-send="" th:text="#{sig.further}">Далее
               </button>
               <span th:if="${userError}" th:text="${userError.getLocalizedMessage()}" style="color: red"></span>
             </div>
           </div>
           <div class="Login-step Login-step_hide" data-type="phone">
             <div class="form-group">
-              <label class="form-label Login-title">На&nbsp;Ваш телефон будет совершен звонок. Введите последние четыре цифпы номера:
+              <label class="form-label Login-title" th:text="#{sig.pass.phone.txt=}">На&nbsp;Ваш телефон будет совершен звонок. Введите последние четыре цифпы номера:
               </label>
             </div>
             <div class="form-group form-group_key">
@@ -103,7 +103,7 @@ p.error-browser
             </div>
             <div class="form-group form-group_center">
               <button class="btn btn_primary form-btn" type="button"
-                      name="toComeInPhone" id="toComeInPhone" data-send="">Войти
+                      name="toComeInPhone" id="toComeInPhone" data-send="" th:text="#{menu.enter}">Войти
               </button>
 
               <span th:if="${codeError}" th:text="${codeError.getLocalizedMessage()}" style="color: red"></span>
@@ -112,7 +112,7 @@ p.error-browser
           </div>
           <div class="Login-step Login-step_hide" data-type="mail">
             <div class="form-group">
-              <label class="form-label Login-title">Введите пароль учетной записи или
+              <label class="form-label Login-title" th:text="#{sig.pass.accound}">Введите пароль учетной записи или
                 перейдите по ссылке ниже для регистрации:
               </label>
             </div>
@@ -122,13 +122,13 @@ p.error-browser
             </div>
             <div class="form-group form-group_center">
               <button class="btn btn_primary form-btn" type="button"
-                      name="toComeInMail" id="toComeInMail" data-send="">Войти
+                      name="toComeInMail" id="toComeInMail" data-send="" th:text="#{menu.enter}">Войти
               </button>
 
             </div>
           </div>
           <div class="form-group form-group_center">
-            <a class="Login-reg" th:href="@{/signup}" href="/signup.html">Зарегистрироваться</a>
+            <a class="Login-reg" th:href="@{/signup}" href="/signup.html" th:text="#{sig.reg}">Зарегистрироваться</a>
           </div>
         </div>
       </form>
