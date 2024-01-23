@@ -20,9 +20,9 @@ public class UniqueTokenUtil {
     @Value("${auth.secret}")
     private String secret;
 
-    public String generateToken(ProfileFormDto profileForm) throws JsonProcessingException {
+    public String generateToken(ProfileFormDto profileFormDto) throws JsonProcessingException {
         ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-        String json = ow.writeValueAsString(profileForm);
+        String json = ow.writeValueAsString(profileFormDto);
         return Jwts
                 .builder()
                 .setClaims(new HashMap<>())

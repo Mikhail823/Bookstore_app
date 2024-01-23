@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="#{menu.contacts}">Наши контакты</title>
     <meta name="description" content="Описание страницы">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="/assets/css/extra.min.css?v=10496799">
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <script defer src="/assets/js/scripts.min.js?v=10496799"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 </head>
@@ -30,23 +31,30 @@
     </div>
     <div class="wrap">
         <main class="Middle-main">
-            <ul class="breadcrumbs" th:replace="~{fragment/breadcrums_fragment :: breadcrumps(#{menu.contacts}, #{menu.contacts})}"></ul>
+            <ul class="breadcrumbs" th:fragment="breadcrumps(item, title)">
+                <li class="breadcrumbs-item">
+                    <a th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                </li>
+
+                <li class="breadcrumbs-item breadcrumbs-item_current" >
+                    <span th:text="#{menu.contacts}">Новинки</span>
+                </li>
+            </ul>
             <div class="Contacts">
                 <div class="row">
                     <div class="row-block">
-                        <h2 th:text="#{menu.contacts}">Контакты
-                        </h2>
+                        <h2 th:text="#{menu.contacts}">Контакты</h2>
                         <div class="Contacts-prop">
-                            <strong class="Contacts-propTitle" th:text="#{contacts.telephone}">Телефон:
-                            </strong><span class="Contacts-propContent">8 (800) 484-48-48</span>
+                            <strong class="Contacts-propTitle" th:text="#{contacts.telephone}">Телефон:</strong>
+                            <span class="Contacts-propContent">8 (800) 484-48-48</span>
                         </div>
                         <div class="Contacts-prop">
                             <strong class="Contacts-propTitle">E-mail:
                             </strong><span class="Contacts-propContent">test@test.ru</span>
                         </div>
                         <div class="Contacts-prop">
-                            <strong class="Contacts-propTitle" th:text="#{contacts.bot}">Телеграм-бот:
-                            </strong><span class="Contacts-propContent" th:text="#{email.address.shop}">@testBookShop</span>
+                            <strong class="Contacts-propTitle" th:text="#{contacts.bot}">Телеграм-бот:</strong>
+                            <span class="Contacts-propContent">@testBookShop</span>
                         </div>
                     </div>
                     <div class="row-block">

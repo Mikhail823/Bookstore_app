@@ -15,17 +15,20 @@ import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.mail.MailException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 
 import java.util.List;
@@ -67,8 +70,17 @@ public class ProfileUserPageController {
     }
 
     @GetMapping("/profile")
-    public String handlerProfile(@AuthenticationPrincipal BookstoreUserDetails user, Model model) {
+    public String handlerProfile(@AuthenticationPrincipal BookstoreUserDetails user,
+                                @RequestParam(value = "successfulSave", required = false) Boolean successfulSave,
+                                @RequestParam(value = "sendMsgMail", required = false) Boolean save, Model model) {
 
+        if (Boolean.TRUE.equals(successfulSave))
+            model.addAttribute("successfulSave", true);
+        if (Boolean.TRUE.equals(save)){
+            model.addAttribute("sendMsgMail", true);
+        } else {
+            model.addAttribute("sendMsgMail", false);
+        }
         UserContactEntity email = userService.findContactUser(user.getContact().getUserId(), ContactType.EMAIL);
         UserContactEntity phone = userService.findContactUser(user.getContact().getUserId(), ContactType.PHONE);
         model.addAttribute("transactionList",
@@ -86,15 +98,24 @@ public class ProfileUserPageController {
         return "myarchive";
     }
 
+    @SneakyThrows
     @PostMapping("/profile/save")
-    public String updateProfile(@RequestBody ProfileFormDto profileDto, Model model)
-            throws JsonProcessingException {
+    public String updateProfile(@RequestParam("phone") String phone,
+                                @RequestParam("mail") String email,
+                                @RequestParam("name") String name,
+                                @RequestParam("password") String password,
+                                @RequestParam("passwordReply") String passwordReply, Model model) throws JsonProcessingException {
 
-            userService.confirmChangingUserProfile(profileDto);
-            model.addAttribute("sendMessage", "На Вашу почту " +
-                    profileDto.getMail() + " сообщение для подверждения");
 
-        return PROF_REDIRECT;
+        userService.checkPassword(password, passwordReply, model);
+
+        try {
+            userService.confirmChangingUserProfile(phone, email, name, passwordReply);
+        } catch (MailException ex){
+            return PROF_REDIRECT + "?sendMsgMail=false";
+        }
+
+        return PROF_REDIRECT + "?sendMsgMail=true";
     }
 
     @PostMapping("/payment")
@@ -109,8 +130,7 @@ public class ProfileUserPageController {
     @GetMapping("/profile/verify/{token}")
     public String handleProfileVerification(@PathVariable String token, Model model) throws JsonProcessingException {
         userService.changeUserProfile(token);
-        model.addAttribute("successfulSave", true);
-        return PROF_REDIRECT;
+        return PROF_REDIRECT + "?successfulSave=true";
     }
 
     @GetMapping("/payment/success")
@@ -118,7 +138,7 @@ public class ProfileUserPageController {
                                           @RequestParam(value = "InvId", required = false) Integer invId,
                                           @RequestParam("SignatureValue") String signatureValue,
                                           @RequestParam("IsTest") String isTest,
-                                          @RequestParam("Culture") String culture) throws NoSuchAlgorithmException {
+                                          @RequestParam("Culture") String culture) {
 
 
         String description = "Пополнение счета через сервис ROBOKASSA на сумму " + outSum + " руб.";

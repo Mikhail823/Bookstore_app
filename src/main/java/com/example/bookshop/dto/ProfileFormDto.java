@@ -7,6 +7,6 @@ public class ProfileFormDto {
     private String name;
     private String mail;
     private String phone;
-    private String password;
-    private String passRepeated;
+    private String passwordRepl;
+
 }

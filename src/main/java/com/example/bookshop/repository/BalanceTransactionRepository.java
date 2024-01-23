@@ -16,5 +16,8 @@ public interface BalanceTransactionRepository extends JpaRepository<BalanceTrans
     List<BalanceTransactionEntity> findBalanceTransactionEntitiesByUserId(UserEntity userId);
 
 
+    @Override
+    void deleteAll(Iterable<? extends BalanceTransactionEntity> iterable);
+
     Page<BalanceTransactionEntity> findBalanceTransactionEntitiesByUserIdOrderByTimeAsc(UserEntity user, Pageable page);
 }

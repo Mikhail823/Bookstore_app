@@ -116,4 +116,6 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
             " ON rb.book = b ORDER BY rb.fiveStar DESC")
     Page<BookEntity> findAllOrderByRating(Pageable pageable);
 
+
+
 }

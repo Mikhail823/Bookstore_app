@@ -1,10 +1,13 @@
 package com.example.bookshop.controllers;
 
 import com.example.bookshop.dto.*;
+import com.example.bookshop.security.BookstoreUserDetails;
+import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.security.exception.RequestException;
 import com.example.bookshop.service.*;
 import com.example.bookshop.service.util.DateFormatter;
 import com.example.bookshop.struct.book.BookEntity;
+import com.example.bookshop.struct.user.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -36,26 +39,30 @@ public class BooksController {
     private final ResourceStorageService storage;
     private final BookReviewService bookReviewService;
     private final ViewedBooksService viewedBooksService;
+    private final BookstoreUserRegister register;
     private static final String REDIRECT = "redirect:/api/books/";
 
     private DateFormatter dateFormatter = new DateFormatter();
+
     @Autowired
-    public BooksController(BookService bookService, BooksRatingAndPopulatityService booksRatingAndPopulatityService,
+    public BooksController(BookService bookService,
+                           BooksRatingAndPopulatityService booksRatingAndPopulatityService,
                            ResourceStorageService storage, BookReviewService bookReviewService,
-                           ViewedBooksService viewedBooksService) {
+                           ViewedBooksService viewedBooksService, BookstoreUserRegister register) {
         this.bookService = bookService;
         this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
         this.storage = storage;
         this.bookReviewService = bookReviewService;
         this.viewedBooksService = viewedBooksService;
+        this.register = register;
     }
 
     @PostMapping("/{slug}/img/save")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String saveNewBookImage(@RequestParam("file")MultipartFile file,
-                                   @PathVariable("slug")String slug) throws IOException {
+    public String saveNewBookImage(@RequestParam("file") MultipartFile file,
+                                   @PathVariable("slug") String slug) throws IOException {
 
-        String savePath = storage.saveNewBookImage(file,slug);
+        String savePath = storage.saveNewBookImage(file, slug);
         BookEntity bookToUpdate = bookService.getBookPageSlug(slug);
         bookToUpdate.setImage(savePath);
         bookService.saveImageBook(bookToUpdate);
@@ -65,6 +72,7 @@ public class BooksController {
 
     @GetMapping("/download/{hash}")
     public ResponseEntity<ByteArrayResource> bookFile(@PathVariable("hash") String hash) throws IOException {
+
 
         Path path = storage.getBookFilePath(hash);
         MediaType mediaType = storage.getBookFileMime(hash);
@@ -76,10 +84,12 @@ public class BooksController {
                 .contentType(mediaType)
                 .contentLength(data.length)
                 .body(new ByteArrayResource(data));
+
     }
+
     @GetMapping("/{slug}")
     public ModelAndView getSlugBookPage(@PathVariable(value = "slug") String slugBook,
-                                        Model model, HttpServletRequest request){
+                                        Model model, HttpServletRequest request) {
         BookEntity book = bookService.getBookPageSlug(slugBook);
         viewedBooksService.saveViewedBooksUser(book, request);
         booksRatingAndPopulatityService.calculatingThePopularityOfBook(book);
@@ -91,7 +101,7 @@ public class BooksController {
     }
 
     @GetMapping("/popular")
-    public String getPopularPage(Model model){
+    public String getPopularPage(Model model) {
         model.addAttribute("booksPopular", bookService.getPageOfPopularBooks(0, 6).getContent());
         return "/books/popular";
     }
@@ -128,22 +138,22 @@ public class BooksController {
     public String saveRatingBook(@RequestBody RatingRequestDto requestDto,
                                  @PathVariable(name = "slug") String slug) throws RequestException {
 
-            booksRatingAndPopulatityService.ratingBookSave(requestDto.getValue(),
-                    booksRatingAndPopulatityService.getRatingBook(bookService.getBookPageSlug(slug).getId()));
+        booksRatingAndPopulatityService.ratingBookSave(requestDto.getValue(),
+                booksRatingAndPopulatityService.getRatingBook(bookService.getBookPageSlug(slug).getId()));
 
         return REDIRECT + slug;
     }
 
     @PostMapping(value = "/bookReview/{slug}")
     public ModelAndView addBookReview(@PathVariable("slug") String slug,
-                                      @PathParam("text") String text){
+                                      @PathParam("text") String text) {
         bookReviewService.saveReviewText(slug, text);
         return new ModelAndView(REDIRECT + slug);
     }
 
     @PostMapping("/rateBookReview/{slug}")
     public String likeTheReviewBook(@RequestBody LikeReviewBookDto reviewBookDto,
-                                    @PathVariable("slug") String slug){
+                                    @PathVariable("slug") String slug) {
         booksRatingAndPopulatityService.saveLikeReviewBook(reviewBookDto);
         booksRatingAndPopulatityService.saveRatingReview(reviewBookDto.getReviewid());
         return REDIRECT + slug;

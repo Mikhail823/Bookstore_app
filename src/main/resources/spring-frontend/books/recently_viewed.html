@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="#{topbar.recentl}">Недавно просмотренные книги</title>
     <meta name="description" content="Описание страницы">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="/assets/css/extra.min.css?v=45035206"><!--[if lt IE 9]>
     <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
     <script defer src="/assets/js/scripts.min.js?v=45035206"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
@@ -36,7 +37,17 @@
 <div class="Middle">
     <div class="wrap">
         <main class="Middle-main">
-            <ul class="breadcrumbs" th:replace="~{fragments/breadcrums_fragment :: breadcrumps(#{item.books}, #{topbar.recently})}"></ul>
+
+            <ul class="breadcrumbs">
+                <li class="breadcrumbs-item">
+                    <a th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+                </li>
+                <li class="breadcrumbs-item">
+                    <a th:href="@{/api/genres}" href="/genres/index.html" th:text="#{item.books}">Книги</a>
+                </li>
+                <li class="breadcrumbs-item breadcrumbs-item_current" th:text="#{topbar.recently}"><span>Новинки</span>
+                </li>
+            </ul>
             <div class="Section">
                 <div class="Section-header">
                     <h1 class="Section-title" th:text="#{topbar.recently}">Недавно просмотренные

@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru"  xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{menu.enter}">Вход на сайт</title>
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -26,8 +26,10 @@
   <link rel="stylesheet" href="/assets/css/fonts.min.css?v=27449092">
   <link rel="stylesheet" href="/assets/css/basic.min.css?v=27449092">
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=27449092"><!--[if lt IE 9]>
+  <script src="/assets/plg/jQuery/jquery-3.5.1.min.js"></script>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
   <script defer src="/assets/js/scripts.min.js?v=27449092"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 <body class="Site">
@@ -51,6 +53,8 @@ p.error-browser
   </div>
   <div class="wrap">
     <main class="Middle-main">
+
+
       <form class="form Login" action="#" method="post">
         <div class="Login-ins">
           <div class="Login-step">
@@ -58,7 +62,8 @@ p.error-browser
               <label class="form-label Login-title" th:text="#{sig.enter.e-mail.phone}">Введите e-mail или телефон
                 <br>
                 <span th:if="${regOk}" th:text="#{sig.reg.info}">Регистрация прошла успешно!</span>
-              </label>
+                <span th:if="${userError}" th:text="${userError}" style="color:red;"></span>
+               </label>
             </div>
             <div class="form-group">
               <div class="row">
@@ -79,37 +84,35 @@ p.error-browser
             <div class="form-group">
               <input class="form-input form-input_phone"
                      id="phone" name="phone" type="text"
-                     placeholder="Введите телефон" data-mask="+7 (999) 999-99-99" data-validate="require"/>
+                     th:placeholder="#{phone.place}" placeholder="Введите телефон" data-mask="+7 (999) 999-99-99" data-validate="require"/>
               <input class="form-input form-input_mail"
-                     id="mail" name="mail" type="text" placeholder="Введите e-mail" data-validate="mail require"/>
+                     id="mail" name="mail" type="text" th:placeholder="#{email.place}" placeholder="Введите e-mail" data-validate="mail require"/>
             </div>
             <div class="form-group form-group_center">
 
               <button class="btn btn_primary form-btn" type="button"
                       name="sendauth" id="sendauth" data-type="phone" data-send="" th:text="#{sig.further}">Далее
               </button>
-              <span th:if="${userError}" th:text="${userError.getLocalizedMessage()}" style="color: red"></span>
             </div>
           </div>
           <div class="Login-step Login-step_hide" data-type="phone">
             <div class="form-group">
-              <label class="form-label Login-title" th:text="#{sig.pass.phone.txt=}">На&nbsp;Ваш телефон будет совершен звонок. Введите последние четыре цифпы номера:
+              <label class="form-label Login-title" th:text="#{sig.pass.phone.txt}">На&nbsp;Ваш телефон будет совершен звонок. Введите последние четыре цифпы номера:
               </label>
             </div>
             <div class="form-group form-group_key">
               <input class="form-input" id="phonecode"
                      name="phonecode" type="password"
-                     placeholder="Код" data-validate="key require" data-mask="99 99"/>
+                     th:placeholder="#{code.place}" placeholder="Код" data-validate="key require" data-mask="99 99"/>
             </div>
             <div class="form-group form-group_center">
               <button class="btn btn_primary form-btn" type="button"
                       name="toComeInPhone" id="toComeInPhone" data-send="" th:text="#{menu.enter}">Войти
               </button>
 
-              <span th:if="${codeError}" th:text="${codeError.getLocalizedMessage()}" style="color: red"></span>
-
             </div>
           </div>
+
           <div class="Login-step Login-step_hide" data-type="mail">
             <div class="form-group">
               <label class="form-label Login-title" th:text="#{sig.pass.accound}">Введите пароль учетной записи или
@@ -124,14 +127,15 @@ p.error-browser
               <button class="btn btn_primary form-btn" type="button"
                       name="toComeInMail" id="toComeInMail" data-send="" th:text="#{menu.enter}">Войти
               </button>
-
             </div>
           </div>
           <div class="form-group form-group_center">
             <a class="Login-reg" th:href="@{/signup}" href="/signup.html" th:text="#{sig.reg}">Зарегистрироваться</a>
           </div>
+
         </div>
       </form>
+
     </main>
   </div>
 </div>

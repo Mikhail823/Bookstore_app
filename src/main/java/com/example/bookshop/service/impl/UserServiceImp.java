@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.util.*;
@@ -58,13 +59,10 @@ public class UserServiceImp implements UserService {
         this.encoder = encoder;
     }
 
-
-
     @Override
     public UserEntity getUserById(Integer id) {
         return userRepository.findUserEntityById(id);
     }
-
 
     @Override
     public UserEntity findByUserFromHash(String hash) {
@@ -98,7 +96,6 @@ public class UserServiceImp implements UserService {
         return RandomStringUtils.random(4, true, false);
     }
 
-
     @Override
     public UserEntity getUserName(String name) {
         return userRepository.getUserByUsername(name);
@@ -106,24 +103,23 @@ public class UserServiceImp implements UserService {
 
     @Override
     @Transactional
-    public void updateUserProfile(ProfileFormDto profileDto, Integer userId) {
+    public void updateUserProfile(ProfileFormDto profileFormDto, Integer userId) {
         UserEntity userEntity = getUserById(userId);
         List<UserContactEntity> listContactUser = userEntity.getListContact();
-            userEntity.setName(profileDto.getName());
-            userEntity.setPassword(encoder.encode(profileDto.getPassword()));
+            userEntity.setName(profileFormDto.getName());
+            userEntity.setPassword(encoder.encode(profileFormDto.getPasswordRepl()));
             userEntity.setRegTime(new Date());
             userRepository.save(userEntity);
             for (UserContactEntity contact : listContactUser) {
                 contact.setUserId(userEntity);
                 contact.setType(ContactType.EMAIL);
-                contact.setContact(profileDto.getMail());
+                contact.setContact(profileFormDto.getMail());
                 contactRepository.save(contact);
                 contact.setUserId(userEntity);
                 contact.setType(ContactType.PHONE);
-                contact.setContact(profileDto.getPhone());
+                contact.setContact(profileFormDto.getPhone());
                 contactRepository.save(contact);
             }
-
     }
 
     @Transactional
@@ -136,25 +132,28 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    public void confirmChanges(ProfileFormDto profileForm) throws JsonProcessingException {
+    public void confirmChanges(String phone, String email,  String name,
+                               String passwordRepl) throws JsonProcessingException {
         SimpleMailMessage message = new SimpleMailMessage();
+        ProfileFormDto form = getUserFormProfile(phone, email, name, passwordRepl);
         message.setFrom("rabota822@bk.ru");
-        message.setTo(profileForm.getMail());
+        message.setTo(email);
         message.setSubject("User profile update verification!");
-        message.setText(setMessageText(profileForm, uniqueTokenUtil.generateToken(profileForm)));
+        message.setText(setMessageText(phone, email, name, passwordRepl,
+                uniqueTokenUtil.generateToken(form)));
         javaMailSender.send(message);
     }
 
     @Override
-    public void confirmChangingUserProfile(ProfileFormDto profileForm) throws JsonProcessingException {
+    public void confirmChangingUserProfile(String phone, String email,  String name,
+                                           String passwordReply) throws JsonProcessingException {
         Object curUser = registerUser.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails) {
-            confirmChanges(profileForm);
+            confirmChanges(phone, email, name,passwordReply);
         }
     }
 
     @Override
-    @Transactional
     public void changeUserProfile(String token) throws JsonProcessingException {
         Object user = registerUser.getCurrentUser();
         if (user instanceof BookstoreUserDetails) {
@@ -174,14 +173,15 @@ public class UserServiceImp implements UserService {
         return contactRepository.findFirstUserContactEntityByUserIdAndType(user, type);
     }
 
-    public String setMessageText(ProfileFormDto profileFormDto, String token){
+    public String setMessageText(String phone, String email,  String name,
+                                  String passwordRepl, String token){
         StringBuilder sb = new StringBuilder();
                     sb
                     .append("You have changed your credentials!!! ")
-                    .append(" Name: " + profileFormDto.getName())
-                    .append(" E-mail: " + profileFormDto.getMail())
-                    .append(" Phone: " + profileFormDto.getPhone())
-                    .append(" New password: " + profileFormDto.getPassRepeated())
+                    .append(" Name: " + name + " /n")
+                    .append(" E-mail: " + email+ " /n")
+                    .append(" Phone: " + phone + " /n")
+                    .append(" New password: " + passwordRepl + " /n")
                     .append(" Verification link is: " + "http://192.168.1.3:8081/profile/verify/" + token + " please, follow it.");
 
         return sb.toString();
@@ -190,5 +190,24 @@ public class UserServiceImp implements UserService {
     @Override
     public UserEntity getUserRegistrationByContact(String contact){
         return userRepository.findUserEntityByContact(contact);
+    }
+
+    @Override
+    public void checkPassword(String password, String passwordReply, Model model) throws InvalidPasswordException {
+        if (password.length() < 6 || password.trim().isEmpty()) {
+            throw new InvalidPasswordException("Пароль должен быть больше шести символов");
+        } else if (!password.equals(passwordReply)) {
+            throw new InvalidPasswordException("Пароли не совпадают");
+        }
+    }
+
+    public ProfileFormDto getUserFormProfile(String phone, String email,  String name,
+                                             String passwordRepl){
+        ProfileFormDto userProfile = new ProfileFormDto();
+        userProfile.setName(name);
+        userProfile.setMail(email);
+        userProfile.setPasswordRepl(passwordRepl);
+        return userProfile;
+
     }
 }

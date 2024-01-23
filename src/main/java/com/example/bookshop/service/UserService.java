@@ -21,14 +21,16 @@ public interface UserService {
 
     UserEntity getUserName(String name);
 
-    void updateUserProfile(ProfileFormDto profileDto, Integer userId);
+    void updateUserProfile(ProfileFormDto profileFormDto, Integer userId);
 
     void saveBalanceUser(UserEntity user, Double balance);
 
-    void confirmChanges(ProfileFormDto profileForm) throws JsonProcessingException;
+    void confirmChanges(String phone, String email,  String name,
+                        String passwordRepl) throws JsonProcessingException;
 
 
-    void confirmChangingUserProfile(ProfileFormDto  profileForm) throws JsonProcessingException;
+    void confirmChangingUserProfile(String phone, String email,  String name,
+                                    String passwordReply) throws JsonProcessingException;
 
     void changeUserProfile(String token) throws JsonProcessingException;
 
@@ -38,4 +40,5 @@ public interface UserService {
 
     UserEntity getUserRegistrationByContact(String contact);
 
+    void checkPassword(String password, String passwordReply, Model model) throws InvalidPasswordException;
 }

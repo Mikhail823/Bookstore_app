@@ -10,7 +10,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{prof.my}">Профиль</title>
   <meta name="description" content="Описание страницы"/>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
@@ -26,8 +26,9 @@
   <link rel="stylesheet" href="/assets/css/basic.min.css?v=45744385"/>
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/><!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script src="/assets/js/scripts.min.js?v=45744385"></script>
-  <<script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
+  <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 
 <body class="Site">
@@ -43,7 +44,8 @@
   <div class="wrap">
     <main class="Middle-main">
       <h2 class="Middle-title" th:text="#{prof.my}">Мой профиль</h2>
-      <span th:text="${sendMessage}" style="color: red"></span>
+      <span th:if="${passError}" th:text="${passError.getLocalizedMessage()}" style="color: red"></span>
+      <span th:if="${sendMsgMail}" th:text="#{text.prof.info}" style="color: red"></span>
       <div class="Tabs Tabs_default">
         <div class="Tabs-links">
           <a class="Tabs-link Tabs-link_ACTIVE" href="#basic" th:text="#{account.info}" >Основные сведения</a>
@@ -101,13 +103,16 @@
                       <input class="form-input" id="password"
                              name="password"
                              type="password"
+                             th:placeholder="#{prof.place.pass}"
                              placeholder="Тут можно изменить пароль"/>
                     </div>
                     <div class="form-group">
                       <label class="form-label" for="passwordReply" th:text="#{prof.pass.confirm}">Подтверждение пароля
                       </label>
                       <input class="form-input" id="passwordReply" name="passwordReply"
-                             type="password" placeholder="Введите пароль повторно"/>
+                             type="password"
+                             th:placeholder="#{prof.place.passRep}"
+                             placeholder="Введите пароль повторно"/>
                     </div>
                     <div class="form-group">
                       <div class="Profile-btn">
@@ -115,7 +120,7 @@
                         <button class="btn btn_primary"  type="submit" th:text="#{prof.save}">Сохранить</button>
                       </div>
                       <div class="Profile-success" th:if="${successfulSave}" th:text="#{prof.saved}">Профиль успешно сохранен
-
+                      <span th:if="${sendMsgMail}" th:text="#{text.prof.info}" style="color: red"></span>
                       </div>
                     </div>
                   </div>

@@ -51,7 +51,6 @@ public class BookServiceImpl implements BookService {
     private final BalanceTransactionRepository transactionRepository;
     private final UserRepository userRepository;
     private final CookieService cookieService;
-
     private DateFormatter dateFormatter = new DateFormatter();
 
     @Autowired
@@ -257,8 +256,7 @@ public class BookServiceImpl implements BookService {
                 b.setTypeId(book2UserType.getId());
                 book2UserRepository.save(b);
 
-            }
-            else if (nonNull(newBook2User) && !newBook2User.getTypeId().equals(type) &&
+            } else if (nonNull(newBook2User) && !newBook2User.getTypeId().equals(type) &&
                     !newBook2User.getTypeId().equals(PAID)
                     && !newBook2User.getTypeId().equals(ARCHIVED)) {
                 book.setStatus(type);
@@ -272,31 +270,30 @@ public class BookServiceImpl implements BookService {
                 newBook2User.setTime(new Date());
                 newBook2User.setTypeId(book2UserType.getId());
                 book2UserRepository.save(newBook2User);
-
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public List<BookEntity> getBooksArchiveUser(Integer userId){
+    public List<BookEntity> getBooksArchiveUser(Integer userId) {
         return bookRepository.getBooksArchive(userId);
     }
 
     @Override
-    public void removeBook2User(BookEntity book, UserEntity user){
+    public void removeBook2User(BookEntity book, UserEntity user) {
         Book2UserEntity book2User =
                 book2UserRepository.findBook2UserEntityByUserIdAndBookId(user.getId(), book.getId());
         book2UserRepository.delete(book2User);
     }
 
     @Override
-    public void purchaseOfBooksByTheUser(UserEntity user, Model model){
+    public void purchaseOfBooksByTheUser(UserEntity user, Model model) {
         List<BookEntity> bookList = bookRepository.getBooksCartUser(user.getId());
         double allSumBooks = bookList.stream().mapToDouble(BookEntity::getPrice).sum();
 
-        if (user.getBalance() < allSumBooks){
+        if (user.getBalance() < allSumBooks) {
             model.addAttribute("error", "true");
             model.addAttribute("noMoneyAccount", "На Вашем счету не достаточно денежных средств!!!");
         } else {
@@ -313,26 +310,26 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    public boolean isStatus(BookEntity book){
+    public boolean isStatus(BookEntity book) {
         Object user = registerUser.getCurrentUser();
         Book2UserEntity b2u = book2UserRepository
                 .findBook2UserEntityByUserIdAndBookId
-                        (((BookstoreUserDetails)user).getContact().getUserId().getId(), book.getId());
+                        (((BookstoreUserDetails) user).getContact().getUserId().getId(), book.getId());
 
         return b2u != null;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
     @Override
-    public void updateCountPostponedBook(String slug, Integer post){
+    public void updateCountPostponedBook(String slug, Integer post) {
         bookRepository.updateCountPosponedBooks(slug, post);
     }
 
     @Override
-    public Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit){
+    public Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit) {
         Pageable page = PageRequest.of(offset, limit);
         Object curUser = registerUser.getCurrentUser();
-        if (curUser instanceof BookstoreUserDetails){
+        if (curUser instanceof BookstoreUserDetails) {
             return bookRepository.getViewedBooksUser(((BookstoreUserDetails) curUser).getContact().getUserId(), page);
         } else {
 
@@ -342,12 +339,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void updateCountBooksCart(String slug, Integer count){
-        bookRepository.updateCountCartBooks(slug,  count);
+    public void updateCountBooksCart(String slug, Integer count) {
+        bookRepository.updateCountCartBooks(slug, count);
     }
 
     @Override
-
     public void addBook(BookDto bookDto) {
         BookEntity newBook = new BookEntity();
         newBook.setTitle(bookDto.getTitle());
@@ -365,27 +361,24 @@ public class BookServiceImpl implements BookService {
 
     }
 
-    public String randomSlug(){
+    public String randomSlug() {
         return RandomStringUtils.randomAlphabetic(6);
     }
 
-    public Integer isBestsellerBook(String bestseller){
-        if (bestseller.equals("no")){
-            return 0;
-        }
-         return 1;
+    public Integer isBestsellerBook(String bestseller) {
+        return (bestseller.equals("no")) ? 0 : 1;
     }
 
     @Transactional
     @Override
-    public void updateCountCartAndCountPostponed(String slug, Integer countCart, Integer countPostponed){
+    public void updateCountCartAndCountPostponed(String slug, Integer countCart, Integer countPostponed) {
         updateCountPostponedBook(slug, countPostponed);
         updateCountBooksCart(slug, countCart);
     }
 
     @Transactional
     @Override
-    public void updateCountPaidBooks(String slug, Integer count){
+    public void updateCountPaidBooks(String slug, Integer count) {
         bookRepository.updateCountPaidBooks(slug, count);
     }
 
@@ -398,7 +391,7 @@ public class BookServiceImpl implements BookService {
     public String addingBookStatusCart(String slug, Model model,
                                        HttpServletResponse response,
                                        String cartContents,
-                                       String redirect, Map<String, String> allParams){
+                                       String redirect, Map<String, String> allParams) {
         Object curUser = registerUser.getCurrentUser();
         BookEntity book = getBookPageSlug(slug);
         int countCartBooks = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();

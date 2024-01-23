@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{topbar.popular}">Популярные</title>
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -36,7 +36,17 @@
   <div class="Middle">
     <div class="wrap">
       <main class="Middle-main">
-        <ul class="breadcrumbs" th:fragment="~{fragments/breadcrums_fragment :: breadcrumps(#{menu.books}, #{topbar.popular})}"></ul>
+
+        <ul class="breadcrumbs">
+          <li class="breadcrumbs-item">
+            <a th:href="@{/}" th:text="#{topbar.main}">Главная</a>
+          </li>
+          <li class="breadcrumbs-item">
+            <a th:href="@{/api/genres}" href="/genres/index.html" th:text="#{item.books}">Книги</a>
+          </li>
+          <li class="breadcrumbs-item breadcrumbs-item_current" th:text="#{topbar.popular}"><span>Новинки</span>
+          </li>
+        </ul>
         <div class="Section">
           <div class="Section-header">
             <h1 class="Section-title" th:text="#{topbar.popular}">Популярное

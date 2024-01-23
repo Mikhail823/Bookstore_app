@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,10 +19,8 @@ import java.util.*;
 @Table(name = "users")
 @Setter
 @Getter
-@EqualsAndHashCode
-public class UserEntity implements Serializable {
 
-    private  static  final  Long  serialVersionUID  =  1L;
+public class UserEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -70,8 +69,8 @@ public class UserEntity implements Serializable {
     @JsonIgnore
     private List<BookEntity> listBooks = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
+    @JsonIgnore
     private List<BalanceTransactionEntity> transaction = new ArrayList<>();
-
 
 }

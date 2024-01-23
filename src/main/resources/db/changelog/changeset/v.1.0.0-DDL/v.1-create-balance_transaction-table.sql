@@ -1,5 +1,5 @@
 --liquibase formatted sql
---changeset Mikhail Popov:users_transaction
+--changeset Mikhail Popov:balance_transaction
 
 CREATE TABLE balance_transaction (
                                    id serial4 NOT NULL,

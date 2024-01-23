@@ -38,12 +38,15 @@
     <div sec:authorize="isAuthenticated()">
         <div class="ProductCard-cart">
             <div class="ProductCard-cartElement">
-                <a class="btn btn_primary btn_outline" href="#">
+
+                    <a class="btn btn_primary btn_outline">
                     <span class="btn-icon">
                         <img src="/assets/img/icons/download.svg" alt="download.svg"/>
                     </span>
-                    <span class="btn-content" th:text="#{text.button.download}">Скачать</span>
-                </a>
+                        <span class="btn-content" th:text="#{text.button.download}">Скачать</span>
+                    </a>
+
+
             </div>
 
             <div class="ProductCard-cartElement">
@@ -63,7 +66,8 @@
             </div>
             <div sec:authorize="hasRole('ADMIN')">
                 <div class="ProductCard-cartElement">
-                    <button class="btn btn_primary btn_outline" type="submit" th:href="@{'api/admin/delete-book/' + book}">Удалить</button>
+                    <button class="btn btn_primary btn_outline"
+                            type="submit" th:href="@{'/api/admin/delete-book/' + book}" >Удалить</button>
                 </div>
             </div>
         </div>

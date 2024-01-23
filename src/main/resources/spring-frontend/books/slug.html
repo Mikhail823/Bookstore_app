@@ -13,7 +13,7 @@
 <html lang="ru" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!--<![endif]-->
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="${slugBook.title}">Тут название страницы написать</title>
     <meta name="description" content="Описание страницы">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -98,7 +98,7 @@
                                 <span th:each="tag, iStat :${slugBook.tagList}">
                                     <a th:text="${tag.name}" th:href="${'/api/tags/' + tag.id}"
                                        href="/tags/">Современные</a>
-                                   <span th:if="${!iStat.last}">,&#32;</span>-->
+                                   <span th:if="${!iStat.last}">,&#32;</span>
                                 </span>
                                 </span>
                             </div>
@@ -116,15 +116,15 @@
                         </div>
                         <div class="ProductCard-cart" th:replace="~{fragments/productcard_fragment :: button_card(${slugBook})}"></div>
                     </div>
-                    <div id="myPopup" sec:authorize="hasRole('USER, ADMIN')">
+                    <div id="myPopup">
                         <p>Ссылки для скачивания</p>
-                        <div th:each="bookFile : ${slugBook.getFileList()}">
-                            <a href="#" th:herf="${'/api/books/download/' + bookFile.hash}"
-                               th:text="${bookFile.getBookExtensionString()}"></a>
+                        <div th:each="file : ${slugBook.fileList}">
+                            <a th:href="${'/api/books/download/' + file.hash}"
+                               th:text="${file.getBookExtensionString()}"></a>
                             <span id="myPopup_close" class="close">❎</span>
                         </div>
                     </div>
-                    <div id="myOverlay" sec:authorize="hasRole('USER, ADMIN')"></div>
+                    <div id="myOverlay"></div>
                     <!--+div.-cart-->
                     <!--    //+div.-cartElement.-cartElement_amount-->
                     <!--    //    +Amount._product-->

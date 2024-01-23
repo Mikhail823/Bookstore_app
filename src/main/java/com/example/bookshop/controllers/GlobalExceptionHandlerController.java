@@ -2,14 +2,15 @@ package com.example.bookshop.controllers;
 
 import com.example.bookshop.exeption.CodeVerificationException;
 import com.example.bookshop.exeption.EmptySearchException;
+import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.security.exception.JWTAuthException;
 import com.example.bookshop.security.exception.UserNotFoundException;
 import io.jsonwebtoken.JwtException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
+
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
+
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @ControllerAdvice
@@ -18,6 +19,8 @@ public class GlobalExceptionHandlerController {
 
     public static final String REDIRECT_SIGNIN = "redirect:/signin";
     public static final String REDIRECT_SIGNUP = "redirect:/signup";
+    public static final String REDIRECT_PROFILE = "redirect:/profile";
+
     @ExceptionHandler(EmptySearchException.class)
     public String emptySearchHandlerException(EmptySearchException e, RedirectAttributes redirectAttributes){
         redirectAttributes.addFlashAttribute("searchError", e);
@@ -33,7 +36,7 @@ public class GlobalExceptionHandlerController {
 
     @ExceptionHandler(UserNotFoundException.class)
     public String userNameException(UserNotFoundException us, RedirectAttributes redirectAttributes){
-        redirectAttributes.addAttribute("userError", us);
+        redirectAttributes.addFlashAttribute("userError", us.getLocalizedMessage());
         return REDIRECT_SIGNIN;
     }
 
@@ -47,5 +50,12 @@ public class GlobalExceptionHandlerController {
     public String handlerCodeException(CodeVerificationException e, RedirectAttributes redirect){
         redirect.addAttribute("codeError", e);
         return REDIRECT_SIGNIN;
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public String handlerPassError(InvalidPasswordException e, RedirectAttributes redirectAttributes){
+        redirectAttributes.addFlashAttribute("passError", e);
+        log.error(e.getLocalizedMessage());
+        return REDIRECT_PROFILE;
     }
 }

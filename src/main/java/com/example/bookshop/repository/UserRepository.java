@@ -16,11 +16,15 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     UserEntity getUserByUsername(@Param("username") String username);
 
     UserEntity findByHash(String hash);
-   @Modifying
-   @Query(value = "UPDATE users  SET balance=:balance WHERE id=:userId", nativeQuery = true)
-   void updateUserBalance(@Param("balance") Double balance, @Param("userId") Integer userId);
 
-   @Query(value = "SELECT u FROM UserEntity AS u JOIN UserContactEntity AS uc ON uc.userId = u where uc.contact = ?1")
-   UserEntity findUserEntityByContact(String contact);
+    @Modifying
+    @Query(value = "UPDATE users  SET balance=:balance WHERE id=:userId", nativeQuery = true)
+    void updateUserBalance(@Param("balance") Double balance, @Param("userId") Integer userId);
 
+    @Query(value = "SELECT u FROM UserEntity AS u JOIN UserContactEntity AS uc ON uc.userId = u where uc.contact = ?1")
+    UserEntity findUserEntityByContact(String contact);
+
+    @Modifying
+    @Query(value = "DELETE FROM users  WHERE id=?1", nativeQuery = true)
+    void deleteUserEntityById(Integer id);
 }

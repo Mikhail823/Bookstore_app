@@ -1,5 +1,6 @@
 package com.example.bookshop.service.impl;
 
+
 import com.example.bookshop.repository.BookFileRepository;
 import com.example.bookshop.service.ResourceStorageService;
 import com.example.bookshop.struct.book.file.BookFileEntity;
@@ -28,9 +29,12 @@ public class ResourceStorageServiceImpl implements ResourceStorageService {
 
     private final BookFileRepository bookFileRepository;
 
+
+
     @Autowired
     public ResourceStorageServiceImpl(BookFileRepository bookFileRepository) {
         this.bookFileRepository = bookFileRepository;
+
     }
 
     @Override
@@ -38,12 +42,12 @@ public class ResourceStorageServiceImpl implements ResourceStorageService {
 
         String resourceURI = null;
 
-        if(!file.isEmpty()){
-            if(!new File(uploadPath).exists()){
+        if (!file.isEmpty()) {
+            if (!new File(uploadPath).exists()) {
                 Files.createDirectories(Paths.get(uploadPath));
             }
             String fileName = slug + "." + FilenameUtils.getExtension(file.getOriginalFilename());
-            Path path = Paths.get(uploadPath,fileName);
+            Path path = Paths.get(uploadPath, fileName);
             resourceURI = "/Users/User/book-covers/" + fileName;
             file.transferTo(path);
         }
@@ -61,9 +65,9 @@ public class ResourceStorageServiceImpl implements ResourceStorageService {
         BookFileEntity bookFile = bookFileRepository.findBookFileEntityByHash(hash);
         String mimeType =
                 URLConnection.guessContentTypeFromName(Paths.get(bookFile.getPath()).getFileName().toString());
-        if (mimeType != null){
+        if (mimeType != null) {
             return MediaType.parseMediaType(mimeType);
-        }else{
+        } else {
             return MediaType.APPLICATION_OCTET_STREAM;
         }
     }
@@ -74,4 +78,5 @@ public class ResourceStorageServiceImpl implements ResourceStorageService {
         Path path = Paths.get(downloadPath, bookFile.getPath());
         return Files.readAllBytes(path);
     }
+
 }

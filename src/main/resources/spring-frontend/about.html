@@ -11,7 +11,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru"  xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{menu.about}">О компании</title>
   <meta name="description" content="Описание страницы">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="/assets/css/basic.min.css?v=74020866">
   <link rel="stylesheet" href="/assets/css/extra.min.css?v=74020866"><!--[if lt IE 9]>
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
   <script defer src="/assets/js/scripts.min.js?v=74020866"></script>
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>

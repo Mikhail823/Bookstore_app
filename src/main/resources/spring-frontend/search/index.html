@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Тут название страницы написать</title>
+    <title th:text="#{menu.search}">Поиск книг в магазине</title>
     <meta name="description" content="Описание страницы"/>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
-    <link href="../favicon.ico" rel="shortcut icon"/>
+    <link href="../favicon.ico" th:href="@{/favicon.ico}"   rel="shortcut icon"/>
     <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-SemiBold.woff2" as="font" crossorigin="anonymous"/>
     <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Light.woff2" as="font" crossorigin="anonymous"/>
     <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-Medium.woff2" as="font" crossorigin="anonymous"/>
@@ -13,9 +13,8 @@
     <link rel="stylesheet" href="/assets/css/fonts.min.css?v=33498857"/>
     <link rel="stylesheet" href="/assets/css/basic.min.css?v=33498857"/>
     <link rel="stylesheet" href="/assets/css/extra.min.css?v=33498857"/>
-    <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <script  src="/assets/js/scripts.min.js?v=33498857"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script  defer src="/assets/js/scripts.min.js?v=33498857"></script>
     <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 </head>
@@ -24,17 +23,27 @@
 <div class="Middle Middle_search">
     <div class="wrap">
         <main class="Middle-main">
-            <h1 class="Middle-title" th:text="#{menu.search}">Поиск
-            </h1>
+            <h1 class="Middle-title" th:text="#{menu.search}">Поиск</h1>
             <div class="Section">
                 <div class="search">
-                    <form class="form form_search"  action="#" method="get" data-searchlimit="5"
+                    <form class="form form_search"
+                          action="#"
+                          method="post"
+                          data-searchlimit="6"
                           th:object="${searchWordDto}">
-                        <input class="search-input" id="querypage" name="querypage" type="text"
+                        <input class="search-input"
+                               id="querypage"
+                               name="querypage"
+                               type="text"
                                placeholder="Search over 30 million book titles"
+                               th:placeholder="#{search.place}"
                                th:value="${searchWordDto.example}"
                                value=""/>
-                        <button class="search-button" type="submit" name="searchpage" id="searchpage" th:text="#{menu.search}">Поиск
+                        <button class="search-button"
+                                type="submit"
+                                name="searchpage"
+                                id="searchpage"
+                                th:text="#{menu.search}">Поиск
                         </button>
                     </form>
                 </div>
@@ -47,29 +56,30 @@
                 </header>
                 <div class="Cards Cards_search Cards_refresh">
                     <div class="Card" th:each="book : ${searchResults}">
-                        <div class="Card-picture"><a href="#" th:href="@{'/api/books/' + ${book.slug}}"><img  th:src="${book.image}"
-                                                                    src="/assets/img/content/main/card.jpg"
-                                                                    alt="card.jpg"/></a>
+                        <div class="Card-picture">
+                            <a href="#" th:href="@{'/api/books/' + ${book.slug}}">
+                                <img  th:src="${book.image}" src="/assets/img/content/main/card.jpg" alt="card.jpg"/></a>
                         </div>
                         <div class="Card-content">
                             <strong class="Card-title">
                                 <a href="#" th:href="@{'/api/books/' + ${book.slug}}" th:text="${book.title}">Техника</a>
                             </strong>
-                            <div class="Card-description" th:text="${book.description}">Кондратенко Александр Петрович
+                            <div th:each="author : ${book.authors}">
+                                <div class="Card-description" th:text="${author}"></div>
                             </div>
                             <div class="Card-cost">
                                 <span class="Card-priceOld" th:text="${'₽' + book.priceOld}">₽300.00</span>
-                                <span class="Card-price" th:text="${'₽' + book.price}">₽190.00</span>
+                                <span class="Card-price" th:text="${'₽' + book.discountPrice()}">₽190.00</span>
                             </div>
                         </div>
                     </div>
-                    <div class="Cards-footer Cards-footer_center">
+                    <div class="Cards-footer Cards-footer_center" th:if="${searchResults.size()} > 10">
                         <a class="btn btn_primary" href="#"
                             data-refreshshow="search"
-                           data-refreshoffset="0"
+                            data-refreshoffset="0"
                             data-refreshlimit="6"
                             th:attr="data-refreshquery=${searchWordDto.example}"
-                             data-refreshquery="Техника" th:text="#{text.button}">Показать еще</a>
+                            data-refreshquery="Техника" th:text="#{text.button}">Показать еще</a>
                     </div>
                 </div>
             </div>
