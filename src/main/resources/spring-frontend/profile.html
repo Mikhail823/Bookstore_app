@@ -24,10 +24,9 @@
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous"/>
   <link rel="stylesheet" href="/assets/css/fonts.min.css?v=45744385"/>
   <link rel="stylesheet" href="/assets/css/basic.min.css?v=45744385"/>
-  <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/><!--[if lt IE 9]>
-  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script src="/assets/js/scripts.min.js?v=45744385"></script>
+  <script defer="" src="/assets/js/scripts.min.js?v=45744385"></script>
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 
@@ -60,9 +59,11 @@
                 <div class="row">
                   <div class="row-block">
                     <div class="form-group">
-                      <label class="form-label" for="name" th:text="#{prof.name}" >Имя
+                      <label class="form-label"
+                             for="name" th:text="#{prof.name}" >Имя
                       </label>
-                      <input class="form-input" id="name" name="name" type="text" th:value="${curUsr.name}" value="Михаил"/>
+                      <input class="form-input"
+                             id="name" name="name" type="text" th:value="${curUsr.name}" value="Михаил"/>
                     </div>
                     <div class="form-group">
                       <label class="form-label" for="mail">E-mail
@@ -75,12 +76,14 @@
                              th:value="${email}"
                              data-validate="require mail"/>
                       <div class="Profile-btn Profile-btn_confirm">
-                        <button class="btn btn_primary" type="button" th:text="#{text.button.confirm}">Подтвердить
+                        <button class="btn btn_primary" type="button"
+                                th:text="#{text.button.confirm}">Подтвердить
                         </button>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="form-label" for="phone" th:text="#{prof.phone}">Телефон
+                      <label class="form-label" for="phone"
+                             th:text="#{prof.phone}">Телефон
                       </label>
                       <input class="form-input"
                              id="phone"
@@ -157,7 +160,8 @@
                   </tbody>
                 </table>
               </div>
-              <div class="Transactions-footer Transactions-footer_center" th:if="${transactionList.getTotalElements() > 6}">
+              <div class="Transactions-footer Transactions-footer_center"
+                   th:if="${transactionList.getTotalElements() > 6}">
                 <a class="btn btn_primary Transactions-get"
                    href="#"
                    th:href="@{'/transaction/page'}"
@@ -169,8 +173,7 @@
           </div>
           <div class="Tabs-block" id="topup">
             <form class="form Topup" action="#" method="post" data-sendHash="34534535"
-                  th:data-sendhash="${curUsr.hash}"
-                  th:action="${'/payment'}">
+                  th:data-sendhash="${curUsr.hash}">
               <div class="Topup-wrap">
                 <strong class="Topup-title" th:text="#{prof.amount.top}">Введите сумму, на которую хотите пополнить свой счет:
                 </strong>

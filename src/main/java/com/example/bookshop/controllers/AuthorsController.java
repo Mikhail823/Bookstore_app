@@ -45,13 +45,6 @@ public class AuthorsController {
         return "/authors/index";
     }
 
-//    @ApiOperation("method to get mapping")
-//    @GetMapping("/api/authors")
-//    @ResponseBody
-//    public List<AuthorEntity> authors(){
-//        return authorRepository.findAll();
-//    }
-
     @GetMapping("/author/{id:\\d+}")
     public String getPageAuthor(@PathVariable(value = "id") Integer id, Model model){
         Page<BookEntity> booksPage = bookService.getBooksByAuthorId(id, 0, 6);
@@ -74,6 +67,4 @@ public class AuthorsController {
         model.addAttribute("booksAuthor", bookService.getBooksByAuthorId(id, 0, 6).getContent());
         return "/books/author";
     }
-
-
 }

@@ -31,7 +31,6 @@
     <include file="v.1-create-message-table.sql" relativeToChangelogFile="true"/>
     <include file="v.1-create-rating_book-table.sql" relativeToChangelogFile="true"/>
     <include file="v.1-create-spring_session-table.sql" relativeToChangelogFile="true"/>
-    <include file="v.1-create-viewed_books-table.sql" relativeToChangelogFile="true"/>
     <include file="v.1-create-balance_transaction-table.sql" relativeToChangelogFile="true"/>
 <!--    <include file="v.1-create-tables.sql" relativeToChangelogFile="true"/>-->
 </databaseChangeLog>

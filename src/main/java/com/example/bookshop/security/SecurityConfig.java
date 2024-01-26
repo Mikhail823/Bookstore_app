@@ -5,6 +5,8 @@ import com.example.bookshop.security.jwt.blacklist.JWTBlackList;
 import com.example.bookshop.security.oauth.CustomOAuth2UserService;
 
 import com.example.bookshop.service.UserService;
+import com.google.common.collect.ImmutableList;
+import net.sf.ehcache.config.generator.ConfigurationSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,13 +24,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.AnonymousAuthenticationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
 @Order(1)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     public static final String SIGNIN = "/signin";
 
@@ -70,6 +78,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .cors().and()
                 .csrf()
                 .disable()
                 .authorizeRequests()
@@ -98,4 +107,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected AnonymousAuthenticationProvider anonymousAuthenticationProvider(){
         return new AnonymousAuthenticationProvider("userKey");
     }
+
+//    @Bean
+//    public CorsConfigurationSource corsConfigurationSource() {
+//        final CorsConfiguration configuration = new CorsConfiguration();
+//        configuration.setAllowedOrigins(ImmutableList.of("https://auth.robokassa.ru"));
+//        configuration.setAllowedMethods(ImmutableList.of("OPTIONS", "GET", "POST"));
+//        configuration.setAllowCredentials(false);
+//        configuration.setAllowedHeaders(ImmutableList.of("Content-Type", "Access-Control-Allow-Origin"));
+//        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("/payment", configuration);
+//        return source;
+//    }
 }

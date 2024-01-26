@@ -45,10 +45,7 @@ public class BooksController {
     private DateFormatter dateFormatter = new DateFormatter();
 
     @Autowired
-    public BooksController(BookService bookService,
-                           BooksRatingAndPopulatityService booksRatingAndPopulatityService,
-                           ResourceStorageService storage, BookReviewService bookReviewService,
-                           ViewedBooksService viewedBooksService, BookstoreUserRegister register) {
+    public BooksController(BookService bookService, BooksRatingAndPopulatityService booksRatingAndPopulatityService, ResourceStorageService storage, BookReviewService bookReviewService, ViewedBooksService viewedBooksService, BookstoreUserRegister register) {
         this.bookService = bookService;
         this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
         this.storage = storage;
@@ -59,8 +56,7 @@ public class BooksController {
 
     @PostMapping("/{slug}/img/save")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public String saveNewBookImage(@RequestParam("file") MultipartFile file,
-                                   @PathVariable("slug") String slug) throws IOException {
+    public String saveNewBookImage(@RequestParam("file") MultipartFile file, @PathVariable("slug") String slug) throws IOException {
 
         String savePath = storage.saveNewBookImage(file, slug);
         BookEntity bookToUpdate = bookService.getBookPageSlug(slug);
@@ -78,18 +74,16 @@ public class BooksController {
         MediaType mediaType = storage.getBookFileMime(hash);
         byte[] data = storage.getBookFileByteArray(hash);
 
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,
-                        "attachment;filename=" + path.getFileName().toString())
-                .contentType(mediaType)
-                .contentLength(data.length)
-                .body(new ByteArrayResource(data));
-
+        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                "attachment;filename="
+                        + path.getFileName().toString()).contentType(mediaType)
+                .contentLength(data.length).body(new ByteArrayResource(data));
     }
 
     @GetMapping("/{slug}")
     public ModelAndView getSlugBookPage(@PathVariable(value = "slug") String slugBook,
                                         Model model, HttpServletRequest request) {
+
         BookEntity book = bookService.getBookPageSlug(slugBook);
         viewedBooksService.saveViewedBooksUser(book, request);
         booksRatingAndPopulatityService.calculatingThePopularityOfBook(book);
@@ -108,8 +102,7 @@ public class BooksController {
 
     @GetMapping("/popular/page")
     @ResponseBody
-    public BooksPageDto getPagePopularBooks(@RequestParam("offset") Integer offset,
-                                            @RequestParam("limit") Integer limit) {
+    public BooksPageDto getPagePopularBooks(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit) {
         return new BooksPageDto(bookService.getPageOfPopularBooks(offset, limit).getContent());
     }
 
@@ -125,35 +118,26 @@ public class BooksController {
 
     @GetMapping("/recent/page")
     @ResponseBody
-    public BooksPageDto getNextSearchPage(
-            @RequestParam("offset") Integer offset,
-            @RequestParam("limit") Integer limit,
-            @RequestParam(value = "from", defaultValue = "") String from,
-            @RequestParam(value = "to", defaultValue = "") String to) {
-        return new BooksPageDto(bookService.getPageOfRecentBooksData(dateFormatter.getToDateFormat(from),
-                dateFormatter.getToDateFormat(to), offset, limit).getContent());
+    public BooksPageDto getNextSearchPage(@RequestParam("offset") Integer offset, @RequestParam("limit") Integer limit, @RequestParam(value = "from", defaultValue = "") String from, @RequestParam(value = "to", defaultValue = "") String to) {
+        return new BooksPageDto(bookService.getPageOfRecentBooksData(dateFormatter.getToDateFormat(from), dateFormatter.getToDateFormat(to), offset, limit).getContent());
     }
 
     @PostMapping("/rateBook/{slug}")
-    public String saveRatingBook(@RequestBody RatingRequestDto requestDto,
-                                 @PathVariable(name = "slug") String slug) throws RequestException {
+    public String saveRatingBook(@RequestBody RatingRequestDto requestDto, @PathVariable(name = "slug") String slug) throws RequestException {
 
-        booksRatingAndPopulatityService.ratingBookSave(requestDto.getValue(),
-                booksRatingAndPopulatityService.getRatingBook(bookService.getBookPageSlug(slug).getId()));
+        booksRatingAndPopulatityService.ratingBookSave(requestDto.getValue(), booksRatingAndPopulatityService.getRatingBook(bookService.getBookPageSlug(slug).getId()));
 
         return REDIRECT + slug;
     }
 
     @PostMapping(value = "/bookReview/{slug}")
-    public ModelAndView addBookReview(@PathVariable("slug") String slug,
-                                      @PathParam("text") String text) {
+    public ModelAndView addBookReview(@PathVariable("slug") String slug, @PathParam("text") String text) {
         bookReviewService.saveReviewText(slug, text);
         return new ModelAndView(REDIRECT + slug);
     }
 
     @PostMapping("/rateBookReview/{slug}")
-    public String likeTheReviewBook(@RequestBody LikeReviewBookDto reviewBookDto,
-                                    @PathVariable("slug") String slug) {
+    public String likeTheReviewBook(@RequestBody LikeReviewBookDto reviewBookDto, @PathVariable("slug") String slug) {
         booksRatingAndPopulatityService.saveLikeReviewBook(reviewBookDto);
         booksRatingAndPopulatityService.saveRatingReview(reviewBookDto.getReviewid());
         return REDIRECT + slug;

@@ -1,87 +1,75 @@
 package com.example.bookshop.service.impl;
 
+import com.example.bookshop.repository.Book2UserRepository;
+import com.example.bookshop.repository.Book2UserTypeRepository;
 import com.example.bookshop.repository.BookRepository;
-import com.example.bookshop.repository.ViewedBooksRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.service.ViewedBooksService;
 import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.struct.book.BookEntity;
+import com.example.bookshop.struct.book.links.Book2UserEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
-import com.example.bookshop.struct.book.links.ViewedBooks;
-import com.example.bookshop.struct.user.UserEntity;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.List;
+import java.util.Date;
+
 
 @Service
 @Slf4j
 public class ViewedBooksServiceImpl implements ViewedBooksService {
 
-    private final ViewedBooksRepository viewedBooksRepository;
     private final BookRepository bookRepository;
+    private final Book2UserRepository book2UserRepository;
+    private final Book2UserTypeRepository book2UserTypeRepository;
     private final UserService userService;
     private final BookstoreUserRegister userRegister;
     private final CookieService cookieService;
 
 
     @Autowired
-    public ViewedBooksServiceImpl(ViewedBooksRepository viewedBooksRepository,
-                                  BookRepository bookRepository, UserService userService,
+    public ViewedBooksServiceImpl(BookRepository bookRepository, Book2UserRepository book2UserRepository,
+                                  UserService userService, Book2UserTypeRepository book2UserTypeRepository,
                                   BookstoreUserRegister userRegister, CookieService cookieService) {
-        this.viewedBooksRepository = viewedBooksRepository;
         this.bookRepository = bookRepository;
+        this.book2UserRepository = book2UserRepository;
         this.userService = userService;
+        this.book2UserTypeRepository = book2UserTypeRepository;
         this.userRegister = userRegister;
         this.cookieService = cookieService;
     }
 
     @Override
     @Transactional
-    public void saveViewedBooksUser(BookEntity book, HttpServletRequest request){
-        ViewedBooks viewedBooks = new ViewedBooks();
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public void saveViewedBooksUser(BookEntity book, HttpServletRequest request) {
+        Object user = userRegister.getCurrentUser();
+        Book2UserEntity newBookUser = null;
 
-         if(userRegister.isAuthAnonymousUser()){
-             UserEntity anonyUser = userService.findByUserFromHash(cookieService.getHashTheUserFromCookie(request));
-             if (getAllViewedBooksUser(anonyUser).contains(book.getId())){
-                 return;
-             }
-             viewedBooks.setBook(book);
-             viewedBooks.setUser(anonyUser);
-             viewedBooks.setType(Book2UserTypeEntity.StatusBookType.VIEWED);
-             viewedBooks.setTime(LocalDateTime.now());
-             viewedBooksRepository.save(viewedBooks);
-             book.setStatus(Book2UserTypeEntity.StatusBookType.VIEWED);
-             bookRepository.save(book);
-         } else {
-             if (getAllViewedBooksUser(
-                     ((BookstoreUserDetails) auth.getPrincipal()).getContact().getUserId()).contains(book.getId())) return;
-             viewedBooks.setBook(book);
-             viewedBooks.setUser(((BookstoreUserDetails) auth.getPrincipal()).getContact().getUserId());
-             viewedBooks.setType(Book2UserTypeEntity.StatusBookType.VIEWED);
-             viewedBooks.setTime(LocalDateTime.now());
-             viewedBooksRepository.save(viewedBooks);
-             book.setStatus(Book2UserTypeEntity.StatusBookType.VIEWED);
-             bookRepository.save(book);
+        if (user instanceof BookstoreUserDetails){
+            Book2UserEntity userBook =
+                    book2UserRepository
+                            .findBook2UserEntityByUserIdAndBookId(((BookstoreUserDetails) user).getContact()
+                                    .getUserId().getId(), book.getId());
 
-         }
- }
-
-    public ViewedBooks getViewedBookUser(BookEntity book, UserEntity user){
-        return viewedBooksRepository.findFirstByBookAndUser(book, user);
-    }
-
-    public List<ViewedBooks> getAllViewedBooksUser(UserEntity user){
-        return viewedBooksRepository.findViewedBooksByUser(user);
+            if (userBook != null && book.getStatus().equals(Book2UserTypeEntity.StatusBookType.VIEWED)) return;
+            else {
+                Book2UserTypeEntity book2UserType = book2UserTypeRepository
+                        .findByCode(Book2UserTypeEntity.StatusBookType.VIEWED);
+                book.setStatus(Book2UserTypeEntity.StatusBookType.VIEWED);
+                bookRepository.save(book);
+                newBookUser = new Book2UserEntity();
+                newBookUser.setUserId(((BookstoreUserDetails) user).getContact().getUserId().getId());
+                newBookUser.setBookId(book.getId());
+                newBookUser.setTypeId(book2UserType.getId());
+                newBookUser.setTime(new Date());
+                book2UserRepository.save(newBookUser);
+            }
+        }
     }
 }

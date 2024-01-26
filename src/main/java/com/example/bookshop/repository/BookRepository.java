@@ -89,9 +89,10 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     List<BookEntity> getBooksPaid(Integer userId);
 
     @Query(value = "SELECT b FROM BookEntity AS b " +
-            "JOIN ViewedBooks AS vb ON vb.book = b " +
-            "WHERE vb.user = ?1")
-    Page<BookEntity> getViewedBooksUser(UserEntity userId, Pageable nextPage);
+            "JOIN Book2UserEntity AS bu ON bu.bookId = b.id " +
+            "JOIN Book2UserTypeEntity AS type ON type.id = bu.typeId " +
+            "WHERE type.code = 'VIEWED' AND bu.userId = ?1")
+    Page<BookEntity> getViewedBooksUser(Integer userId, Pageable nextPage);
 
     @Modifying
     @Query(value = "UPDATE BookEntity b SET b.popularity = :popular WHERE b.id = :bookId")
@@ -109,13 +110,12 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     @Query(value = "UPDATE book AS b SET quantity_basket = :quantity WHERE b.slug = :slug", nativeQuery = true)
     void updateCountCartBooks(@Param("slug") String slug, @Param("quantity") Integer quantity);
 
-    @Query(value = "SELECT b FROM BookEntity AS b JOIN ViewedBooks AS vb ON vb.book = b WHERE vb.type='VIEWED'")
-    Page<BookEntity> findBookEntityByViewed(Pageable  nextPage);
-
     @Query(value = "SELECT b FROM BookEntity AS b JOIN RatingBookEntity AS rb" +
             " ON rb.book = b ORDER BY rb.fiveStar DESC")
     Page<BookEntity> findAllOrderByRating(Pageable pageable);
 
+    @Query(value = "SELECT b FROM BookEntity AS b WHERE b.isBesteller = 1 ORDER BY b.pubDate DESC")
+    Page<BookEntity> findAllByIsBestellerOrderByPubDateDesc(Pageable pageable);
 
 
 }

@@ -39,7 +39,8 @@ public class BookShopCartController {
 
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
-    @Qualifier("cookieService")private final CookieService cookieService;
+    @Qualifier("cookieService")
+    private final CookieService cookieService;
     private final UserService userService;
     private final PaymentService paymentService;
 
@@ -55,7 +56,6 @@ public class BookShopCartController {
         this.userService = userService;
         this.paymentService = paymentService;
     }
-
 
     @GetMapping("/cart")
     public String handleCartRequest(@CookieValue(name = "cartContents", required = false) String cartContents,
@@ -85,7 +85,6 @@ public class BookShopCartController {
                 oldPrice = oldPrice + book.getPriceOld();
             }
         }
-
         return "cart";
     }
 
@@ -100,7 +99,6 @@ public class BookShopCartController {
                                          @RequestBody Map<String, String> allParams, Model model, HttpServletResponse response) {
 
         return bookService.addingBookStatusCart(slug, model, response, cartContents, REDIRECT_CART, allParams);
-
     }
 
     @PostMapping("/changeBookStatus/cart/remove/{slug}")
@@ -127,24 +125,7 @@ public class BookShopCartController {
         if (accountMoney < allSumBooks) {
             return REDIRECT_CART + "?noMoney=true";
         }
-        for (BookEntity b : bookList) {
-            int countPayBooks = b.getNumberOfPurchased() == null ? 0 : b.getNumberOfPurchased() + 1;
-            bookService.updateCountPaidBooks(b.getSlug(), countPayBooks);
-        }
-
-        String bookStrong = (bookList.size() == 1) ? "книги: " : "книг: ";
-        String booksName = bookList.stream().map(book -> book.getTitle() + ", ").collect(Collectors.joining());
-        double balance = user.getContact().getUserId().getBalance() - allSumBooks;
-        user.getContact().getUserId().setBalance(balance);
-        userService.saveUserEntity(user.getContact().getUserId());
-        model.addAttribute("accountMoney", balance);
-        bookList.forEach(b -> bookService.saveBook2User(b, user.getContact().getUserId(), PAID));
-        BalanceTransactionEntity transaction = new BalanceTransactionEntity();
-        transaction.setUserId(user.getContact().getUserId());
-        transaction.setDescription("Покупка " + bookStrong + booksName);
-        transaction.setValue(allSumBooks);
-        transaction.setTime(LocalDateTime.now());
-        paymentService.saveTransaction(transaction);
+        paymentService.countingAndSavingPurchases(bookList, allSumBooks, user, model);
         return REDIRECT_CART;
     }
 }

@@ -14,24 +14,28 @@ import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import com.google.common.collect.ImmutableList;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.*;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.view.RedirectView;
 
 import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -44,17 +48,19 @@ public class ProfileUserPageController {
     private final PaymentService paymentService;
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
+    private final RestTemplate restTemplate;
 
     @Autowired
     public ProfileUserPageController(UserService userService,
                                      PaymentService paymentService,
                                      BookService bookService,
-                                     BookstoreUserRegister userRegister) {
+                                     BookstoreUserRegister userRegister, RestTemplate restTemplate) {
 
         this.userService = userService;
         this.paymentService = paymentService;
         this.bookService = bookService;
         this.userRegister = userRegister;
+        this.restTemplate = restTemplate;
     }
     @ModelAttribute("paymentDto")
     public PaymentDto getPayment(){
@@ -118,13 +124,12 @@ public class ProfileUserPageController {
         return PROF_REDIRECT + "?sendMsgMail=true";
     }
 
+
     @PostMapping("/payment")
-    @ResponseBody
     public RedirectView handlerPayment(@RequestBody PaymentDto paymentDto) throws NoSuchAlgorithmException {
 
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
-        String redirectUrl = paymentService.getPaymentUrl(user, paymentDto);
-        return new RedirectView(redirectUrl);
+        return new RedirectView(paymentService.getPaymentUrl(user, paymentDto));
     }
 
     @GetMapping("/profile/verify/{token}")

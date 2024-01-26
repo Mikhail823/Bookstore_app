@@ -25,6 +25,7 @@ public class GlobalModelAttributesController {
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
     private final CookieService cookieComponent;
+
     @Autowired
     public GlobalModelAttributesController(BookService bookService,
                                            BookstoreUserRegister userRegister,
@@ -45,7 +46,7 @@ public class GlobalModelAttributesController {
     }
 
     @ModelAttribute("curUser")
-    public Object getCurrentUserBookShop(){
+    public Object getCurrentUserBookShop() {
         Object curUser = userRegister.getCurrentUser();
 
         return (curUser instanceof BookstoreUserDetails) ?
@@ -53,7 +54,7 @@ public class GlobalModelAttributesController {
     }
 
     @ModelAttribute("countBooksCart")
-    public Integer getCountBooksCart(){
+    public Integer getCountBooksCart() {
         Object curUser = userRegister.getCurrentUser();
 
         return (curUser instanceof BookstoreUserDetails) ?
@@ -61,12 +62,12 @@ public class GlobalModelAttributesController {
     }
 
     @ModelAttribute("countBooksCartAnyUser")
-    public Integer getCountBooksCartAnyUser(@CookieValue(name = "cartContents", required = false) String cartContents){
+    public Integer getCountBooksCartAnyUser(@CookieValue(name = "cartContents", required = false) String cartContents) {
         return (cookieComponent.countBooksCookie(cartContents) == 0) ? 0 : cookieComponent.countBooksCookie(cartContents);
     }
 
     @ModelAttribute("countPostponedBooksAnyUser")
-    public Integer getCountBooksPostponedAnyUser(@CookieValue(name = "postponedBook", required = false) String postponedBook){
+    public Integer getCountBooksPostponedAnyUser(@CookieValue(name = "postponedBook", required = false) String postponedBook) {
 
         return (cookieComponent.countBooksCookie(postponedBook) == 0) ? 0 : cookieComponent.countBooksCookie(postponedBook);
     }
@@ -80,19 +81,19 @@ public class GlobalModelAttributesController {
     }
 
     @ModelAttribute("accountMoney")
-    public Double getAccountMoney(){
+    public Double getAccountMoney() {
         Object curUser = userRegister.getCurrentUser();
-            return (curUser instanceof BookstoreUserDetails &&
-                    ((BookstoreUserDetails) curUser).getContact().getUserId().getBalance()!= 0) ?
-                    ((BookstoreUserDetails) curUser).getContact().getUserId().getBalance() : 0.0;
+        return (curUser instanceof BookstoreUserDetails &&
+                ((BookstoreUserDetails) curUser).getContact().getUserId().getBalance() != 0) ?
+                ((BookstoreUserDetails) curUser).getContact().getUserId().getBalance() : 0.0;
     }
 
     @ModelAttribute("countNotReadBook")
-    public Integer getCountNotReadBook(){
+    public Integer getCountNotReadBook() {
         Object curUser = userRegister.getCurrentUser();
         return (curUser instanceof BookstoreUserDetails) ?
-                bookService.getNotReadBooks(((BookstoreUserDetails)curUser).getContact().getUserId().getId()).size()
-                : 0;
+                bookService.getNotReadBooks(((BookstoreUserDetails) curUser)
+                        .getContact().getUserId().getId()).size() : 0;
 
     }
 

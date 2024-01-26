@@ -3,7 +3,6 @@ package com.example.bookshop.service;
 
 import com.example.bookshop.dto.BookDto;
 import com.example.bookshop.exeption.BookStoreApiWrongParameterException;
-import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import com.example.bookshop.struct.book.review.BookReviewEntity;
@@ -67,7 +66,7 @@ public interface BookService {
 
     List<BookEntity> getNotReadBooks(Integer userId);
 
-    void saveBook2User(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type);
+    void saveBookUser(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type);
 
     List<BookEntity> getBooksArchiveUser(Integer userId);
 

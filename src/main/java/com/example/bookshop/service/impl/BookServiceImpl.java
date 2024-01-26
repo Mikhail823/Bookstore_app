@@ -104,7 +104,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public Page<BookEntity> getPageOfRecommendedBooks(Integer offset, Integer limit) {
         Pageable nexPage = PageRequest.of(offset, limit);
-        return bookRepository.findBookEntityByViewed(nexPage);
+        return bookRepository.findAllByIsBestellerOrderByPubDateDesc(nexPage);
     }
 
     @Override
@@ -241,7 +241,7 @@ public class BookServiceImpl implements BookService {
 
     @LogSQLException
     @Override
-    public void saveBook2User(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type) {
+    public void saveBookUser(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type) {
         Book2UserEntity newBook2User =
                 book2UserRepository.findBook2UserEntityByUserIdAndBookId(user.getId(), book.getId());
         Book2UserTypeEntity book2UserType = book2UserTypeRepository.findByCode(type);
@@ -297,7 +297,7 @@ public class BookServiceImpl implements BookService {
             model.addAttribute("error", "true");
             model.addAttribute("noMoneyAccount", "На Вашем счету не достаточно денежных средств!!!");
         } else {
-            bookList.forEach(book -> saveBook2User(book, user, PAID));
+            bookList.forEach(book -> saveBookUser(book, user, PAID));
             BalanceTransactionEntity transaction = new BalanceTransactionEntity();
             String bookStrong = (bookList.size() == 1) ? "книги: " : "книг: ";
             String booksName = bookList.stream().map(book -> book.getTitle() + ", ").collect(Collectors.joining());
@@ -312,11 +312,10 @@ public class BookServiceImpl implements BookService {
     @Override
     public boolean isStatus(BookEntity book) {
         Object user = registerUser.getCurrentUser();
-        Book2UserEntity b2u = book2UserRepository
+        Book2UserEntity bookUser = book2UserRepository
                 .findBook2UserEntityByUserIdAndBookId
                         (((BookstoreUserDetails) user).getContact().getUserId().getId(), book.getId());
-
-        return b2u != null;
+        return bookUser != null;
     }
 
     @Transactional(propagation = Propagation.REQUIRED)
@@ -329,11 +328,13 @@ public class BookServiceImpl implements BookService {
     public Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit) {
         Pageable page = PageRequest.of(offset, limit);
         Object curUser = registerUser.getCurrentUser();
-        if (curUser instanceof BookstoreUserDetails) {
-            return bookRepository.getViewedBooksUser(((BookstoreUserDetails) curUser).getContact().getUserId(), page);
-        } else {
-
-            return bookRepository.findAllOrderByRating(page);
+        if(curUser instanceof BookstoreUserDetails) {
+            return bookRepository
+                    .getViewedBooksUser(((BookstoreUserDetails) curUser).getContact()
+                            .getUserId().getId(), page);
+        }
+        else {
+            return bookRepository.findAll(page);
         }
     }
 
@@ -355,7 +356,7 @@ public class BookServiceImpl implements BookService {
         newBook.setAuthors(bookDto.getAuthors());
         newBook.setTagList(bookDto.getTags());
         newBook.setGenre(bookDto.getGenre());
-        newBook.setIsBesteller(isBestsellerBook(bookDto.getBestseller()));
+        newBook.setIsBesteller(bestsellerBook(bookDto.getBestseller()));
         newBook.setSlug(randomSlug());
         bookRepository.save(newBook);
 
@@ -365,7 +366,7 @@ public class BookServiceImpl implements BookService {
         return RandomStringUtils.randomAlphabetic(6);
     }
 
-    public Integer isBestsellerBook(String bestseller) {
+    public Integer bestsellerBook(String bestseller) {
         return (bestseller.equals("no")) ? 0 : 1;
     }
 
@@ -397,7 +398,7 @@ public class BookServiceImpl implements BookService {
         int countCartBooks = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
         if (curUser instanceof BookstoreUserDetails) {
             UserEntity user = userRepository.findUserEntityById(((BookstoreUserDetails) curUser).getContact().getUserId().getId());
-            saveBook2User(book, user, CART);
+            saveBookUser(book, user, CART);
             updateCountBooksCart(slug, countCartBooks + 1);
             return redirect + slug;
         } else {

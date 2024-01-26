@@ -3,18 +3,13 @@ package com.example.bookshop.controllers.user;
 import com.example.bookshop.security.BookstoreUserDetails;
 
 import com.example.bookshop.service.BookService;
-import com.example.bookshop.service.PaymentService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.view.RedirectView;
-
-import java.security.NoSuchAlgorithmException;
 
 @Controller
 @RequestMapping("/api/books")
@@ -35,7 +30,7 @@ public class BookShopPaidController {
                                           @AuthenticationPrincipal BookstoreUserDetails user){
 
         BookEntity book = bookService.getBookPageSlug(slug);
-        bookService.saveBook2User(book, user.getContact().getUserId(), Book2UserTypeEntity.StatusBookType.ARCHIVED);
+        bookService.saveBookUser(book, user.getContact().getUserId(), Book2UserTypeEntity.StatusBookType.ARCHIVED);
 
         return REDIRECT_SLUG + slug;
     }
