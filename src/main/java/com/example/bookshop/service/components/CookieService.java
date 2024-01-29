@@ -35,4 +35,6 @@ public interface CookieService {
     List<String> getListBooksAnonymousUser(String cartContents);
 
     String getHashTheUserFromCookie(HttpServletRequest request);
+
+    void priceCalculatorForCookie(String content, Model model);
 }

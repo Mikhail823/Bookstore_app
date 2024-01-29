@@ -78,6 +78,7 @@ public class PostponedBooksController {
         Object curUser = userRegister.getCurrentUser();
         BookEntity book = bookService.getBookPageSlug(slug);
         int quantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
+        model.addAttribute("countBooksPostponed", quantityPostponed);
         if (curUser instanceof BookstoreUserDetails) {
             UserEntity user = userServiceImp.getUserById(((BookstoreUserDetails) curUser).getContact().getUserId().getId());
             bookService.saveBookUser(book, user, KEPT);

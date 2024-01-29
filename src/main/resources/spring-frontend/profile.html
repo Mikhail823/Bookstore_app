@@ -10,7 +10,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title th:text="#{prof.my}">Профиль</title>
+  <title>Тут название страницы написать</title>
   <meta name="description" content="Описание страницы"/>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
@@ -24,9 +24,11 @@
   <link rel="preload" href="/assets/fonts/Montserrat/Montserrat-ExtraBold.woff2" as="font" crossorigin="anonymous"/>
   <link rel="stylesheet" href="/assets/css/fonts.min.css?v=45744385"/>
   <link rel="stylesheet" href="/assets/css/basic.min.css?v=45744385"/>
-  <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/>
+  <link rel="stylesheet" href="/assets/css/extra.min.css?v=45744385"/><!--[if lt IE 9]>
+  <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script defer="" src="/assets/js/scripts.min.js?v=45744385"></script>
+  <script defer="" src="/assets/js/scripts.min.js?v=45744385" ></script>
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 
@@ -43,8 +45,7 @@
   <div class="wrap">
     <main class="Middle-main">
       <h2 class="Middle-title" th:text="#{prof.my}">Мой профиль</h2>
-      <span th:if="${passError}" th:text="${passError.getLocalizedMessage()}" style="color: red"></span>
-      <span th:if="${sendMsgMail}" th:text="#{text.prof.info}" style="color: red"></span>
+      <span th:text="${sendMessage}" style="color: red"></span>
       <div class="Tabs Tabs_default">
         <div class="Tabs-links">
           <a class="Tabs-link Tabs-link_ACTIVE" href="#basic" th:text="#{account.info}" >Основные сведения</a>
@@ -59,11 +60,9 @@
                 <div class="row">
                   <div class="row-block">
                     <div class="form-group">
-                      <label class="form-label"
-                             for="name" th:text="#{prof.name}" >Имя
+                      <label class="form-label" for="name" th:text="#{prof.name}" >Имя
                       </label>
-                      <input class="form-input"
-                             id="name" name="name" type="text" th:value="${curUsr.name}" value="Михаил"/>
+                      <input class="form-input" id="name" name="name" type="text" th:value="${curUsr.name}" value="Михаил"/>
                     </div>
                     <div class="form-group">
                       <label class="form-label" for="mail">E-mail
@@ -76,14 +75,12 @@
                              th:value="${email}"
                              data-validate="require mail"/>
                       <div class="Profile-btn Profile-btn_confirm">
-                        <button class="btn btn_primary" type="button"
-                                th:text="#{text.button.confirm}">Подтвердить
+                        <button class="btn btn_primary" type="button" th:text="#{text.button.confirm}">Подтвердить
                         </button>
                       </div>
                     </div>
                     <div class="form-group">
-                      <label class="form-label" for="phone"
-                             th:text="#{prof.phone}">Телефон
+                      <label class="form-label" for="phone" th:text="#{prof.phone}">Телефон
                       </label>
                       <input class="form-input"
                              id="phone"
@@ -106,16 +103,13 @@
                       <input class="form-input" id="password"
                              name="password"
                              type="password"
-                             th:placeholder="#{prof.place.pass}"
                              placeholder="Тут можно изменить пароль"/>
                     </div>
                     <div class="form-group">
                       <label class="form-label" for="passwordReply" th:text="#{prof.pass.confirm}">Подтверждение пароля
                       </label>
                       <input class="form-input" id="passwordReply" name="passwordReply"
-                             type="password"
-                             th:placeholder="#{prof.place.passRep}"
-                             placeholder="Введите пароль повторно"/>
+                             type="password" placeholder="Введите пароль повторно"/>
                     </div>
                     <div class="form-group">
                       <div class="Profile-btn">
@@ -123,7 +117,7 @@
                         <button class="btn btn_primary"  type="submit" th:text="#{prof.save}">Сохранить</button>
                       </div>
                       <div class="Profile-success" th:if="${successfulSave}" th:text="#{prof.saved}">Профиль успешно сохранен
-                      <span th:if="${sendMsgMail}" th:text="#{text.prof.info}" style="color: red"></span>
+
                       </div>
                     </div>
                   </div>
@@ -160,8 +154,7 @@
                   </tbody>
                 </table>
               </div>
-              <div class="Transactions-footer Transactions-footer_center"
-                   th:if="${transactionList.getTotalElements() > 6}">
+              <div class="Transactions-footer Transactions-footer_center" th:if="${transactionList.getTotalElements() > 6}">
                 <a class="btn btn_primary Transactions-get"
                    href="#"
                    th:href="@{'/transaction/page'}"
@@ -173,7 +166,8 @@
           </div>
           <div class="Tabs-block" id="topup">
             <form class="form Topup" action="#" method="post" data-sendHash="34534535"
-                  th:data-sendhash="${curUsr.hash}">
+                  th:data-sendhash="${curUsr.hash}"
+                  th:action="${'/payment'}">
               <div class="Topup-wrap">
                 <strong class="Topup-title" th:text="#{prof.amount.top}">Введите сумму, на которую хотите пополнить свой счет:
                 </strong>

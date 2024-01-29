@@ -233,4 +233,21 @@ public class CookieComponent implements CookieService {
         }
         return hashAnonyUser;
     }
+
+    @Override
+    public void priceCalculatorForCookie(String content, Model model){
+        cookieCartBooks(content, model);
+        int totalPrice = 0;
+        int oldPrice = 0;
+        if (getListBooksAnonymousUser(content) == null) {
+            model.addAttribute("isCartEmpty", true);
+            model.addAttribute("totalPrice", totalPrice);
+            model.addAttribute("oldPrice", oldPrice);
+        }
+        for (String slug : getListBooksAnonymousUser(content)) {
+            BookEntity book = bookService.getBookPageSlug(slug);
+            totalPrice = totalPrice + book.discountPrice();
+            oldPrice = oldPrice + book.getPriceOld();
+        }
+    }
 }

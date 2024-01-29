@@ -8,8 +8,7 @@ import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.service.PaymentService;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.struct.book.BookEntity;
-import com.example.bookshop.struct.payments.BalanceTransactionEntity;
-import com.example.bookshop.struct.user.UserEntity;
+import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,12 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
-
-import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.CART;
-import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.PAID;
 
 @Controller
 @RequestMapping("/api/books")
@@ -41,24 +35,21 @@ public class BookShopCartController {
     private final BookstoreUserRegister userRegister;
     @Qualifier("cookieService")
     private final CookieService cookieService;
-    private final UserService userService;
     private final PaymentService paymentService;
 
     @Autowired
     public BookShopCartController(BookService bookService,
                                   BookstoreUserRegister userRegister,
                                   CookieService cookieService,
-                                  UserService userService,
                                   PaymentService paymentService) {
         this.bookService = bookService;
         this.userRegister = userRegister;
         this.cookieService = cookieService;
-        this.userService = userService;
         this.paymentService = paymentService;
     }
 
     @GetMapping("/cart")
-    public String handleCartRequest(@CookieValue(name = "cartContents", required = false) String cartContents,
+    public String handlerCartRequest(@CookieValue(name = "cartContents", required = false) String cartContents,
                                     @RequestParam(name = "noMoney", required = false) Boolean noMoney,
                                     Model model, HttpServletResponse response,
                                     HttpServletRequest request) {
@@ -71,19 +62,7 @@ public class BookShopCartController {
             bookService.getBooksTheCartOfUser(model);
 
         } else {
-            cookieService.cookieCartBooks(cartContents, model);
-            int totalPrice = 0;
-            int oldPrice = 0;
-            if (cookieService.getListBooksAnonymousUser(cartContents) == null) {
-                model.addAttribute("isCartEmpty", true);
-                model.addAttribute("totalPrice", totalPrice);
-                model.addAttribute("oldPrice", oldPrice);
-            }
-            for (String slug : cookieService.getListBooksAnonymousUser(cartContents)) {
-                BookEntity book = bookService.getBookPageSlug(slug);
-                totalPrice = totalPrice + book.discountPrice();
-                oldPrice = oldPrice + book.getPriceOld();
-            }
+            cookieService.priceCalculatorForCookie(cartContents, model);
         }
         return "cart";
     }
@@ -102,7 +81,7 @@ public class BookShopCartController {
     }
 
     @PostMapping("/changeBookStatus/cart/remove/{slug}")
-    public String handleRemoveBookFromCartRequest(@PathVariable("slug") String slug, @CookieValue(name = "cartContents", required = false) String cartContents, HttpServletResponse response, HttpServletRequest request, Model model) {
+    public String handlerRemoveBookFromCartRequest(@PathVariable("slug") String slug, @CookieValue(name = "cartContents", required = false) String cartContents, HttpServletResponse response, HttpServletRequest request, Model model) {
         Object curUser = userRegister.getCurrentUser();
         BookEntity book = bookService.getBookPageSlug(slug);
         if (curUser instanceof BookstoreUserDetails) {
@@ -127,6 +106,16 @@ public class BookShopCartController {
         }
         paymentService.countingAndSavingPurchases(bookList, allSumBooks, user, model);
         return REDIRECT_CART;
+    }
+
+    @PostMapping("/changeBookStatus/archived/{slug}")
+    public String handlerChangeBookArhived(@PathVariable(name = "slug") String slug,
+                                          @AuthenticationPrincipal BookstoreUserDetails user){
+
+        BookEntity book = bookService.getBookPageSlug(slug);
+        bookService.saveBookUser(book, user.getContact().getUserId(), Book2UserTypeEntity.StatusBookType.ARCHIVED);
+
+        return REDIRECT_SLUG + slug;
     }
 }
 

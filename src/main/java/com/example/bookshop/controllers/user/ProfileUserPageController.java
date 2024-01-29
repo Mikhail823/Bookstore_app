@@ -48,25 +48,23 @@ public class ProfileUserPageController {
     private final PaymentService paymentService;
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
-    private final RestTemplate restTemplate;
 
     @Autowired
     public ProfileUserPageController(UserService userService,
                                      PaymentService paymentService,
                                      BookService bookService,
-                                     BookstoreUserRegister userRegister, RestTemplate restTemplate) {
+                                     BookstoreUserRegister userRegister) {
 
         this.userService = userService;
         this.paymentService = paymentService;
         this.bookService = bookService;
         this.userRegister = userRegister;
-        this.restTemplate = restTemplate;
-    }
-    @ModelAttribute("paymentDto")
-    public PaymentDto getPayment(){
-        return new PaymentDto();
     }
 
+    @ModelAttribute("paymentDto")
+    public PaymentDto getPayment() {
+        return new PaymentDto();
+    }
 
     @GetMapping("/my")
     public String handleMy(@AuthenticationPrincipal BookstoreUserDetails user, Model model) {
@@ -77,12 +75,12 @@ public class ProfileUserPageController {
 
     @GetMapping("/profile")
     public String handlerProfile(@AuthenticationPrincipal BookstoreUserDetails user,
-                                @RequestParam(value = "successfulSave", required = false) Boolean successfulSave,
-                                @RequestParam(value = "sendMsgMail", required = false) Boolean save, Model model) {
+                                 @RequestParam(value = "successfulSave", required = false) Boolean successfulSave,
+                                 @RequestParam(value = "sendMsgMail", required = false) Boolean save, Model model) {
 
         if (Boolean.TRUE.equals(successfulSave))
             model.addAttribute("successfulSave", true);
-        if (Boolean.TRUE.equals(save)){
+        if (Boolean.TRUE.equals(save)) {
             model.addAttribute("sendMsgMail", true);
         } else {
             model.addAttribute("sendMsgMail", false);
@@ -112,28 +110,27 @@ public class ProfileUserPageController {
                                 @RequestParam("password") String password,
                                 @RequestParam("passwordReply") String passwordReply, Model model) throws JsonProcessingException {
 
-
         userService.checkPassword(password, passwordReply, model);
-
         try {
             userService.confirmChangingUserProfile(phone, email, name, passwordReply);
-        } catch (MailException ex){
+        } catch (MailException ex) {
             return PROF_REDIRECT + "?sendMsgMail=false";
         }
-
         return PROF_REDIRECT + "?sendMsgMail=true";
     }
 
 
-    @PostMapping("/payment")
-    public RedirectView handlerPayment(@RequestBody PaymentDto paymentDto) throws NoSuchAlgorithmException {
+    @PostMapping(value = "/payment")
+    @ResponseBody
+    public RedirectView handlerPayment(PaymentDto paymentDto) throws NoSuchAlgorithmException {
+        log.info("SUMMM =================>>>>>>>>>>>>>>>>" + paymentDto.getSum());
 
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
         return new RedirectView(paymentService.getPaymentUrl(user, paymentDto));
     }
 
     @GetMapping("/profile/verify/{token}")
-    public String handleProfileVerification(@PathVariable String token, Model model) throws JsonProcessingException {
+    public String handleProfileVerification(@PathVariable String token) throws JsonProcessingException {
         userService.changeUserProfile(token);
         return PROF_REDIRECT + "?successfulSave=true";
     }
@@ -156,13 +153,13 @@ public class ProfileUserPageController {
                                          @RequestParam("InvId") Integer invId,
                                          @RequestParam("SignatureValue") String signatureValue,
                                          @RequestParam("Culture") String culture,
-                                         @RequestParam("IsTest") String isTest, Model model){
+                                         @RequestParam("IsTest") String isTest, Model model) {
 
 
-            String description = "Пополнение счета через сервис ROBOKASSA на сумму " + outSum + " руб.";
-            paymentService.savingTransaction(signatureValue, outSum, invId, description);
-            model.addAttribute("res", true);
-            model.addAttribute("paymentResult", "Денежные средства зачислены на счет!");
+        String description = "Пополнение счета через сервис ROBOKASSA на сумму " + outSum + " руб.";
+        paymentService.savingTransaction(signatureValue, outSum, invId, description);
+        model.addAttribute("res", true);
+        model.addAttribute("paymentResult", "Денежные средства зачислены на счет!");
 
         return new RedirectView(PROF_REDIRECT_PAY);
 
@@ -171,7 +168,7 @@ public class ProfileUserPageController {
     @GetMapping("/payment/failPayment")
     public RedirectView failPaymentUrlHandler(@RequestParam("OutSum") Double outSum,
                                               @RequestParam("InvId") Integer invId,
-                                              @RequestParam("Culture") String culture, Model model){
+                                              @RequestParam("Culture") String culture, Model model) {
         model.addAttribute("error", "Ошибка зачисления денежных средств!!!!!:((");
         return new RedirectView(PROF_REDIRECT_PAY);
     }
@@ -179,7 +176,7 @@ public class ProfileUserPageController {
     @GetMapping("/transaction/page")
     @ResponseBody
     public TransactionPageDto handlerPageTransactional(@RequestParam(value = "offset") Integer offset,
-                                                       @RequestParam(value = "limit") Integer limit){
+                                                       @RequestParam(value = "limit") Integer limit) {
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
         return new TransactionPageDto(paymentService.getPageTransactionalUser(user, offset, limit).getContent());
     }

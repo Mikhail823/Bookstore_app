@@ -57,7 +57,7 @@ public class AutoRunAdmin implements CommandLineRunner{
         roles.add(role);
         UserEntity adm = new UserEntity();
         adm.setHash(generateString());
-        adm.setBalance(0);
+        adm.setBalance(12000);
         adm.setRegTime(new Date());
         adm.setPassword(passwordEncoder.encode(adminDataConfig.getPass()));
         adm.setName(adminDataConfig.getLogin());

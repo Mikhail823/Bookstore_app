@@ -282,10 +282,13 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void removeBook2User(BookEntity book, UserEntity user) {
         Book2UserEntity book2User =
                 book2UserRepository.findBook2UserEntityByUserIdAndBookId(user.getId(), book.getId());
-        book2UserRepository.delete(book2User);
+        if (book2User != null) {
+            book2UserRepository.delete(book2User);
+        }
     }
 
     @Override

@@ -5,9 +5,7 @@ import com.example.bookshop.repository.Book2UserTypeRepository;
 import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
-import com.example.bookshop.service.UserService;
 import com.example.bookshop.service.ViewedBooksService;
-import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
@@ -28,21 +26,19 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
     private final BookRepository bookRepository;
     private final Book2UserRepository book2UserRepository;
     private final Book2UserTypeRepository book2UserTypeRepository;
-    private final UserService userService;
     private final BookstoreUserRegister userRegister;
-    private final CookieService cookieService;
 
 
     @Autowired
-    public ViewedBooksServiceImpl(BookRepository bookRepository, Book2UserRepository book2UserRepository,
-                                  UserService userService, Book2UserTypeRepository book2UserTypeRepository,
-                                  BookstoreUserRegister userRegister, CookieService cookieService) {
+    public ViewedBooksServiceImpl(BookRepository bookRepository,
+                                  Book2UserRepository book2UserRepository,
+                                  Book2UserTypeRepository book2UserTypeRepository,
+                                  BookstoreUserRegister userRegister) {
         this.bookRepository = bookRepository;
         this.book2UserRepository = book2UserRepository;
-        this.userService = userService;
         this.book2UserTypeRepository = book2UserTypeRepository;
         this.userRegister = userRegister;
-        this.cookieService = cookieService;
+
     }
 
     @Override
