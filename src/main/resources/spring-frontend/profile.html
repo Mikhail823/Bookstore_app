@@ -10,7 +10,7 @@
 <![endif]-->
 <!--[if gt IE 9]><!--> <html lang="ru" xmlns:th="http://www.thymeleaf.org"> <!--<![endif]-->
 <head>
-  <title>Тут название страницы написать</title>
+  <title th:text="#{title.my}"></title>
   <meta name="description" content="Описание страницы"/>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
@@ -28,7 +28,7 @@
   <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-  <script defer="" src="/assets/js/scripts.min.js?v=45744385" ></script>
+  <script defer src="/assets/js/scripts.min.js?v=45744385" ></script>
   <script type="text/javascript" th:replace="~{fragments/script_lang_fragment :: lang}"></script>
 </head>
 
@@ -48,9 +48,9 @@
       <span th:text="${sendMessage}" style="color: red"></span>
       <div class="Tabs Tabs_default">
         <div class="Tabs-links">
-          <a class="Tabs-link Tabs-link_ACTIVE" href="#basic" th:text="#{account.info}" >Основные сведения</a>
-          <a class="Tabs-link" href="#transactions" th:text="#{transaction.history}">История транзакций</a>
-          <a class="Tabs-link" href="#topup" th:text="#{account.top}">Пополнить счет</a>
+          <a class="Tabs-link  Tabs-link_ACTIVE" id="bs" href="#basic" th:text="#{account.info}" >Основные сведения</a>
+          <a class="Tabs-link" id="ts" href="#transactions" th:text="#{transaction.history}">История транзакций</a>
+          <a class="Tabs-link" id="tp" href="#topup" th:text="#{account.top}">Пополнить счет</a>
         </div>
         <div class="Tabs-wrap">
           <div class="Tabs-block" id="basic">
@@ -165,8 +165,7 @@
             </div>
           </div>
           <div class="Tabs-block" id="topup">
-            <form class="form Topup" action="#" method="post" data-sendHash="34534535"
-                  th:data-sendhash="${curUsr.hash}"
+            <form class="form Topup" action="#" method="post"
                   th:action="${'/payment'}">
               <div class="Topup-wrap">
                 <strong class="Topup-title" th:text="#{prof.amount.top}">Введите сумму, на которую хотите пополнить свой счет:
@@ -177,7 +176,7 @@
                 </div>
                 <div class="form-group">
                   <div class="Topup-btn">
-                    <button class="btn btn_primary" th:text="#{prof.replenish}">Пополнить
+                    <button class="btn btn_primary" data-sendHash="34534535" th:text="#{prof.replenish}">Пополнить
                     </button>
                   </div>
                   <div th:if="${res}">

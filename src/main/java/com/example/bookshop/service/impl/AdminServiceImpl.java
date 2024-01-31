@@ -1,6 +1,5 @@
 package com.example.bookshop.service.impl;
 
-import com.example.bookshop.repository.BalanceTransactionRepository;
 import com.example.bookshop.repository.BookRepository;
 import com.example.bookshop.repository.User2RoleRepository;
 import com.example.bookshop.repository.UserRepository;

@@ -15,7 +15,6 @@ import com.example.bookshop.struct.book.review.BookReviewEntity;
 import com.example.bookshop.struct.book.review.BookReviewLikeEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -47,7 +46,6 @@ public class BooksRatingAndPopulatityServiceImpl implements BooksRatingAndPopula
     }
 
     @Override
-    @Cacheable("starts")
     public RatingCountDto getTotalAndAvgStars(Integer bookId) {
         RatingCountI totalAndAvgStars = ratingRepository.getTotalAndAvgStars(bookId);
         BookEntity book = bookRepository.getOne(bookId);

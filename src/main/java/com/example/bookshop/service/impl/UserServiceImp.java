@@ -25,8 +25,6 @@ import org.springframework.stereotype.Component;
 
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 import java.util.*;
 
@@ -102,7 +100,6 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
-    @Transactional
     public void updateUserProfile(ProfileFormDto profileFormDto, Integer userId) {
         UserEntity userEntity = getUserById(userId);
         List<UserContactEntity> listContactUser = userEntity.getListContact();
@@ -154,6 +151,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional
     public void changeUserProfile(String token) throws JsonProcessingException {
         Object user = registerUser.getCurrentUser();
         if (user instanceof BookstoreUserDetails) {
@@ -175,16 +173,14 @@ public class UserServiceImp implements UserService {
 
     public String setMessageText(String phone, String email,  String name,
                                   String passwordRepl, String token){
-        StringBuilder sb = new StringBuilder();
-                    sb
-                    .append("You have changed your credentials!!! ")
-                    .append(" Name: " + name + " /n")
-                    .append(" E-mail: " + email+ " /n")
-                    .append(" Phone: " + phone + " /n")
-                    .append(" New password: " + passwordRepl + " /n")
-                    .append(" Verification link is: " + "http://192.168.1.3:8081/profile/verify/" + token + " please, follow it.");
 
-        return sb.toString();
+        return "You have changed your credentials!!! "
+                + " Name: " + name
+                + " E-mail: " + email
+                + " Phone: " + phone
+                + " New password: " + passwordRepl
+                + " Verification link is: " + " http://192.168.1.3:8081/profile/verify/"
+                + token + " please, follow it.";
     }
 
     @Override
@@ -206,6 +202,7 @@ public class UserServiceImp implements UserService {
         ProfileFormDto userProfile = new ProfileFormDto();
         userProfile.setName(name);
         userProfile.setMail(email);
+        userProfile.setPhone(phone);
         userProfile.setPasswordRepl(passwordRepl);
         return userProfile;
 

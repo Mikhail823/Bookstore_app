@@ -121,12 +121,12 @@ public class ProfileUserPageController {
 
 
     @PostMapping(value = "/payment")
-    @ResponseBody
-    public RedirectView handlerPayment(PaymentDto paymentDto) throws NoSuchAlgorithmException {
-        log.info("SUMMM =================>>>>>>>>>>>>>>>>" + paymentDto.getSum());
+
+    public RedirectView handlerPayment(@RequestBody PaymentDto pay) throws NoSuchAlgorithmException {
+        log.info("SUMMM =================>>>>>>>>>>>>>>>>" + pay.getSum());
 
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
-        return new RedirectView(paymentService.getPaymentUrl(user, paymentDto));
+        return new RedirectView(paymentService.getPaymentUrl(user, pay));
     }
 
     @GetMapping("/profile/verify/{token}")

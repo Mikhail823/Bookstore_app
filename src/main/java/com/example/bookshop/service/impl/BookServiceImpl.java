@@ -74,7 +74,7 @@ public class BookServiceImpl implements BookService {
     @Override
     public List<BookEntity> getBooksByTitle(String title) throws BookStoreApiWrongParameterException {
 
-        if (title.equals("") || title.length() <= 1) {
+        if (title.length() <= 1) {
             throw new BookStoreApiWrongParameterException("Wrong values paseed to one more parameters");
         } else {
             List<BookEntity> data = bookRepository.findBooksByTitleContaining(title);
@@ -242,11 +242,11 @@ public class BookServiceImpl implements BookService {
     @LogSQLException
     @Override
     public void saveBookUser(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type) {
-        Book2UserEntity newBook2User =
+        Book2UserEntity newBookUser =
                 book2UserRepository.findBook2UserEntityByUserIdAndBookId(user.getId(), book.getId());
         Book2UserTypeEntity book2UserType = book2UserTypeRepository.findByCode(type);
         try {
-            if (newBook2User == null) {
+            if (newBookUser == null) {
                 book.setStatus(type);
                 bookRepository.save(book);
                 Book2UserEntity b = new Book2UserEntity();
@@ -256,20 +256,20 @@ public class BookServiceImpl implements BookService {
                 b.setTypeId(book2UserType.getId());
                 book2UserRepository.save(b);
 
-            } else if (nonNull(newBook2User) && !newBook2User.getTypeId().equals(type) &&
-                    !newBook2User.getTypeId().equals(PAID)
-                    && !newBook2User.getTypeId().equals(ARCHIVED)) {
+            } else if (nonNull(newBookUser) && !newBookUser.getTypeId().equals(type) &&
+                    !newBookUser.getTypeId().equals(PAID)
+                    && !newBookUser.getTypeId().equals(ARCHIVED)) {
                 book.setStatus(type);
                 bookRepository.save(book);
-                newBook2User.setTime(new Date());
-                newBook2User.setTypeId(book2UserType.getId());
-                book2UserRepository.saveAndFlush(newBook2User);
-            } else if (nonNull(newBook2User) && newBook2User.getTypeId().equals(PAID)) {
+                newBookUser.setTime(new Date());
+                newBookUser.setTypeId(book2UserType.getId());
+                book2UserRepository.saveAndFlush(newBookUser);
+            } else if (nonNull(newBookUser) && newBookUser.getTypeId().equals(PAID)) {
                 book.setStatus(type);
                 bookRepository.save(book);
-                newBook2User.setTime(new Date());
-                newBook2User.setTypeId(book2UserType.getId());
-                book2UserRepository.save(newBook2User);
+                newBookUser.setTime(new Date());
+                newBookUser.setTypeId(book2UserType.getId());
+                book2UserRepository.save(newBookUser);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -380,7 +380,7 @@ public class BookServiceImpl implements BookService {
         updateCountBooksCart(slug, countCart);
     }
 
-    @Transactional
+
     @Override
     public void updateCountPaidBooks(String slug, Integer count) {
         bookRepository.updateCountPaidBooks(slug, count);
@@ -391,7 +391,7 @@ public class BookServiceImpl implements BookService {
         return null;
     }
 
-    @Override
+    @Override @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String addingBookStatusCart(String slug, Model model,
                                        HttpServletResponse response,
                                        String cartContents,

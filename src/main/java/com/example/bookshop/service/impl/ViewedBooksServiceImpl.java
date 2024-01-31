@@ -47,13 +47,15 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
         Object user = userRegister.getCurrentUser();
         Book2UserEntity newBookUser = null;
 
-        if (user instanceof BookstoreUserDetails){
+        while (user instanceof BookstoreUserDetails){
             Book2UserEntity userBook =
                     book2UserRepository
                             .findBook2UserEntityByUserIdAndBookId(((BookstoreUserDetails) user).getContact()
                                     .getUserId().getId(), book.getId());
 
-            if (userBook != null && book.getStatus().equals(Book2UserTypeEntity.StatusBookType.VIEWED)) return;
+            if (userBook != null && book.getStatus().equals(Book2UserTypeEntity.StatusBookType.VIEWED)){
+                return;
+            }
             else {
                 Book2UserTypeEntity book2UserType = book2UserTypeRepository
                         .findByCode(Book2UserTypeEntity.StatusBookType.VIEWED);

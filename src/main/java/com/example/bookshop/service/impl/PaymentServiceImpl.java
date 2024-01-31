@@ -60,7 +60,7 @@ public class PaymentServiceImpl implements PaymentService {
         this.bookService = bookService;
     }
 
-    @CrossOrigin(value = "https://auth.robokassa.ru/")
+
     @Override
     public String getPaymentUrl(UserEntity user,
                                 PaymentDto paymentDto) throws NoSuchAlgorithmException {
@@ -127,6 +127,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
+    @Transactional
     public void countingAndSavingPurchases(List<BookEntity> bookList,
                                            Double allSumBooks, BookstoreUserDetails user, Model model){
         for (BookEntity book : bookList) {
@@ -146,6 +147,6 @@ public class PaymentServiceImpl implements PaymentService {
         transaction.setDescription("Покупка " + bookStrong + booksName);
         transaction.setValue(allSumBooks);
         transaction.setTime(LocalDateTime.now());
-        saveTransaction(transaction);
+        balanceTransactionRepository.save(transaction);
     }
 }

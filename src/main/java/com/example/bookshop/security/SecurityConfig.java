@@ -83,7 +83,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.disable())
+                .cors().and()
                 .csrf()
                 .disable()
                 .authorizeRequests()
@@ -112,13 +112,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
     protected AnonymousAuthenticationProvider anonymousAuthenticationProvider(){
         return new AnonymousAuthenticationProvider("userKey");
     }
-//    @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("https://auth.robokassa.ru"));
-//        configuration.setAllowedMethods(Arrays.asList("GET","POST", "OPTIONS"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
 }
