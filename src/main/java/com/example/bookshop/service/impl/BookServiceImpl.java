@@ -37,7 +37,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.*;
-import static java.util.Objects.nonNull;
 
 @Service
 public class BookServiceImpl implements BookService {
@@ -240,40 +239,29 @@ public class BookServiceImpl implements BookService {
     }
 
     @LogSQLException
+    @Transactional
     @Override
     public void saveBookUser(BookEntity book, UserEntity user, Book2UserTypeEntity.StatusBookType type) {
         Book2UserEntity newBookUser =
                 book2UserRepository.findBook2UserEntityByUserIdAndBookId(user.getId(), book.getId());
-        Book2UserTypeEntity book2UserType = book2UserTypeRepository.findByCode(type);
-        try {
-            if (newBookUser == null) {
-                book.setStatus(type);
-                bookRepository.save(book);
-                Book2UserEntity b = new Book2UserEntity();
-                b.setTime(new Date());
-                b.setUserId(user.getId());
-                b.setBookId(book.getId());
-                b.setTypeId(book2UserType.getId());
-                book2UserRepository.save(b);
+        Book2UserTypeEntity bookUserType = book2UserTypeRepository.findByCode(type);
 
-            } else if (nonNull(newBookUser) && !newBookUser.getTypeId().equals(type) &&
-                    !newBookUser.getTypeId().equals(PAID)
-                    && !newBookUser.getTypeId().equals(ARCHIVED)) {
-                book.setStatus(type);
-                bookRepository.save(book);
-                newBookUser.setTime(new Date());
-                newBookUser.setTypeId(book2UserType.getId());
-                book2UserRepository.saveAndFlush(newBookUser);
-            } else if (nonNull(newBookUser) && newBookUser.getTypeId().equals(PAID)) {
-                book.setStatus(type);
-                bookRepository.save(book);
-                newBookUser.setTime(new Date());
-                newBookUser.setTypeId(book2UserType.getId());
-                book2UserRepository.save(newBookUser);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (newBookUser == null) {
+            saveNewBookUser(book, user, bookUserType);
+        } else {
+            book2UserRepository.updateBookUser(user.getId(), book.getId(), bookUserType.getId());
         }
+    }
+
+    public void saveNewBookUser(BookEntity book, UserEntity user, Book2UserTypeEntity type){
+        book.setStatus(type.getCode());
+        bookRepository.save(book);
+        Book2UserEntity b = new Book2UserEntity();
+        b.setTime(new Date());
+        b.setUserId(user.getId());
+        b.setBookId(book.getId());
+        b.setTypeId(type.getId());
+        book2UserRepository.save(b);
     }
 
     @Override
@@ -331,12 +319,11 @@ public class BookServiceImpl implements BookService {
     public Page<BookEntity> getListViewedBooksUser(Integer offset, Integer limit) {
         Pageable page = PageRequest.of(offset, limit);
         Object curUser = registerUser.getCurrentUser();
-        if(curUser instanceof BookstoreUserDetails) {
+        if (curUser instanceof BookstoreUserDetails) {
             return bookRepository
                     .getViewedBooksUser(((BookstoreUserDetails) curUser).getContact()
                             .getUserId().getId(), page);
-        }
-        else {
+        } else {
             return bookRepository.findAll(page);
         }
     }
@@ -391,7 +378,8 @@ public class BookServiceImpl implements BookService {
         return null;
     }
 
-    @Override @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public String addingBookStatusCart(String slug, Model model,
                                        HttpServletResponse response,
                                        String cartContents,

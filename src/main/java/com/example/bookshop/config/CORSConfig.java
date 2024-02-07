@@ -13,6 +13,6 @@ public class CORSConfig implements WebMvcConfigurer {
                 .allowedOrigins("https://auth.robokassa.ru")
                 .allowedMethods("GET", "POST", "OPTIONS")
                 .allowCredentials(true)
-                .allowedHeaders("*");
+                .allowedHeaders("Access-Control-Allow-Origin: http://192.168.1.3:8081");
     }
 }

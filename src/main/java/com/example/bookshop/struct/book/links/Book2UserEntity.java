@@ -22,10 +22,9 @@ public class Book2UserEntity implements Serializable {
     private Date time;
 
     @Column(name = "book_id", columnDefinition = "INT NOT NULL")
-
     private Integer bookId;
 
-    @Column(name = "user_id", columnDefinition = "INT NOT NULL")
+    @Column(name = "user_id", columnDefinition = "INT NOT NULL", unique = false)
     private Integer userId;
 
     @Column(name = "type_id", columnDefinition = "INT NOT NULL")

@@ -103,7 +103,7 @@ public interface BookRepository extends JpaRepository<BookEntity, Integer> {
     void updateCountPosponedBooks(@Param("slug") String slug, @Param("count") Integer count);
 
     @Modifying
-    @Query(value = "UPDATE BookEntity b SET b.numberOfPurchased = :quantity WHERE b.slug = :slug")
+    @Query(value = "UPDATE book AS b SET count_purchased = :quantity WHERE b.slug = :slug", nativeQuery = true)
     void updateCountPaidBooks(@Param("slug") String slug, @Param("quantity") Integer quantity);
 
     @Modifying

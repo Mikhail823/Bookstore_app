@@ -119,7 +119,7 @@ public class ProfileUserPageController {
         return PROF_REDIRECT + "?sendMsgMail=true";
     }
 
-
+    @CrossOrigin
     @PostMapping(value = "/payment")
 
     public RedirectView handlerPayment(@RequestBody PaymentDto pay) throws NoSuchAlgorithmException {

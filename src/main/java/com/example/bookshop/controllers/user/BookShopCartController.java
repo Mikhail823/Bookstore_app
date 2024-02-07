@@ -2,16 +2,17 @@ package com.example.bookshop.controllers.user;
 
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
+import com.example.bookshop.security.exception.UserNotFoundException;
 import com.example.bookshop.service.BookService;
 
 import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.service.PaymentService;
-import com.example.bookshop.service.UserService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -87,24 +88,26 @@ public class BookShopCartController {
         if (curUser instanceof BookstoreUserDetails) {
             bookService.removeBook2User(book, ((BookstoreUserDetails) curUser).getContact().getUserId());
             bookService.updateCountBooksCart(slug, book.getQuantityTheBasket() - 1);
-        } else {
+        } else{
             cookieService.deleteBookFromCookieCart(slug, cartContents, response, model);
             bookService.updateCountBooksCart(slug, book.getQuantityTheBasket() - 1);
-            cookieService.clearCookie(response, request);
+           cookieService.clearCookie(response, request);
         }
         return REDIRECT_CART;
     }
 
     @GetMapping("/pay")
-    public String handlerPay(@AuthenticationPrincipal BookstoreUserDetails user, Model model) {
-
-        List<BookEntity> bookList = bookService.getBooksCart(user.getContact().getUserId());
-        Double allSumBooks = bookList.stream().mapToDouble(BookEntity::discountPrice).sum();
-        Double accountMoney = (Double) ((BindingAwareModelMap) model).get("accountMoney");
-        if (accountMoney < allSumBooks) {
-            return REDIRECT_CART + "?noMoney=true";
+    public String handlerPay(Model model) {
+        Object user = userRegister.getCurrentUser();
+        if (user instanceof BookstoreUserDetails) {
+            List<BookEntity> bookList = bookService.getBooksCart(((BookstoreUserDetails) user).getContact().getUserId());
+            Double allSumBooks = bookList.stream().mapToDouble(BookEntity::discountPrice).sum();
+            Double accountMoney = (Double) ((BindingAwareModelMap) model).get("accountMoney");
+            if (accountMoney < allSumBooks) {
+                return REDIRECT_CART + "?noMoney=true";
+            }
+            paymentService.countingAndSavingPurchases(bookList, allSumBooks, (BookstoreUserDetails) user, model);
         }
-        paymentService.countingAndSavingPurchases(bookList, allSumBooks, user, model);
         return REDIRECT_CART;
     }
 

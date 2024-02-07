@@ -47,10 +47,10 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
         Object user = userRegister.getCurrentUser();
         Book2UserEntity newBookUser = null;
 
-        while (user instanceof BookstoreUserDetails){
+        if (user instanceof BookstoreUserDetails){
             Book2UserEntity userBook =
                     book2UserRepository
-                            .findBook2UserEntityByUserIdAndBookId(((BookstoreUserDetails) user).getContact()
+                            .findFirstByUserIdAndBookId(((BookstoreUserDetails) user).getContact()
                                     .getUserId().getId(), book.getId());
 
             if (userBook != null && book.getStatus().equals(Book2UserTypeEntity.StatusBookType.VIEWED)){
@@ -66,8 +66,12 @@ public class ViewedBooksServiceImpl implements ViewedBooksService {
                 newBookUser.setBookId(book.getId());
                 newBookUser.setTypeId(book2UserType.getId());
                 newBookUser.setTime(new Date());
-                book2UserRepository.save(newBookUser);
+                save(newBookUser);
             }
         }
+    }
+
+    public Book2UserEntity save(Book2UserEntity bookUser){
+        return book2UserRepository.save(bookUser);
     }
 }

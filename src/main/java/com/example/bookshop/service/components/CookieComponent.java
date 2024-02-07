@@ -100,13 +100,13 @@ public class CookieComponent implements CookieService {
     @Override
     public void clearCookie(HttpServletResponse response, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
-        for (Cookie c : cookies) {
-            if (c.getName().equals(CART_CONTENT) && c.getValue().equals("")
-                    || c.getName().equals(POST_BOOK) && c.getValue().equals("")) {
-                c.setPath("/");
-                c.setMaxAge(0);
-                c.setValue("");
-                response.addCookie(c);
+        for (Cookie cookie : cookies) {
+            if (cookie.getName().equals(CART_CONTENT) && cookie.getValue().equals("")
+                    || cookie.getName().equals(POST_BOOK) && cookie.getValue().equals("")) {
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                cookie.setValue("");
+                response.addCookie(cookie);
             }
         }
     }
@@ -169,14 +169,13 @@ public class CookieComponent implements CookieService {
 
     @Override
     public void deleteBookFromCookieCart(String slug, String cartContents, HttpServletResponse response, Model model) {
-        if (cartContents.isEmpty()) {
+        if (!cartContents.isEmpty()) {
             ArrayList<String> booksCookie = new ArrayList<>
                     (Arrays.asList(cartContents.split("/")));
-            booksCookie.remove(CART + "=" + slug);
+            booksCookie.remove("CART" + "=" + slug);
             Cookie cookie = new Cookie(CART_CONTENT, String.join("/", booksCookie));
             cookie.setPath("/");
             response.addCookie(cookie);
-
             isCartEmpty(booksCookie, model);
         } else {
             model.addAttribute(CART_EMPTY, true);
@@ -184,7 +183,7 @@ public class CookieComponent implements CookieService {
     }
 
     public Model isCartEmpty(List<String> cookie, Model model) {
-        return (cookie.isEmpty()) ? model.addAttribute(CART_EMPTY, false)
+        return (!cookie.isEmpty()) ? model.addAttribute(CART_EMPTY, false)
                 : model.addAttribute(CART_EMPTY, true);
     }
 
@@ -206,11 +205,7 @@ public class CookieComponent implements CookieService {
     @Override
     public Integer countBooksCookie(String cartContents) {
         List<String> listCookie = slugsCookieCart(cartContents);
-        if (listCookie != null) {
-            return listCookie.size();
-        } else {
-            return 0;
-        }
+        return (listCookie != null) ? listCookie.size() : 0;
     }
 
     @Override
@@ -243,11 +238,15 @@ public class CookieComponent implements CookieService {
             model.addAttribute("isCartEmpty", true);
             model.addAttribute("totalPrice", totalPrice);
             model.addAttribute("oldPrice", oldPrice);
-        }
-        for (String slug : getListBooksAnonymousUser(content)) {
-            BookEntity book = bookService.getBookPageSlug(slug);
-            totalPrice = totalPrice + book.discountPrice();
-            oldPrice = oldPrice + book.getPriceOld();
+        }else {
+            for (String slug : getListBooksAnonymousUser(content)) {
+                BookEntity book = bookService.getBookPageSlug(slug);
+                totalPrice = totalPrice + book.discountPrice();
+                oldPrice = oldPrice + book.getPriceOld();
+            }
+            model.addAttribute("isCartEmpty", false);
+            model.addAttribute("totalPrice", totalPrice);
+            model.addAttribute("oldPrice", oldPrice);
         }
     }
 }

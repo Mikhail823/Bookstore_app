@@ -110,7 +110,6 @@ public class PostponedBooksController {
 
     @PostMapping("/changeBookStatus/payAllPostponed/{books}")
     public String handlerPayAllPostponedBooks(@PathVariable("books") List<BookEntity> books) {
-        if (userRegister.isAuthAnonymousUser()) {
             for (BookEntity book : books) {
                 int quantityCart = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
                 bookService.saveBookUser(book,
@@ -119,7 +118,6 @@ public class PostponedBooksController {
                 bookService.updateCountCartAndCountPostponed(book.getSlug(),
                         quantityCart + 1, book.getNumberOfPosponed() - 1);
             }
-        }
         return REDIRECT_POSTPONED + "isCart=true";
     }
 }

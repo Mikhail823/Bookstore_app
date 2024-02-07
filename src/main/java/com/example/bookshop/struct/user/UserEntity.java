@@ -65,7 +65,8 @@ public class UserEntity implements Serializable {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinTable(name = "book2user" ,
             joinColumns = {@JoinColumn(name = "user_id")},
-            inverseJoinColumns = {@JoinColumn(name = "book_id")})
+            inverseJoinColumns = {@JoinColumn(name = "book_id")},
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     @JsonIgnore
     private List<BookEntity> listBooks = new ArrayList<>();
 

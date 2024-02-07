@@ -39,7 +39,7 @@
       <main class="Middle-main">
         <h1 class="Middle-title" th:text="#{postponed}">Отложенное
         </h1>
-        <h3 th:if="${isPostponedEmpty}" style="color: red; text-align: center" th:text="#{postponed.not}">У Вас нет отложенных книг.</h3>
+        <h3 th:if="${isPostponedEmpty}" style="color: red; text-align: center" th:text="#{postponed.isEmpty}">У Вас нет отложенных книг.</h3>
         <form class="form Cart Cart_postponed" action="#" method="post">
           <div class="Cart-product" th:each="book : ${postponedBooks}">
             <div class="Cart-block Cart-block_row">
