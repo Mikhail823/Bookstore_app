@@ -119,12 +119,8 @@ public class ProfileUserPageController {
         return PROF_REDIRECT + "?sendMsgMail=true";
     }
 
-    @CrossOrigin
     @PostMapping(value = "/payment")
-
     public RedirectView handlerPayment(@RequestBody PaymentDto pay) throws NoSuchAlgorithmException {
-        log.info("SUMMM =================>>>>>>>>>>>>>>>>" + pay.getSum());
-
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
         return new RedirectView(paymentService.getPaymentUrl(user, pay));
     }

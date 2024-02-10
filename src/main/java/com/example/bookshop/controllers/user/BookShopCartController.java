@@ -12,7 +12,6 @@ import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,6 +27,8 @@ import java.util.*;
 @RequestMapping("/api/books")
 @Slf4j
 public class BookShopCartController {
+
+    public static final String CART = "CART";
 
     public static final String REDIRECT_SLUG = "redirect:/api/books/";
     private static final String REDIRECT_CART = "redirect:/api/books/cart";
@@ -63,7 +64,7 @@ public class BookShopCartController {
             bookService.getBooksTheCartOfUser(model);
 
         } else {
-            cookieService.priceCalculatorForCookie(cartContents, model);
+            cookieService.priceCalculatorForCookie(cartContents, model, CART);
         }
         return "cart";
     }

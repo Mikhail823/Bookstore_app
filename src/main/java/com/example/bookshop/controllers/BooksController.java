@@ -81,13 +81,13 @@ public class BooksController {
     }
 
     @GetMapping("/{slug}")
-    public ModelAndView getSlugBookPage(@PathVariable(value = "slug") String slugBook,
+    public ModelAndView getSlugBookPage(@PathVariable(value = "slug") String slug,
                                         Model model, HttpServletRequest request) {
 
-        BookEntity book = bookService.getBookPageSlug(slugBook);
+        BookEntity book = bookService.getBookPageSlug(slug);
         viewedBooksService.saveViewedBooksUser(book, request);
         booksRatingAndPopulatityService.calculatingThePopularityOfBook(book);
-        model.addAttribute("slugBook", bookService.getBookPageSlug(slugBook));
+        model.addAttribute("slugBook", bookService.getBookPageSlug(slug));
         model.addAttribute("totalRating", booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
         model.addAttribute("ratingBook", booksRatingAndPopulatityService.getRatingBook(book.getId()));
         model.addAttribute("reviewBook", bookService.getBookReview(book, 0, 4));

@@ -137,7 +137,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
 
         String bookStrong = (bookList.size() == 1) ? "книги: " : "книг: ";
-        String booksName = bookList.stream().map(book -> book.getTitle() + ", ").collect(Collectors.joining());
+        String booksName = bookList.stream().map(book -> book.getTitle() + " ").collect(Collectors.joining());
         double balance = user.getContact().getUserId().getBalance() - allSumBooks;
         user.getContact().getUserId().setBalance(balance);
         userRepository.save(user.getContact().getUserId());

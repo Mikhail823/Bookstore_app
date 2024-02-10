@@ -11,6 +11,7 @@ import com.example.bookshop.struct.book.BookEntity;
 
 import com.example.bookshop.struct.book.links.Book2UserTypeEntity;
 import com.example.bookshop.struct.user.UserEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,9 +25,14 @@ import java.util.*;
 
 import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusBookType.KEPT;
 
+@Slf4j
 @Controller
 @RequestMapping("/api/books")
 public class PostponedBooksController {
+
+    private static final String IS_CART = "isCart";
+    private static final String COUNT_BOOKS_POSTPONED = "countBooksPostponed";
+    private static final String IS_CART_TRUE = "isCart=true";
 
     private static final String REDIRECT_SLUG = "redirect:/api/books/";
     private static final String REDIRECT_POSTPONED = "redirect:/api/books/postponed";
@@ -53,14 +59,14 @@ public class PostponedBooksController {
     }
 
     @GetMapping("/postponed")
-    public ModelAndView handlePostponedRequest(@CookieValue(name = "postponedBook", required = false)
+    public ModelAndView handlePostponedRequest(@CookieValue(name = "postponedBook", required = false) String postponedBook,
                                                @RequestParam(value = "isCart", required = false) Boolean isCart,
-                                               String postponedBook, Model model, HttpServletResponse response,
+                                               Model model, HttpServletResponse response,
                                                HttpServletRequest request) {
         Object curUser = userRegister.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails) {
             if (Boolean.TRUE.equals(isCart)) {
-                model.addAttribute("isCart", true);
+                model.addAttribute(IS_CART, true);
             }
             cookieService.clearCookie(response, request);
             bookService.getPostponedBooksOfUser(model);
@@ -78,7 +84,7 @@ public class PostponedBooksController {
         Object curUser = userRegister.getCurrentUser();
         BookEntity book = bookService.getBookPageSlug(slug);
         int quantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
-        model.addAttribute("countBooksPostponed", quantityPostponed);
+        model.addAttribute(COUNT_BOOKS_POSTPONED, quantityPostponed);
         if (curUser instanceof BookstoreUserDetails) {
             UserEntity user = userServiceImp.getUserById(((BookstoreUserDetails) curUser).getContact().getUserId().getId());
             bookService.saveBookUser(book, user, KEPT);
@@ -118,6 +124,6 @@ public class PostponedBooksController {
                 bookService.updateCountCartAndCountPostponed(book.getSlug(),
                         quantityCart + 1, book.getNumberOfPosponed() - 1);
             }
-        return REDIRECT_POSTPONED + "isCart=true";
+        return REDIRECT_POSTPONED + IS_CART_TRUE;
     }
 }

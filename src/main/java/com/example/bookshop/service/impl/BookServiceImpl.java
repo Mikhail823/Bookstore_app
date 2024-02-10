@@ -41,6 +41,12 @@ import static com.example.bookshop.struct.book.links.Book2UserTypeEntity.StatusB
 @Service
 public class BookServiceImpl implements BookService {
 
+    public static final String POSTPONED_BOOK = "postponedBook";
+    public static final String IS_POSTPONED_EMPTY = "isPostponedEmpty";
+    public static final String IS_CART_EMPTY = "isEmptyCart";
+    public static final String BOOK_CART = "bookCart";
+    public static final String TOTAL_RATING = "totalRating";
+
     private final BookRepository bookRepository;
     private final BookReviewRepository bookReviewRepository;
     private final Book2UserRepository book2UserRepository;
@@ -186,12 +192,12 @@ public class BookServiceImpl implements BookService {
         if (user instanceof BookstoreUserDetails) {
             List<BookEntity> listBooksCartUser = bookRepository.getBooksCartUser(((BookstoreUserDetails) user).getContact().getUserId().getId());
             if (listBooksCartUser == null) {
-                model.addAttribute("isEmptyCart", true);
+                model.addAttribute(IS_CART_EMPTY, true);
             } else {
-                model.addAttribute("isEmptyCart", false);
-                model.addAttribute("bookCart", listBooksCartUser);
+                model.addAttribute(IS_CART_EMPTY, false);
+                model.addAttribute(BOOK_CART , listBooksCartUser);
                 for (BookEntity book : listBooksCartUser) {
-                    model.addAttribute("totalRating", booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
+                    model.addAttribute(TOTAL_RATING, booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
                 }
                 calculationCostOfBooksTheCartUser(model, listBooksCartUser);
             }
@@ -215,16 +221,16 @@ public class BookServiceImpl implements BookService {
     public void getPostponedBooksOfUser(Model model) {
         Object curUser = registerUser.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails) {
-            model.addAttribute("isPostponedEmpty", false);
-            model.addAttribute("postponedBooks",
+            model.addAttribute(IS_POSTPONED_EMPTY, false);
+            model.addAttribute(POSTPONED_BOOK,
                     getListPostponedBooks(((BookstoreUserDetails) curUser).getContact().getUserId()));
             for (BookEntity book : getListPostponedBooks(
                     ((BookstoreUserDetails) curUser).getContact().getUserId())) {
-                model.addAttribute("totalRating",
+                model.addAttribute(TOTAL_RATING,
                         booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
             }
         } else {
-            model.addAttribute("isPostponedEmpty", true);
+            model.addAttribute(IS_POSTPONED_EMPTY, true);
         }
     }
 
@@ -285,7 +291,7 @@ public class BookServiceImpl implements BookService {
         double allSumBooks = bookList.stream().mapToDouble(BookEntity::getPrice).sum();
 
         if (user.getBalance() < allSumBooks) {
-            model.addAttribute("error", "true");
+            model.addAttribute("error", true);
             model.addAttribute("noMoneyAccount", "На Вашем счету не достаточно денежных средств!!!");
         } else {
             bookList.forEach(book -> saveBookUser(book, user, PAID));
@@ -379,7 +385,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public String addingBookStatusCart(String slug, Model model,
                                        HttpServletResponse response,
                                        String cartContents,

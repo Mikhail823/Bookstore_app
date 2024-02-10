@@ -7,6 +7,7 @@ import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.struct.book.BookEntity;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Primary;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,6 +22,9 @@ import static java.util.Objects.nonNull;
 
 @ControllerAdvice
 public class GlobalModelAttributesController {
+
+    public static final String KEPT = "KEPT";
+    public static final String CART = "CART";
 
     private final BookService bookService;
     private final BookstoreUserRegister userRegister;
@@ -63,13 +67,15 @@ public class GlobalModelAttributesController {
 
     @ModelAttribute("countBooksCartAnyUser")
     public Integer getCountBooksCartAnyUser(@CookieValue(name = "cartContents", required = false) String cartContents) {
-        return (cookieComponent.countBooksCookie(cartContents) == 0) ? 0 : cookieComponent.countBooksCookie(cartContents);
+        return (cookieComponent.countBooksCookie(cartContents, CART) == 0) ? 0
+                : cookieComponent.countBooksCookie(cartContents, CART);
     }
 
     @ModelAttribute("countPostponedBooksAnyUser")
     public Integer getCountBooksPostponedAnyUser(@CookieValue(name = "postponedBook", required = false) String postponedBook) {
 
-        return (cookieComponent.countBooksCookie(postponedBook) == 0) ? 0 : cookieComponent.countBooksCookie(postponedBook);
+        return (cookieComponent.countBooksCookie(postponedBook, KEPT) == 0) ? 0
+                : cookieComponent.countBooksCookie(postponedBook, KEPT);
     }
 
     @ModelAttribute("countBooksPostponed")

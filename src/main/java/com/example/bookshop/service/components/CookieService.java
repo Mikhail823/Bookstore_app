@@ -20,7 +20,7 @@ public interface CookieService {
 
     String[] splitCookie(String contents);
 
-    List<String> slugsCookieCart(String contents);
+    List<String> slugsCookie(String contents, String type);
 
     void cookieCartBooks(String contents, Model model);
 
@@ -30,11 +30,11 @@ public interface CookieService {
 
     void deleteBookThePostponedCookie(String slug, String postponedBook, HttpServletResponse response, Model model);
 
-    Integer countBooksCookie(String cartContents);
+    Integer countBooksCookie(String cartContents, String type);
 
-    List<String> getListBooksAnonymousUser(String cartContents);
+    List<String> getListBooksAnonymousUser(String cartContents, String type);
 
     String getHashTheUserFromCookie(HttpServletRequest request);
 
-    void priceCalculatorForCookie(String content, Model model);
+    void priceCalculatorForCookie(String content, Model model, String type);
 }

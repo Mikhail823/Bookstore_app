@@ -103,12 +103,13 @@
               </strong><span class="Cart-price" th:text="${'₽' + totalPrice}">534 р.</span>
               <span class="Cart-price_old" th:text="${'₽' + oldPrice}">658 р.</span>
             </div>
-            <div class="Cart-block">
+
+            <div class="Cart-block" sec:authorize="isAuthenticated()">
               <a class="btn btn_success btn_md" th:href="@{'/api/books/pay'}"
                  href="/order.html" th:text="#{text.button.buy}">Купить</a>
             </div>
           </div>
-          <span style="color:red" th:text="${error}"></span>
+          <span sec:authorize="!isAuthenticated()" style="color:red" th:text="#{error.buy}"></span>
         </form>
       </main>
     </div>

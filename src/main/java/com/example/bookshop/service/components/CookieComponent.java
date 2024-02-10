@@ -23,6 +23,7 @@ public class CookieComponent implements CookieService {
     public static final String POST_BOOK = "postponedBook";
     public static final String CART_CONTENT = "cartContents";
     public static final String CART_EMPTY = "isCartEmpty";
+    public static  final String IS_EMPTY = "isEmpty";
     public static final String STATUS = "status";
     public static final String POSTPONED_EMPTY = "isPostponedEmpty";
     public static final String TOTAL_RATING = "totalRating";
@@ -123,10 +124,10 @@ public class CookieComponent implements CookieService {
     }
 
     @Override
-    public List<String> slugsCookieCart(String contents) {
+    public List<String> slugsCookie(String contents, String type) {
         return Arrays.stream(splitCookie(contents))
-                .filter(s -> s.contains(CART))
-                .map(s -> s.replace(CART + "=", ""))
+                .filter(s -> s.contains(type))
+                .map(s -> s.replace(type + "=", ""))
                 .collect(Collectors.toList());
     }
 
@@ -136,7 +137,7 @@ public class CookieComponent implements CookieService {
             model.addAttribute(CART_EMPTY, true);
         } else {
             model.addAttribute(CART_EMPTY, false);
-            List<String> suitableCookieSlugs = slugsCookieCart(contents);
+            List<String> suitableCookieSlugs = slugsCookie(contents, CART);
             List<BookEntity> booksFromCookieSlugs = bookService.getBooksBySlugIn(suitableCookieSlugs);
             model.addAttribute(BOOK_CART, booksFromCookieSlugs);
             for (BookEntity book : booksFromCookieSlugs) {
@@ -151,18 +152,13 @@ public class CookieComponent implements CookieService {
             model.addAttribute(POSTPONED_EMPTY, true);
         } else {
             model.addAttribute(POSTPONED_EMPTY, false);
-            contents = contents.startsWith("/") ? contents.substring(1) : contents;
-            contents = contents.endsWith("/") ? contents.substring(0, contents.length() - 1) : contents;
-            String[] cookiePostponedBook = contents.split("/");
-            List<String> suitableCookieSlugs = Arrays.stream(cookiePostponedBook)
-                    .filter(s -> s.contains(KEPT))
-                    .map(s -> s.replace(KEPT + "=", ""))
-                    .collect(Collectors.toList());
+            List<String> suitableCookieSlugs = slugsCookie(contents, KEPT);
             List<BookEntity> booksFromCookieSlug = bookService.getBooksBySlugIn(suitableCookieSlugs);
+            model.addAttribute(POST_BOOK, booksFromCookieSlug);
             for (BookEntity book : booksFromCookieSlug) {
                 model.addAttribute(TOTAL_RATING, booksRatingAndPopulatityService.getTotalAndAvgStars(book.getId()));
             }
-            model.addAttribute(POST_BOOK, booksFromCookieSlug);
+
 
         }
     }
@@ -192,10 +188,13 @@ public class CookieComponent implements CookieService {
                                              HttpServletResponse response, Model model) {
         if (postponedBook != null || !postponedBook.equals("")) {
             ArrayList<String> cookieBookPostponedList = new ArrayList<>(Arrays.asList(postponedBook.split("/")));
-            cookieBookPostponedList.remove(slug);
+            cookieBookPostponedList.remove("KEPT=" + slug);
             Cookie cookie = new Cookie(POST_BOOK, String.join("/", cookieBookPostponedList));
             cookie.setPath("/");
             response.addCookie(cookie);
+            if (cookieBookPostponedList.isEmpty()){
+                model.addAttribute(POSTPONED_EMPTY, true);
+            }
             model.addAttribute(POSTPONED_EMPTY, false);
         } else {
             model.addAttribute(POSTPONED_EMPTY, true);
@@ -203,14 +202,14 @@ public class CookieComponent implements CookieService {
     }
 
     @Override
-    public Integer countBooksCookie(String cartContents) {
-        List<String> listCookie = slugsCookieCart(cartContents);
+    public Integer countBooksCookie(String cartContents, String type) {
+        List<String> listCookie = slugsCookie(cartContents, type);
         return (listCookie != null) ? listCookie.size() : 0;
     }
 
     @Override
-    public List<String> getListBooksAnonymousUser(String cartContents) {
-        List<String> listBooks = slugsCookieCart(cartContents);
+    public List<String> getListBooksAnonymousUser(String cartContents, String type) {
+        List<String> listBooks = slugsCookie(cartContents, type);
         if (listBooks == null) {
             return new ArrayList<>();
         }
@@ -230,23 +229,25 @@ public class CookieComponent implements CookieService {
     }
 
     @Override
-    public void priceCalculatorForCookie(String content, Model model){
+    public void priceCalculatorForCookie(String content, Model model, String type){
         cookieCartBooks(content, model);
         int totalPrice = 0;
         int oldPrice = 0;
-        if (getListBooksAnonymousUser(content) == null) {
-            model.addAttribute("isCartEmpty", true);
-            model.addAttribute("totalPrice", totalPrice);
-            model.addAttribute("oldPrice", oldPrice);
+        if (getListBooksAnonymousUser(content, type) == null) {
+            getModelAttribute(model, true, totalPrice, oldPrice);
         }else {
-            for (String slug : getListBooksAnonymousUser(content)) {
+            for (String slug : getListBooksAnonymousUser(content, type)) {
                 BookEntity book = bookService.getBookPageSlug(slug);
                 totalPrice = totalPrice + book.discountPrice();
                 oldPrice = oldPrice + book.getPriceOld();
             }
-            model.addAttribute("isCartEmpty", false);
-            model.addAttribute("totalPrice", totalPrice);
-            model.addAttribute("oldPrice", oldPrice);
+            getModelAttribute(model, false, totalPrice, oldPrice);
         }
+    }
+
+    public void getModelAttribute(Model model, Boolean isEmpty, int total, int old){
+        model.addAttribute(IS_EMPTY, isEmpty);
+        model.addAttribute("totalPrice", total);
+        model.addAttribute("oldPrice", old);
     }
 }
