@@ -2,7 +2,6 @@ package com.example.bookshop.controllers.user;
 
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
-import com.example.bookshop.security.exception.UserNotFoundException;
 import com.example.bookshop.service.BookService;
 
 import com.example.bookshop.service.components.CookieService;
@@ -77,9 +76,11 @@ public class BookShopCartController {
     @PostMapping("/changeBookStatus/{slug}")
     public String handleChangeBookStatus(@PathVariable(value = "slug") String slug,
                                          @CookieValue(name = "cartContents", required = false) String cartContents,
-                                         @RequestBody Map<String, String> allParams, Model model, HttpServletResponse response) {
+                                         @RequestBody Map<String, String> allParams,
+                                         Model model,
+                                         HttpServletResponse response, HttpServletRequest request) {
 
-        return bookService.addingBookStatusCart(slug, model, response, cartContents, REDIRECT_CART, allParams);
+        return bookService.addingBookStatusCart(slug, model, response, request, cartContents, REDIRECT_CART, allParams);
     }
 
     @PostMapping("/changeBookStatus/cart/remove/{slug}")
@@ -87,7 +88,7 @@ public class BookShopCartController {
         Object curUser = userRegister.getCurrentUser();
         BookEntity book = bookService.getBookPageSlug(slug);
         if (curUser instanceof BookstoreUserDetails) {
-            bookService.removeBook2User(book, ((BookstoreUserDetails) curUser).getContact().getUserId());
+            bookService.removeBookUser(book, ((BookstoreUserDetails) curUser).getContact().getUserId());
             bookService.updateCountBooksCart(slug, book.getQuantityTheBasket() - 1);
         } else{
             cookieService.deleteBookFromCookieCart(slug, cartContents, response, model);

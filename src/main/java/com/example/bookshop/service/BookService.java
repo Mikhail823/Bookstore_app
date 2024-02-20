@@ -12,6 +12,7 @@ import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 import java.util.List;
@@ -70,7 +71,7 @@ public interface BookService {
 
     List<BookEntity> getBooksArchiveUser(Integer userId);
 
-    void removeBook2User(BookEntity book, UserEntity user);
+    void removeBookUser(BookEntity book, UserEntity user);
 
     void purchaseOfBooksByTheUser(UserEntity user, Model model);
 
@@ -92,6 +93,7 @@ public interface BookService {
 
     String addingBookStatusCart(String slug, Model model,
                                 HttpServletResponse response,
+                                HttpServletRequest request,
                                 String cartContents,
                                 String redirect, Map<String, String> allParams);
 

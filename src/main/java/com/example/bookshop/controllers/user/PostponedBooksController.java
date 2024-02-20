@@ -106,7 +106,7 @@ public class PostponedBooksController {
             BookEntity book = bookService.getBookPageSlug(slug);
             int removeQuantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
             bookService.updateCountPostponedBook(slug, removeQuantityPostponed - 1);
-            bookService.removeBook2User(book, ((BookstoreUserDetails) currUser).getContact().getUserId());
+            bookService.removeBookUser(book, ((BookstoreUserDetails) currUser).getContact().getUserId());
         } else {
             cookieService.deleteBookThePostponedCookie(slug, postponedBook, response, model);
             cookieService.clearCookie(response, request);
@@ -115,15 +115,25 @@ public class PostponedBooksController {
     }
 
     @PostMapping("/changeBookStatus/payAllPostponed/{books}")
-    public String handlerPayAllPostponedBooks(@PathVariable("books") List<BookEntity> books) {
+    public String handlerPayAllPostponedBooks(@PathVariable("books") List<BookEntity> books,
+                                              @CookieValue(name = "postponedBook", required = false) String postponedBook,
+                                              HttpServletResponse response, HttpServletRequest request,
+                                              @RequestBody Map<String, String> allParams, Model model) {
+        Object curUser = userRegister.getCurrentUser();
+        if (curUser instanceof BookstoreUserDetails) {
             for (BookEntity book : books) {
                 int quantityCart = book.getQuantityTheBasket() == null ? 0 : book.getQuantityTheBasket();
                 bookService.saveBookUser(book,
-                        ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId(),
+                        ((BookstoreUserDetails) curUser).getContact().getUserId(),
                         Book2UserTypeEntity.StatusBookType.CART);
                 bookService.updateCountCartAndCountPostponed(book.getSlug(),
                         quantityCart + 1, book.getNumberOfPosponed() - 1);
             }
+        } else {
+            for (BookEntity book : books) {
+                cookieService.addBooksCookieCart(postponedBook, model, allParams, response, request, book.getSlug());
+            }
+        }
         return REDIRECT_POSTPONED + IS_CART_TRUE;
     }
 }

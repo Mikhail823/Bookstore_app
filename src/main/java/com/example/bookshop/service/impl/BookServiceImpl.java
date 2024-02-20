@@ -29,6 +29,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -262,12 +263,12 @@ public class BookServiceImpl implements BookService {
     public void saveNewBookUser(BookEntity book, UserEntity user, Book2UserTypeEntity type){
         book.setStatus(type.getCode());
         bookRepository.save(book);
-        Book2UserEntity b = new Book2UserEntity();
-        b.setTime(new Date());
-        b.setUserId(user.getId());
-        b.setBookId(book.getId());
-        b.setTypeId(type.getId());
-        book2UserRepository.save(b);
+        Book2UserEntity newBookUser = new Book2UserEntity();
+        newBookUser.setTime(new Date());
+        newBookUser.setUserId(user.getId());
+        newBookUser.setBookId(book.getId());
+        newBookUser.setTypeId(type.getId());
+        book2UserRepository.save(newBookUser);
     }
 
     @Override
@@ -277,11 +278,11 @@ public class BookServiceImpl implements BookService {
 
     @Override
     @Transactional
-    public void removeBook2User(BookEntity book, UserEntity user) {
-        Book2UserEntity book2User =
+    public void removeBookUser(BookEntity book, UserEntity user) {
+        Book2UserEntity bookUser =
                 book2UserRepository.findBook2UserEntityByUserIdAndBookId(user.getId(), book.getId());
-        if (book2User != null) {
-            book2UserRepository.delete(book2User);
+        if (bookUser != null) {
+            book2UserRepository.delete(bookUser);
         }
     }
 
@@ -297,7 +298,7 @@ public class BookServiceImpl implements BookService {
             bookList.forEach(book -> saveBookUser(book, user, PAID));
             BalanceTransactionEntity transaction = new BalanceTransactionEntity();
             String bookStrong = (bookList.size() == 1) ? "книги: " : "книг: ";
-            String booksName = bookList.stream().map(book -> book.getTitle() + ", ").collect(Collectors.joining());
+            String booksName = bookList.stream().map(book -> book.getTitle() + " ").collect(Collectors.joining());
             transaction.setUserId(user);
             transaction.setDescription("Покупка " + bookStrong + booksName);
             transaction.setValue(allSumBooks);
@@ -388,6 +389,7 @@ public class BookServiceImpl implements BookService {
     @Transactional
     public String addingBookStatusCart(String slug, Model model,
                                        HttpServletResponse response,
+                                       HttpServletRequest request,
                                        String cartContents,
                                        String redirect, Map<String, String> allParams) {
         Object curUser = registerUser.getCurrentUser();
@@ -399,7 +401,7 @@ public class BookServiceImpl implements BookService {
             updateCountBooksCart(slug, countCartBooks + 1);
             return redirect + slug;
         } else {
-            cookieService.addBooksCookieCart(cartContents, model, allParams, response, slug);
+            cookieService.addBooksCookieCart(cartContents, model, allParams, response, request, slug);
             updateCountBooksCart(slug, countCartBooks + 1);
             return redirect + slug;
         }

@@ -9,7 +9,8 @@ import java.util.*;
 
 public interface CookieService {
     void addBooksCookieCart(String cookies, Model model,
-                                   Map<String, String> allParams, HttpServletResponse response, String slug);
+                                   Map<String, String> allParams, HttpServletResponse response,
+                            HttpServletRequest request, String slug);
 
     void addBooksCookiePostponed(String cookies, Model model,
                                         Map<String, String> allParams, HttpServletResponse response, String slug);

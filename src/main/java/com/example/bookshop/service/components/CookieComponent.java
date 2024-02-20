@@ -45,12 +45,17 @@ public class CookieComponent implements CookieService {
 
     @Override
     public void addBooksCookieCart(String cookies, Model model,
-                                   Map<String, String> allParams, HttpServletResponse response, String slug) {
+                                   Map<String, String> allParams,
+                                   HttpServletResponse response,
+                                   HttpServletRequest request,
+                                   String slug) {
+        clearCookiePostponed(response, request);
         if (cookies == null || cookies.equals("")) {
             Cookie cookie = new Cookie(CART_CONTENT, allParams.get(STATUS) + "=" + slug);
             cookie.setPath("/");
             response.addCookie(cookie);
             model.addAttribute(CART_CONTENT, false);
+
         } else if (!cookies.contains(allParams.get(STATUS) + "=" + slug)) {
             StringJoiner stringJoiner = new StringJoiner("/");
             stringJoiner.add(cookies).add(allParams.get(STATUS) + "=" + slug);
@@ -58,6 +63,19 @@ public class CookieComponent implements CookieService {
             cookie.setPath("/");
             response.addCookie(cookie);
             model.addAttribute(CART_EMPTY, false);
+
+        }
+    }
+
+    public void clearCookiePostponed(HttpServletResponse response, HttpServletRequest request){
+        Cookie[] cookies = request.getCookies();
+        for(Cookie cookie : cookies){
+            if (cookie.getName().equals(POST_BOOK)){
+                cookie.setPath("/");
+                cookie.setMaxAge(0);
+                cookie.setValue("");
+                response.addCookie(cookie);
+            }
         }
     }
 
@@ -102,8 +120,8 @@ public class CookieComponent implements CookieService {
     public void clearCookie(HttpServletResponse response, HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();
         for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(CART_CONTENT) && cookie.getValue().equals("")
-                    || cookie.getName().equals(POST_BOOK) && cookie.getValue().equals("")) {
+            if (cookie.getName().equals(CART_CONTENT)
+                    || cookie.getName().equals(POST_BOOK)) {
                 cookie.setPath("/");
                 cookie.setMaxAge(0);
                 cookie.setValue("");
