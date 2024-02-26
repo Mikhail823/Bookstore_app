@@ -78,15 +78,15 @@ public class InspectorServiceImpl implements InspectorService {
          if (regUser != null) {
             UserContactEntity regUserContact =
                     userContactRepository.findUserContactEntityByContactAndUserId(payload.getContact(), regUser);
-            regUserContact.setCode(returnStringResponseBody(requestToThePaymentSystem(payload, createRandomIpAddress())));
+         //   regUserContact.setCode(returnStringResponseBody(requestToThePaymentSystem(payload, createRandomIpAddress())));
+            regUserContact.setCode("11 11");
             regUserContact.setCodeTime(LocalDateTime.now());
             regUserContact.setApproved((short) 1);
             regUserContact.setCodeTrails(getCountCodeTrails(regUserContact));
             userContactRepository.save(regUserContact);
          }
          else if (userAny != null){
-             registrationAnyNewUser(payload,userAny,
-                     returnStringResponseBody(requestToThePaymentSystem(payload, createRandomIpAddress())) );
+             registrationAnyNewUser(payload,userAny, "11 11");
          }
 
      }
