@@ -39,19 +39,18 @@ public class BooksController {
     private final ResourceStorageService storage;
     private final BookReviewService bookReviewService;
     private final ViewedBooksService viewedBooksService;
-    private final BookstoreUserRegister register;
+
     private static final String REDIRECT = "redirect:/api/books/";
 
     private DateFormatter dateFormatter = new DateFormatter();
 
     @Autowired
-    public BooksController(BookService bookService, BooksRatingAndPopulatityService booksRatingAndPopulatityService, ResourceStorageService storage, BookReviewService bookReviewService, ViewedBooksService viewedBooksService, BookstoreUserRegister register) {
+    public BooksController(BookService bookService, BooksRatingAndPopulatityService booksRatingAndPopulatityService, ResourceStorageService storage, BookReviewService bookReviewService, ViewedBooksService viewedBooksService) {
         this.bookService = bookService;
         this.booksRatingAndPopulatityService = booksRatingAndPopulatityService;
         this.storage = storage;
         this.bookReviewService = bookReviewService;
         this.viewedBooksService = viewedBooksService;
-        this.register = register;
     }
 
     @PostMapping("/{slug}/img/save")

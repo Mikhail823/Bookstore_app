@@ -22,12 +22,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
 
 import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -122,7 +122,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public Page getPageTransactionalUser(UserEntity user, Integer offset, Integer limit) {
+    public Page<BalanceTransactionEntity> getPageTransactionalUser(UserEntity user, Integer offset, Integer limit) {
         Pageable nextPage = PageRequest.of(offset, limit);
         return balanceTransactionRepository.findBalanceTransactionEntitiesByUserIdOrderByTimeAsc(user, nextPage);
     }
@@ -148,6 +148,23 @@ public class PaymentServiceImpl implements PaymentService {
         transaction.setDescription("Покупка " + bookStrong + booksName);
         transaction.setValue(allSumBooks);
         transaction.setTime(LocalDateTime.now());
+        transaction.setIsIncome(false);
+        transaction.setPaymentStatus(PaymentStatusType.OK);
+        balanceTransactionRepository.save(transaction);
+    }
+
+    @Transactional
+    @Override
+    public void saveTransactionUserBalance(UserEntity user, PaymentDto paymentDto){
+        user.setBalance(user.getBalance() + Double.parseDouble(paymentDto.getSum()));
+        userRepository.save(user);
+        BalanceTransactionEntity transaction = new BalanceTransactionEntity();
+        transaction.setUserId(user);
+        transaction.setPaymentStatus(PaymentStatusType.OK);
+        transaction.setValue(Double.parseDouble(paymentDto.getSum()));
+        transaction.setTime(LocalDateTime.now());
+        transaction.setIsIncome(true);
+        transaction.setDescription("Пополнение личного счета.");
         balanceTransactionRepository.save(transaction);
     }
 }

@@ -1,8 +1,6 @@
 package com.example.bookshop.controllers;
 
 import com.example.bookshop.dto.BooksPageDto;
-import com.example.bookshop.dto.SearchWordDto;
-import com.example.bookshop.exeption.EmptySearchException;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.TagService;
 import com.example.bookshop.service.components.CookieService;

@@ -4,31 +4,24 @@ import com.example.bookshop.repository.UserContactRepository;
 import com.example.bookshop.repository.UserRepository;
 import com.example.bookshop.security.exception.UserNotFoundException;
 import com.example.bookshop.struct.enums.ContactType;
-import com.example.bookshop.struct.user.RoleEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
-import com.example.bookshop.struct.user.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Service
 @Slf4j
 public class BookstoreUserDetailsService implements UserDetailsService {
 
-    private final UserRepository userRepository;
     private final UserContactRepository contactRepository;
 
     @Autowired
-    public BookstoreUserDetailsService(UserRepository userRepository, UserContactRepository contactRepository) {
-        this.userRepository = userRepository;
+    public BookstoreUserDetailsService(UserContactRepository contactRepository) {
         this.contactRepository = contactRepository;
     }
 

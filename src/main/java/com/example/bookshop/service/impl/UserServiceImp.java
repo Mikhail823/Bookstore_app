@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 
+import javax.validation.OverridesAttribute;
 import java.util.*;
 
 @Component
@@ -205,6 +206,11 @@ public class UserServiceImp implements UserService {
         userProfile.setPhone(phone);
         userProfile.setPasswordRepl(passwordRepl);
         return userProfile;
+    }
 
+    @Override
+    public Double getUserBalance(UserEntity user){
+        UserEntity userEntity = userRepository.getById(user.getId());
+        return userEntity.getBalance();
     }
 }

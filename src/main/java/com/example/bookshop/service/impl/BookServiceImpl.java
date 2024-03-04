@@ -186,6 +186,10 @@ public class BookServiceImpl implements BookService {
     public List<BookEntity> getBooksCart(UserEntity userId) {
         return bookRepository.getBooksCartUser(userId.getId());
     }
+    @Override
+    public Integer getCountBooksTheCart(UserEntity user){
+        return bookRepository.getBooksCartUser(user.getId()).size();
+    }
 
     @Override
     public void getBooksTheCartOfUser(Model model) {
@@ -287,6 +291,7 @@ public class BookServiceImpl implements BookService {
     }
 
     @Override
+    @Transactional
     public void purchaseOfBooksByTheUser(UserEntity user, Model model) {
         List<BookEntity> bookList = bookRepository.getBooksCartUser(user.getId());
         double allSumBooks = bookList.stream().mapToDouble(BookEntity::getPrice).sum();

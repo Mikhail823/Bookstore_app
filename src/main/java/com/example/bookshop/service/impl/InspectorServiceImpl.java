@@ -100,9 +100,8 @@ public class InspectorServiceImpl implements InspectorService {
          HttpHeaders headers = new HttpHeaders();
          headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
          HttpEntity<String> entity = new HttpEntity<>(headers);
-         ResponseEntity<ResponseBodyCode> code =
-                 restTemplate.exchange(url, HttpMethod.GET, entity, ResponseBodyCode.class);
-        return code;
+
+        return restTemplate.exchange(url, HttpMethod.GET, entity, ResponseBodyCode.class);
      }
 
      public void registrationAnyNewUser(ContactConfirmationPayload payload,

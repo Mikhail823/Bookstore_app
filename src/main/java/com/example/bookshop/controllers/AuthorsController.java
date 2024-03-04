@@ -8,7 +8,6 @@ import com.example.bookshop.service.BookService;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.book.author.AuthorEntity;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,13 +24,11 @@ import java.util.Map;
 public class AuthorsController {
 
     private final AuthorService authorService;
-    private final AuthorRepository authorRepository;
     private final BookService bookService;
 
     @Autowired
-    public AuthorsController(AuthorService authorService, AuthorRepository authorRepository, BookService bookService) {
+    public AuthorsController(AuthorService authorService, BookService bookService) {
         this.authorService = authorService;
-        this.authorRepository = authorRepository;
         this.bookService = bookService;
     }
 

@@ -1,41 +1,30 @@
 package com.example.bookshop.controllers.user;
 
 import com.example.bookshop.dto.PaymentDto;
-import com.example.bookshop.dto.ProfileFormDto;
 import com.example.bookshop.dto.TransactionPageDto;
-import com.example.bookshop.exeption.InvalidPasswordException;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.PaymentService;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.struct.enums.ContactType;
-import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.common.collect.ImmutableList;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.data.domain.Page;
-import org.springframework.http.*;
 import org.springframework.mail.MailException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
+
 import org.springframework.web.servlet.view.RedirectView;
 
-import javax.websocket.server.PathParam;
 import java.security.NoSuchAlgorithmException;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
 
 @Controller
 @Slf4j
@@ -120,9 +109,10 @@ public class ProfileUserPageController {
     }
 
     @PostMapping(value = "/payment")
-    public RedirectView handlerPayment(@RequestBody PaymentDto pay) throws NoSuchAlgorithmException {
+    public String handlerPayment(@RequestBody PaymentDto pay) throws NoSuchAlgorithmException {
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
-        return new RedirectView(paymentService.getPaymentUrl(user, pay));
+        paymentService.saveTransactionUserBalance(user, pay);
+        return PROF_REDIRECT;
     }
 
     @GetMapping("/profile/verify/{token}")
@@ -169,9 +159,10 @@ public class ProfileUserPageController {
         return new RedirectView(PROF_REDIRECT_PAY);
     }
 
-    @GetMapping("/transaction/page")
+    @GetMapping("/transactions")
     @ResponseBody
-    public TransactionPageDto handlerPageTransactional(@RequestParam(value = "offset") Integer offset,
+    public TransactionPageDto handlerPageTransactional(@RequestParam(value = "sort") String sort,
+                                                        @RequestParam(value = "offset") Integer offset,
                                                        @RequestParam(value = "limit") Integer limit) {
         UserEntity user = ((BookstoreUserDetails) userRegister.getCurrentUser()).getContact().getUserId();
         return new TransactionPageDto(paymentService.getPageTransactionalUser(user, offset, limit).getContent());

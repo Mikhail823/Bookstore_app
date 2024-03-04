@@ -5,10 +5,8 @@ import com.example.bookshop.struct.book.review.BookReviewEntity;
 import com.example.bookshop.struct.book.review.MessageEntity;
 import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;

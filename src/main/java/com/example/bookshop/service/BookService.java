@@ -56,6 +56,7 @@ public interface BookService {
     List<BookReviewEntity> getBookReview(BookEntity book, Integer offset, Integer limit);
 
     List<BookEntity> getBooksCart(UserEntity userId);
+    Integer getCountBooksTheCart(UserEntity user);
 
     void getBooksTheCartOfUser(Model model);
 

@@ -41,4 +41,6 @@ public interface UserService {
     UserEntity getUserRegistrationByContact(String contact);
 
     void checkPassword(String password, String passwordReply, Model model) throws InvalidPasswordException;
+
+    Double getUserBalance(UserEntity user);
 }

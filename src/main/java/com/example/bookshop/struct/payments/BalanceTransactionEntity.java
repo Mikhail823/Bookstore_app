@@ -36,4 +36,6 @@ public class BalanceTransactionEntity implements Serializable {
     @Column(name = "payment_status")
     private PaymentStatusType paymentStatus;
 
+    @Column(columnDefinition = "BOOL", name = "is_income")
+    private Boolean isIncome;
 }

@@ -22,7 +22,9 @@ public interface PaymentService {
 
     void saveTransaction(BalanceTransactionEntity transactionEntity);
 
-    Page getPageTransactionalUser(UserEntity user, Integer offset, Integer limit);
+    Page<BalanceTransactionEntity> getPageTransactionalUser(UserEntity user, Integer offset, Integer limit);
 
     void countingAndSavingPurchases(List<BookEntity> bookList, Double allSumBooks, BookstoreUserDetails user, Model model);
+
+    void saveTransactionUserBalance(UserEntity user, PaymentDto paymentDto);
 }

@@ -146,7 +146,7 @@
                     </td>
                     <td>
                           <span class="Transactions_textSuccess">
-                            <strong th:text="${tr.getValue()+' р.'}">+500 р.</strong>
+                            <strong th:text="(${tr.getIsIcome()==true}?'+':'-') + ${tr.getValue()+' р.'}">+500 р.</strong>
                           </span>
                     </td>
                     <td th:text="${tr.getDescription()}" >Пополнение счета
@@ -158,8 +158,7 @@
               <div class="Transactions-footer Transactions-footer_center" th:if="${transactionList.getTotalElements() > 6}">
                 <a class="btn btn_primary Transactions-get"
                    href="#"
-                   th:href="@{'/transaction/page'}"
-                   data-transactionoffset="4"
+                   data-transactionoffset="0"
                    data-transactionlimit="10"
                    data-transactionsort="asc" th:text="#{text.button}">Показать еще</a>
               </div>

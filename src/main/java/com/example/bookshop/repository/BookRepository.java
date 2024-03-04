@@ -3,7 +3,6 @@ package com.example.bookshop.repository;
 import com.example.bookshop.struct.book.BookEntity;
 import com.example.bookshop.struct.enums.GenreType;
 import com.example.bookshop.struct.genre.GenreEntity;
-import com.example.bookshop.struct.user.UserEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -6,7 +6,6 @@ import com.example.bookshop.service.AuthorService;
 import com.example.bookshop.struct.book.author.AuthorEntity;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.Transient;
@@ -35,7 +34,6 @@ public class AuthorServiceImpl implements AuthorService {
     public AuthorEntity getAuthorById(Integer id){
         return authorRepository.findAuthorEntityById(id);
     }
-
 
     @Override
     @Transient
