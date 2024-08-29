@@ -18,6 +18,8 @@ public class JWTUtil {
     @Value("${auth.secret}")
     private String secret;
 
+    private Long expirationTime = 86400000L;
+
     //Создание токена
     private String createToken(Map<String, Object> claims, String username) {
         return Jwts

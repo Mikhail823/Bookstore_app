@@ -27,4 +27,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Integer> {
     @Modifying
     @Query(value = "DELETE FROM users  WHERE id=?1", nativeQuery = true)
     void deleteUserEntityById(Integer id);
+
+    UserEntity getById(int id);
 }

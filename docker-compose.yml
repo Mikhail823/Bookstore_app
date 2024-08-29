@@ -1,0 +1,11 @@
+version: "3"
+services:
+  bookstore-db:
+    container_name: shop-db
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: bookstore_user
+      POSTGRES_PASSWORD: bookstore_password
+      POSTGRES_DB: bookstore_db

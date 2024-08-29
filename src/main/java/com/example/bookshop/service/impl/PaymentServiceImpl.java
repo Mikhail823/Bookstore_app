@@ -156,12 +156,12 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Override
     public void saveTransactionUserBalance(UserEntity user, PaymentDto paymentDto){
-        user.setBalance(user.getBalance() + Double.parseDouble(paymentDto.getSum()));
+        user.setBalance(user.getBalance() + Double.parseDouble(String.valueOf(paymentDto.getSum())));
         userRepository.save(user);
         BalanceTransactionEntity transaction = new BalanceTransactionEntity();
         transaction.setUserId(user);
         transaction.setPaymentStatus(PaymentStatusType.OK);
-        transaction.setValue(Double.parseDouble(paymentDto.getSum()));
+        transaction.setValue(paymentDto.getSum());
         transaction.setTime(LocalDateTime.now());
         transaction.setIsIncome(true);
         transaction.setDescription("Пополнение личного счета.");

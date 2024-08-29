@@ -145,8 +145,8 @@
                     <td th:text="${#temporals.format(tr.getTime(), 'dd MMMM yyyy HH:mm')}">15 мая 2017 10:03
                     </td>
                     <td>
-                          <span class="Transactions_textSuccess">
-                            <strong th:text="(${tr.getIsIcome()==true}?'+':'-') + ${tr.getValue()+' р.'}">+500 р.</strong>
+                          <span class="Transactions_textSuccess"><strong th:text="${tr.getIsIncome()} ? '+ ' : '- '"></strong>
+                            <strong th:text="${tr.getValue()+' р.'}">+500 р.</strong>
                           </span>
                     </td>
                     <td th:text="${tr.getDescription()}" >Пополнение счета
@@ -171,7 +171,7 @@
                 <strong class="Topup-title" th:text="#{prof.amount.top}">Введите сумму, на которую хотите пополнить свой счет:
                 </strong>
                 <div class="form-group form-group_row Topup-group">
-                  <input class="form-input" id="sum" name="sum" type="text"/>
+                  <input class="form-input" id="sum" name="sum" type="number"/>
                   <span>рублей</span>
                 </div>
                 <div class="form-group">

@@ -10,6 +10,6 @@ import java.util.Date;
 public class PaymentDto {
 
     private String hash;
-    private String sum;
+    private Double sum;
     private Date time;
 }

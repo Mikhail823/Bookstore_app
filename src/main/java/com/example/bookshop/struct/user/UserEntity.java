@@ -68,7 +68,7 @@ public class UserEntity implements Serializable {
     @JsonIgnore
     private List<BookEntity> listBooks = new ArrayList<>();
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<BalanceTransactionEntity> transaction = new ArrayList<>();
 

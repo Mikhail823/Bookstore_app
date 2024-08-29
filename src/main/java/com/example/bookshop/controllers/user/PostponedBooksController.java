@@ -84,15 +84,18 @@ public class PostponedBooksController {
         Object curUser = userRegister.getCurrentUser();
         BookEntity book = bookService.getBookPageSlug(slug);
         int quantityPostponed = book.getNumberOfPosponed() == null ? 0 : book.getNumberOfPosponed();
-        model.addAttribute(COUNT_BOOKS_POSTPONED, quantityPostponed);
         if (curUser instanceof BookstoreUserDetails) {
             UserEntity user = userServiceImp.getUserById(((BookstoreUserDetails) curUser).getContact().getUserId().getId());
             bookService.saveBookUser(book, user, KEPT);
-            bookService.updateCountPostponedBook(slug, quantityPostponed + 1);
+
         } else {
             cookieService.addBooksCookiePostponed(postponedBook, model, allParams, response, slug);
             bookService.updateCountPostponedBook(slug, quantityPostponed + 1);
         }
+
+        bookService.updateCountPostponedBook(slug, quantityPostponed + 1);
+       // model.addAttribute(COUNT_BOOKS_POSTPONED, quantityPostponed);
+
         return new ModelAndView(REDIRECT_SLUG + slug);
     }
 

@@ -8,6 +8,7 @@ import com.example.bookshop.service.BookService;
 import com.example.bookshop.service.PaymentService;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.struct.enums.ContactType;
+import com.example.bookshop.struct.payments.BalanceTransactionEntity;
 import com.example.bookshop.struct.user.UserContactEntity;
 import com.example.bookshop.struct.user.UserEntity;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -78,6 +79,9 @@ public class ProfileUserPageController {
         UserContactEntity phone = userService.findContactUser(user.getContact().getUserId(), ContactType.PHONE);
         model.addAttribute("transactionList",
                 paymentService.getPageTransactionalUser(user.getContact().getUserId(), 0, 6));
+        for (BalanceTransactionEntity entity : paymentService.getPageTransactionalUser(user.getContact().getUserId(), 0, 6)){
+            log.info("ENTITY BALANCE::: {}", entity.getValue());
+        }
         model.addAttribute("email", email.getContact());
         model.addAttribute("phone", phone.getContact());
         model.addAttribute("curUsr", user.getContact().getUserId());

@@ -5,6 +5,8 @@ import com.example.bookshop.repository.Book2UserRepository;
 import com.example.bookshop.security.BookstoreUserDetails;
 import com.example.bookshop.security.BookstoreUserRegister;
 import com.example.bookshop.service.BookService;
+import com.example.bookshop.service.CartService;
+import com.example.bookshop.service.PostponedService;
 import com.example.bookshop.service.UserService;
 import com.example.bookshop.service.components.CookieService;
 import com.example.bookshop.struct.book.BookEntity;
@@ -34,18 +36,20 @@ public class GlobalModelAttributesController {
     private final BookstoreUserRegister userRegister;
     private final CookieService cookieComponent;
     private final UserService userService;
-    private final Book2UserRepository bookUserRepository;
+    private final CartService cartService;
+    private final PostponedService postponedService;
 
     @Autowired
     public GlobalModelAttributesController(BookService bookService,
                                            BookstoreUserRegister userRegister,
-                                           CookieService cookieComponent, UserService userService,
-                                           Book2UserRepository bookUserRepository) {
+                                           CookieService cookieComponent, UserService userService, CartService cartService,
+                                           PostponedService postponedService) {
         this.bookService = bookService;
         this.userRegister = userRegister;
         this.cookieComponent = cookieComponent;
         this.userService = userService;
-        this.bookUserRepository = bookUserRepository;
+        this.cartService = cartService;
+        this.postponedService = postponedService;
     }
 
     @ModelAttribute("searchWordDto")
@@ -70,9 +74,8 @@ public class GlobalModelAttributesController {
     public String getCountBooksCart(Model model) {
         Object curUser = userRegister.getCurrentUser();
         if (curUser instanceof BookstoreUserDetails) {
-            model.addAttribute("countBooksCart",
-                    bookUserRepository.getCountBooksCart(((BookstoreUserDetails) curUser).getContact().getUserId().getId(), 2) != 0 ?
-                            bookUserRepository.getCountBooksCart(((BookstoreUserDetails) curUser).getContact().getUserId().getId(), 2) : 0);
+            model.addAttribute("countBooksCart", cartService.countBooksCartUser(((BookstoreUserDetails) curUser)
+                    .getContact().getUserId().getId()));
         }
         return "fragments/count_book_fragment :: countBooks";
     }
@@ -90,13 +93,16 @@ public class GlobalModelAttributesController {
                 : cookieComponent.countBooksCookie(postponedBook, KEPT);
     }
 
-    @ModelAttribute("countBooksPostponed")
-    public Integer getCountBooksPostponed() {
+    @ModelAttribute
+    public String getCountBooksPostponed(Model model) {
         Object curUser = userRegister.getCurrentUser();
-
-        return (curUser instanceof BookstoreUserDetails) ?
-                bookService.getListPostponedBooks(((BookstoreUserDetails) curUser).getContact().getUserId()).size() : 0;
+        if (curUser instanceof BookstoreUserDetails) {
+            model.addAttribute("countBooksPostponed", postponedService.countBooksPostponedUser(((BookstoreUserDetails) curUser)
+                    .getContact().getUserId().getId()));
+        }
+        return "fragments/count_book_fragment :: countBooks";
     }
+
 
     @ModelAttribute
     public String getAccountMoney(Model model) {
